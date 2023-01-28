@@ -14,7 +14,7 @@
 								<div class="profile-header">
 									<div class="overlay"></div>
 									<div class="profile-main">
-										<img src="{{$user->getProfilePic()}}" class="img-circle" alt="Avatar">
+										<img src="{{$user->getProfilePic()}}" class="img-circle" width="150px" alt="Avatar">
 										<h3 class="name">Samuel Gold</h3>
 										<span class="online-status status-available">Available</span>
 									</div>

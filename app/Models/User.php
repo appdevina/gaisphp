@@ -57,7 +57,7 @@ class User extends Authenticatable
     public function getProfilePic()
     {
         if(!$this->profile_picture){
-            return asset('images/default.jpg');
+            return asset('images/default.png');
         }
 
         return asset('images/'.$this->profile_picture);
