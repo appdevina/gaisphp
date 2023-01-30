@@ -35,7 +35,7 @@
                                     <input name="badan_usaha_id" type="text" class="form-control" id="inputBU" value="{{$user->badan_usaha_id}}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="divisi_id" class="form-label col-lg-12">Divisi</label>
+                                    <label for="divisi_id" class="form-label">Divisi</label>
                                         <select class="form-control" id="divisi_id" name="divisi_id"
                                             required>
                                             @foreach ($division as $division)

@@ -32,9 +32,11 @@ Route::group(['middleware' => 'auth'], function(){
 
     #USER
     Route::get('user', [UserController::class, 'index']);
+    Route::post('/user/create', [UserController::class, 'create']);
     Route::get('/user/{id}/profile', [UserController::class, 'profile']);
     Route::get('/user/{id}/edit', [UserController::class, 'edit']);
     Route::post('/user/{id}/update', [UserController::class, 'update']);
+    Route::get('/user/{id}/delete', [UserController::class, 'destroy']);
 
     #CATEGORY
     Route::get('category', [CategoryController::class, 'index']);

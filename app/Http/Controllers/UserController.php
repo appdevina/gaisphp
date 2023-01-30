@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Divisi;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Exception;
 
 class UserController extends Controller
@@ -25,9 +27,11 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
+        $divisions = Divisi::all();
 
-        return view('master.user.index', [
+        return view('master.user.index')->with([
             'users' => $users,
+            'division' => $divisions,
         ]);
     }
 
@@ -36,9 +40,26 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+            $request['password'] = bcrypt($request->password);
+            
+            $user = User::create($request->all());
+
+            $user->remember_token = Str::random(60);
+            $user->save();
+
+            if ($request->hasFile('profile_picture')) {
+                $request->file('profile_picture')->move('images/', $request->file('profile_picture')->getClientOriginalName());
+                $user->profile_picture = $request->file('profile_picture')->getClientOriginalName();
+                $user->save();
+            }
+
+            return redirect('user')->with('success', 'Data berhasil diinput !');
+        } catch (Exception $e) {
+            return redirect('user')->with(['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -115,6 +136,14 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $user = User::find($id);
+
+            $user->delete($user);
+
+            return redirect('user')->with('success', 'Data berhasil dihapus !');
+        } catch (Exception $e) {
+            //throw $th;
+        }
     }
 }
