@@ -26,10 +26,7 @@ Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('/postlogin', [AuthController::class, 'postlogin']);
 Route::get('logout', [AuthController::class, 'logout']);
 
-Route::group(['middleware' => 'auth'], function(){
-
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware();
-
+Route::group(['middleware' => ['auth', 'checkRole:1']], function(){
     #USER
     Route::get('user', [UserController::class, 'index']);
     Route::post('/user/create', [UserController::class, 'create']);
@@ -37,13 +34,17 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/user/{id}/edit', [UserController::class, 'edit']);
     Route::post('/user/{id}/update', [UserController::class, 'update']);
     Route::get('/user/{id}/delete', [UserController::class, 'destroy']);
-
+    
     #CATEGORY
     Route::get('category', [CategoryController::class, 'index']);
     Route::post('/category/create', [CategoryController::class, 'create']);
     Route::get('/category/{id}/edit', [CategoryController::class, 'edit']);
     Route::post('/category/{id}/update', [CategoryController::class, 'update']);
     Route::get('/category/{id}/delete', [CategoryController::class, 'destroy']);
+    
+});
 
+Route::group(['middleware' => ['auth', 'checkRole:1,2']], function(){
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware();
 });
 
