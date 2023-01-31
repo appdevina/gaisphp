@@ -4,7 +4,7 @@
 			<ul class="nav">
 				<li><a href="/dashboard" class="active"><i class="lnr lnr-home"></i> <span>DASHBOARD</span></a></li>
 				<li><a href="#" class=""><i class="lnr lnr-cart"></i> <span>REQUEST</span></a></li>
-                @if (auth()->user()->role == 1)
+                @if (auth()->user()->role_id == 1)
 				<li>
 					<a href="#subPagesMaster" data-toggle="collapse" class="collapsed"><i class="lnr lnr-list"></i> <span>MASTER DATA</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
 					<div id="subPagesMaster" class="collapse ">
