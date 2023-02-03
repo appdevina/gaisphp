@@ -21,27 +21,27 @@
                     <div class="panel">
 						<div class="panel-heading">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-info" data-toggle="modal" data-target="#divisionModal">TAMBAH</a>
+                                <a class="btn btn-info" data-toggle="modal" data-target="#roleModal">TAMBAH</a>
                             </div>
-							<h3 class="panel-title">Data Divisi</h3>
+                            <h3 class="panel-title">Data Role</h3>
 						</div>
 						<div class="panel-body">
 							<table class="table table-hover">
 								<thead>
                                 <tr>
                                     <th>NO</th>
-                                    <th>Divisi</th>
+                                    <th>Role</th>
                                     <th>Aksi</th>
                                 </tr>
 								</thead>
 								<tbody>
-                                @foreach ($divisions as $division)
+                                @foreach ($roles as $role)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $division->division }}</td>
+                                    <td>{{ $role->role }}</td>
                                     <td>
-                                        <a href="/division/{{$division->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="/division/{{$division->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a>
+                                        <a href="/role/{{$role->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="/role/{{$role->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -55,19 +55,19 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="divisionModal" tabindex="-1" role="dialog" aria-labelledby="divisionModalLabel" aria-hidden="true">
+    <div class="modal fade" id="roleModal" tabindex="-1" role="dialog" aria-labelledby="roleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title" id="divisionModalLabel">Tambah Divisi</h1>
+                    <h1 class="modal-title" id="roleModalLabel">Tambah Role</h1>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="lnr lnr-cross"></i></button>
                 </div>
                 <div class="modal-body">
-                <form action="/division/create" method="POST">
+                <form action="/role/create" method="POST">
                 {{csrf_field()}}
                 <div class="form-group">
-                    <label for="inputDivision" class="form-label">Divisi</label>
-                    <input name="division" type="text" class="form-control" id="inputDivision" placeholder="Nama divisi.." required>
+                    <label for="inputRole" class="form-label">Role</label>
+                    <input name="role" type="text" class="form-control" id="inputRole" placeholder="Nama role.." required>
                 </div>
             </div>
             <div class="modal-footer">

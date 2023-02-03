@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Divisi;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
-class DivisionController extends Controller
+class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,10 +14,10 @@ class DivisionController extends Controller
      */
     public function index()
     {
-        $divisions = Divisi::all();
+        $roles = Role::all();
 
-        return view('settings.division.index', [
-            'divisions' => $divisions,
+        return view('settings.role.index', [
+            'roles' => $roles,
         ]);
     }
 
@@ -29,11 +29,11 @@ class DivisionController extends Controller
     public function create(Request $request)
     {
         try {
-            Divisi::create($request->all());
+            Role::create($request->all());
 
-            return redirect('division')->with('success', 'Data berhasil diinput !');
+            return redirect('role')->with('success', 'Data berhasil diinput !');
         } catch (Exception $e) {
-            return redirect('division')->with(['error' => $e->getMessage()]);
+            return redirect('role')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -67,10 +67,10 @@ class DivisionController extends Controller
      */
     public function edit($id)
     {
-        $division = Divisi::find($id);
+        $role = Role::find($id);
 
-        return view('settings.division.edit', [
-            'division' => $division,
+        return view('settings.role.edit', [
+            'role' => $role,
         ]);
     }
 
@@ -84,13 +84,13 @@ class DivisionController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $division = Divisi::find($id);
+            $role = Role::find($id);
 
-            $division->update($request->all());
+            $role->update($request->all());
 
-            return redirect('division')->with('success', 'Data berhasil diupdate !');
+            return redirect('role')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
-            return redirect('division')->with(['error' => $e->getMessage()]);
+            return redirect('role')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -103,13 +103,13 @@ class DivisionController extends Controller
     public function destroy($id)
     {
         try {
-            $division = Divisi::find($id);
+            $role = Role::find($id);
 
-            $division->delete($division);
+            $role->delete($role);
 
-            return redirect('division')->with('success', 'Data berhasil dihapus !');
+            return redirect('role')->with('success', 'Data berhasil dihapus !');
         } catch (Exception $e) {
-            return redirect('division')->with(['error' => $e->getMessage()]);
+            return redirect('role')->with(['error' => $e->getMessage()]);
         }
     }
 }

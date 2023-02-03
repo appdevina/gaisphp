@@ -20,12 +20,10 @@
                     <div class="col-md-12">
                     <div class="panel">
 						<div class="panel-heading">
-							<h3 class="panel-title">Data Tipe Unit</h3>
-                            <div class="right">
-                                <button type="button" class="btn" data-toggle="modal" data-target="#unitTypeModal">
-                                    <i class="lnr lnr-plus-circle">Tambah Data Tipe Unit</i>
-                                </button>
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-info" data-toggle="modal" data-target="#unitTypeModal">TAMBAH</a>
                             </div>
+							<h3 class="panel-title">Data Tipe Unit</h3>
 						</div>
 						<div class="panel-body">
 							<table class="table table-hover">

@@ -20,10 +20,10 @@
 					<div id="subPagesSettings" class="collapse ">
 						<ul class="nav">
 							<li><a href="/user" class=""><i class="lnr lnr-user"></i>USER</a></li>
-                        	<li><a href="#" class=""><i class="lnr lnr-users"></i>ROLE</a></li>
-							<li><a href="#" class=""><i class="lnr lnr-apartment"></i>AREA</a></li>
-							<li><a href="#" class=""><i class="lnr lnr-apartment"></i>BADAN USAHA</a></li>
-							<li><a href="#" class=""><i class="lnr lnr-apartment"></i>DIVISI</a></li>
+                        	<li><a href="/role" class=""><i class="lnr lnr-users"></i>ROLE</a></li>
+							<li><a href="/area" class=""><i class="lnr lnr-apartment"></i>AREA</a></li>
+							<li><a href="/bu" class=""><i class="lnr lnr-apartment"></i>BADAN USAHA</a></li>
+							<li><a href="/division" class=""><i class="lnr lnr-apartment"></i>DIVISI</a></li>
 						</ul>
 					</div>
 				</li>

@@ -18,9 +18,9 @@ class CreateRequestDetailsTable extends Migration
             $table->foreignId('request_id');
             $table->foreignId('product_id');
             $table->double('qty_request');
-            $table->double('qty_remaining');
-            $table->double('qty_approved');
-            $table->string('description');
+            $table->double('qty_remaining')->nullable();
+            $table->double('qty_approved')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

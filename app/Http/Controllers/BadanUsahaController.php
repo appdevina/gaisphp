@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Divisi;
+use App\Models\BadanUsaha;
 use Illuminate\Http\Request;
 
-class DivisionController extends Controller
+class BadanUsahaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,10 +14,10 @@ class DivisionController extends Controller
      */
     public function index()
     {
-        $divisions = Divisi::all();
+        $badan_usahas = BadanUsaha::all();
 
-        return view('settings.division.index', [
-            'divisions' => $divisions,
+        return view('settings.bu.index', [
+            'badan_usahas' => $badan_usahas,
         ]);
     }
 
@@ -29,11 +29,11 @@ class DivisionController extends Controller
     public function create(Request $request)
     {
         try {
-            Divisi::create($request->all());
+            BadanUsaha::create($request->all());
 
-            return redirect('division')->with('success', 'Data berhasil diinput !');
+            return redirect('bu')->with('success', 'Data berhasil diinput !');
         } catch (Exception $e) {
-            return redirect('division')->with(['error' => $e->getMessage()]);
+            return redirect('bu')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -67,10 +67,10 @@ class DivisionController extends Controller
      */
     public function edit($id)
     {
-        $division = Divisi::find($id);
+        $badan_usaha = BadanUsaha::find($id);
 
-        return view('settings.division.edit', [
-            'division' => $division,
+        return view('settings.bu.edit', [
+            'badan_usaha' => $badan_usaha,
         ]);
     }
 
@@ -84,13 +84,13 @@ class DivisionController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $division = Divisi::find($id);
+            $badan_usaha = BadanUsaha::find($id);
 
-            $division->update($request->all());
+            $badan_usaha->update($request->all());
 
-            return redirect('division')->with('success', 'Data berhasil diupdate !');
+            return redirect('bu')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
-            return redirect('division')->with(['error' => $e->getMessage()]);
+            return redirect('bu')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -103,13 +103,13 @@ class DivisionController extends Controller
     public function destroy($id)
     {
         try {
-            $division = Divisi::find($id);
+            $badan_usaha = BadanUsaha::find($id);
 
-            $division->delete($division);
+            $badan_usaha->delete($badan_usaha);
 
-            return redirect('division')->with('success', 'Data berhasil dihapus !');
+            return redirect('bu')->with('success', 'Data berhasil dihapus !');
         } catch (Exception $e) {
-            return redirect('division')->with(['error' => $e->getMessage()]);
+            return redirect('bu')->with(['error' => $e->getMessage()]);
         }
     }
 }

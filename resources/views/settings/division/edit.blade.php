@@ -23,11 +23,11 @@
                                 <h3 class="panel-title">Edit</h3>
                             </div>
                             <div class="panel-body">
-                            <form action="/category/{{$category->id}}/update" method="POST">
+                            <form action="/division/{{$division->id}}/update" method="POST">
                                 {{csrf_field()}}
                                 <div class="form-group">
-                                    <label for="inputCategory" class="form-label">Kategori</label>
-                                    <input name="category" type="text" class="form-control" id="inputCategory" value="{{$category->category}}" required>
+                                    <label for="inputDivision" class="form-label">Divisi</label>
+                                    <input name="division" type="text" class="form-control" id="inputDivision" value="{{$division->division}}" required>
                                 </div>
                                 <br>
                                 <button type="submit" class="btn btn-warning">UPDATE</button>

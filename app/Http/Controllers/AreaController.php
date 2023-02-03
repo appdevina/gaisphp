@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Divisi;
+use App\Models\Area;
 use Illuminate\Http\Request;
 
-class DivisionController extends Controller
+class AreaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,10 +14,10 @@ class DivisionController extends Controller
      */
     public function index()
     {
-        $divisions = Divisi::all();
+        $areas = Area::all();
 
-        return view('settings.division.index', [
-            'divisions' => $divisions,
+        return view('settings.area.index', [
+            'areas' => $areas,
         ]);
     }
 
@@ -29,11 +29,11 @@ class DivisionController extends Controller
     public function create(Request $request)
     {
         try {
-            Divisi::create($request->all());
+            Area::create($request->all());
 
-            return redirect('division')->with('success', 'Data berhasil diinput !');
+            return redirect('area')->with('success', 'Data berhasil diinput !');
         } catch (Exception $e) {
-            return redirect('division')->with(['error' => $e->getMessage()]);
+            return redirect('area')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -67,10 +67,10 @@ class DivisionController extends Controller
      */
     public function edit($id)
     {
-        $division = Divisi::find($id);
+        $area = Area::find($id);
 
-        return view('settings.division.edit', [
-            'division' => $division,
+        return view('settings.area.edit', [
+            'area' => $area,
         ]);
     }
 
@@ -84,13 +84,13 @@ class DivisionController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $division = Divisi::find($id);
+            $area = Area::find($id);
 
-            $division->update($request->all());
+            $area->update($request->all());
 
-            return redirect('division')->with('success', 'Data berhasil diupdate !');
+            return redirect('area')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
-            return redirect('division')->with(['error' => $e->getMessage()]);
+            return redirect('area')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -103,13 +103,13 @@ class DivisionController extends Controller
     public function destroy($id)
     {
         try {
-            $division = Divisi::find($id);
+            $area = Area::find($id);
 
-            $division->delete($division);
+            $area->delete($area);
 
-            return redirect('division')->with('success', 'Data berhasil dihapus !');
+            return redirect('area')->with('success', 'Data berhasil dihapus !');
         } catch (Exception $e) {
-            return redirect('division')->with(['error' => $e->getMessage()]);
+            return redirect('area')->with(['error' => $e->getMessage()]);
         }
     }
 }

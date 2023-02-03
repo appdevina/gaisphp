@@ -18,9 +18,10 @@ class CreateProductsTable extends Migration
             $table->string('product');
             $table->foreignId('category_id');
             $table->foreignId('unit_type_id');
-            $table->double('price');
-            $table->string('description');
-            $table->string('product_image');
+            $table->double('price')->nullable();
+            $table->string('description')->nullable();
+            $table->string('product_image')->nullable();
+            $table->double('stock')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

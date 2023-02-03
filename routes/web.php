@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AreaController;
+use App\Http\Controllers\BadanUsahaController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UnitTypeController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +32,7 @@ Route::post('/postlogin', [AuthController::class, 'postlogin']);
 Route::get('logout', [AuthController::class, 'logout']);
 
 Route::group(['middleware' => ['auth', 'checkRole:1']], function(){
+    ##MASTER DATA
     #USER
     Route::get('user', [UserController::class, 'index']);
     Route::post('/user/create', [UserController::class, 'create']);
@@ -49,6 +54,35 @@ Route::group(['middleware' => ['auth', 'checkRole:1']], function(){
     Route::get('/unittype/{id}/edit', [UnitTypeController::class, 'edit']);
     Route::post('/unittype/{id}/update', [UnitTypeController::class, 'update']);
     Route::get('/unittype/{id}/delete', [UnitTypeController::class, 'destroy']);
+
+    ##SETTINGS
+    #DIVISION
+    Route::get('division', [DivisionController::class, 'index']);
+    Route::post('/division/create', [DivisionController::class, 'create']);
+    Route::get('/division/{id}/edit', [DivisionController::class, 'edit']);
+    Route::post('/division/{id}/update', [DivisionController::class, 'update']);
+    Route::get('/division/{id}/delete', [DivisionController::class, 'destroy']);
+
+    #ROLE
+    Route::get('role', [RoleController::class, 'index']);
+    Route::post('/role/create', [RoleController::class, 'create']);
+    Route::get('/role/{id}/edit', [RoleController::class, 'edit']);
+    Route::post('/role/{id}/update', [RoleController::class, 'update']);
+    Route::get('/role/{id}/delete', [RoleController::class, 'destroy']);
+
+    #BADAN USAHA
+    Route::get('bu', [BadanUsahaController::class, 'index']);
+    Route::post('/bu/create', [BadanUsahaController::class, 'create']);
+    Route::get('/bu/{id}/edit', [BadanUsahaController::class, 'edit']);
+    Route::post('/bu/{id}/update', [BadanUsahaController::class, 'update']);
+    Route::get('/bu/{id}/delete', [BadanUsahaController::class, 'destroy']);
+
+    #AREA
+    Route::get('area', [AreaController::class, 'index']);
+    Route::post('/area/create', [AreaController::class, 'create']);
+    Route::get('/area/{id}/edit', [AreaController::class, 'edit']);
+    Route::post('/area/{id}/update', [AreaController::class, 'update']);
+    Route::get('/area/{id}/delete', [AreaController::class, 'destroy']);
 });
 
 Route::group(['middleware' => ['auth', 'checkRole:1,2']], function(){

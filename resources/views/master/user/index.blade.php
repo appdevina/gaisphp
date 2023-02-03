@@ -1,29 +1,29 @@
 @extends('layouts.master')
 
 @section('content')
-    @if (session('success'))
-    <div class="alert alert-success" role="alert">
-        {{session('success')}}
-    </div>
-    @endif
-    @if ($message = Session::get('error'))
-    <div class="alert alert-danger" role="alert">
-        {{$message}}
-    </div>
-    @endif
     <div class="main">
         <div class="main-content">
             <div class="container-fluid">
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-check-circle"></i> {{session('success')}}
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-check-circle"></i> {{session('error')}}
+                </div>
+            @endif
                 <div class="row">
                     <div class="col-md-12">
                     <div class="panel">
 						<div class="panel-heading">
-							<h3 class="panel-title">Data User</h3>
-                            <div class="right">
-                                <button type="button" class="btn" data-toggle="modal" data-target="#userModal">
-                                    <i class="lnr lnr-plus-circle">Tambah Data User</i>
-                                </button>
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-info" data-toggle="modal" data-target="#userModal">TAMBAH</a>
                             </div>
+							<h3 class="panel-title">Data User</h3>
 						</div>
 						<div class="panel-body">
 							<table class="table table-hover">
