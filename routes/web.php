@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UnitTypeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,7 +42,13 @@ Route::group(['middleware' => ['auth', 'checkRole:1']], function(){
     Route::get('/category/{id}/edit', [CategoryController::class, 'edit']);
     Route::post('/category/{id}/update', [CategoryController::class, 'update']);
     Route::get('/category/{id}/delete', [CategoryController::class, 'destroy']);
-    
+
+    #TIPE UNIT
+    Route::get('unittype', [UnitTypeController::class, 'index']);
+    Route::post('/unittype/create', [UnitTypeController::class, 'create']);
+    Route::get('/unittype/{id}/edit', [UnitTypeController::class, 'edit']);
+    Route::post('/unittype/{id}/update', [UnitTypeController::class, 'update']);
+    Route::get('/unittype/{id}/delete', [UnitTypeController::class, 'destroy']);
 });
 
 Route::group(['middleware' => ['auth', 'checkRole:1,2']], function(){

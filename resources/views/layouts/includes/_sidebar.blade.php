@@ -11,7 +11,7 @@
 						<ul class="nav">
 							<li><a href="#" class=""><i class="lnr lnr-inbox"></i>BARANG</a></li>
                             <li><a href="/category" class=""><i class="lnr lnr-inbox"></i>KATEGORI</a></li>
-                            <li><a href="#" class=""><i class="lnr lnr-inbox"></i>TIPE UNIT</a></li>
+                            <li><a href="/unittype" class=""><i class="lnr lnr-inbox"></i>TIPE UNIT</a></li>
 						</ul>
 					</div>
 				</li>

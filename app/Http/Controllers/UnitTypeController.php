@@ -2,27 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use Exception;
+use App\Models\UnitType;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class UnitTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        if($request->has('cari')){
-            $categories = Category::where('category', 'LIKE', '%'.$request->cari.'%')->get();
-        } else {
-            $categories = Category::all();
-        }
+        $unit_types = UnitType::all();
 
-        return view('master.category.index', [
-            'categories' => $categories,
+        return view('master.unit_type.index', [
+            'unit_types' => $unit_types,
         ]);
     }
 
@@ -34,11 +29,11 @@ class CategoryController extends Controller
     public function create(Request $request)
     {
         try {
-            Category::create($request->all());
+            UnitType::create($request->all());
 
-            return redirect('category')->with('success', 'Data berhasil diinput !');
+            return redirect('unittype')->with('success', 'Data berhasil diinput !');
         } catch (Exception $e) {
-            return redirect('category')->with(['error' => $e->getMessage()]);
+            return redirect('unittype')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -72,10 +67,10 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::find($id);
+        $unit_type = UnitType::find($id);
 
-        return view('master.category.edit', [
-            'category' => $category
+        return view('master.unit_type.edit', [
+            'unit_type' => $unit_type
         ]);
     }
 
@@ -89,15 +84,14 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $category = Category::find($id);
+            $unit_type = UnitType::find($id);
 
-            $category->update($request->all());
+            $unit_type->update($request->all());
 
-            return redirect('category')->with('success', 'Data berhasil diupdate !');
+            return redirect('unittype')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
-            return redirect('category')->with(['error' => $e->getMessage()]);
+            return redirect('unittype')->with(['error' => $e->getMessage()]);
         }
-        
     }
 
     /**
@@ -109,13 +103,13 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         try {
-            $category = Category::find($id);
+            $unit_type = UnitType::find($id);
 
-            $category->delete($category);
+            $unit_type->delete($unit_type);
 
-            return redirect('category')->with('success', 'Data berhasil dihapus !');
+            return redirect('unittype')->with('success', 'Data berhasil dihapus !');
         } catch (Exception $e) {
-            return redirect('category')->with(['error' => $e->getMessage()]);
+            return redirect('unittype')->with(['error' => $e->getMessage()]);
         }
     }
 }
