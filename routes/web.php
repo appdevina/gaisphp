@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RequestTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UnitTypeController;
 use Illuminate\Support\Facades\Route;
@@ -64,6 +65,13 @@ Route::group(['middleware' => ['auth', 'checkRole:1']], function(){
     Route::get('/unittype/{id}/edit', [UnitTypeController::class, 'edit']);
     Route::post('/unittype/{id}/update', [UnitTypeController::class, 'update']);
     Route::get('/unittype/{id}/delete', [UnitTypeController::class, 'destroy']);
+
+    #TIPE REQUEST
+    Route::get('requesttype', [RequestTypeController::class, 'index']);
+    Route::post('/requesttype/create', [RequestTypeController::class, 'create']);
+    Route::get('/requesttype/{id}/edit', [RequestTypeController::class, 'edit']);
+    Route::post('/requesttype/{id}/update', [RequestTypeController::class, 'update']);
+    Route::get('/requesttype/{id}/delete', [RequestTypeController::class, 'destroy']);
 
     ##SETTINGS
     #DIVISION

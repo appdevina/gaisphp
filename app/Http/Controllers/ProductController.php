@@ -107,9 +107,13 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::find($id);
+        $categories = Category::all();
+        $unit_types = UnitType::all();
 
         return view('master.product.edit', [
             'product' => $product,
+            'categories' => $categories,
+            'unit_types' => $unit_types,
         ]);
     }
 
@@ -122,15 +126,19 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            
+        try { 
             $product = Product::find($id);
-
-            $product_image = $this->storeImage($request);
-            
             $product->update($request->all());
-            $product->product_image = $product_image;
-            $product->save();
+
+            if($request->product_image == null){
+                $product->product_image = 'no_image.jpeg';
+                $product->save();
+            } else {
+                $product_image = $this->storeImage($request);
+                
+                $product->product_image = $product_image;
+                $product->save();
+            }
 
             return redirect('product')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {

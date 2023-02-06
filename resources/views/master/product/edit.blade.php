@@ -30,12 +30,26 @@
                                     <input name="product" type="text" class="form-control" id="inputProduct" value="{{$product->product}}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputCategory" class="form-label">Kategori id</label>
-                                    <input name="category_id" type="text" class="form-control" id="inputCategory" value="{{$product->category_id}}" required>
+                                    <label for="inputCategory" class="form-label">Kategori</label>
+                                        <select class="form-control" id="category_id" name="category_id" required>
+                                            <option selected disabled>-- Pilih Kategori --</option>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}" 
+                                                    {{ $category->id === $product->category_id ? 'selected' : '' }}>
+                                                    {{ $category->category }}</option>
+                                            @endforeach
+                                        </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputUnitType" class="form-label">Unit type id</label>
-                                    <input name="unit_type_id" type="text" class="form-control" id="inputUnitType" value="{{$product->unit_type_id}}" required>
+                                    <label for="inputUnitType" class="form-label">Tipe Unit</label>
+                                        <select class="form-control" id="unit_type_id" name="unit_type_id" required>
+                                            <option selected disabled>-- Pilih Tipe Unit --</option>
+                                            @foreach ($unit_types as $unit_type)
+                                                <option value="{{ $unit_type->id }}" 
+                                                    {{ $unit_type->id === $product->unit_type_id ? 'selected' : '' }}>
+                                                    {{ $unit_type->unit_type }}</option>
+                                            @endforeach
+                                        </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputPrice" class="form-label">Harga</label>
@@ -47,7 +61,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="inputProductImage" class="form-label">Foto Barang</label>
-                                    <input type="file" name="product_image" class="form-control" value="{{$product->product_image}}">
+                                    <input type="file" name="product_image" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label for="inputStock" class="form-label">Stok</label>

@@ -70,6 +70,33 @@ class User extends Authenticatable
         return $this->belongsTo(Area::class);
     }
 
+    public function request_type()
+    {
+        return $this->belongsTo(RequestType::class);
+    }
+
+    public function approval()
+    {
+        $approval_id = $this->approval_id;
+        $approval_name = User::where('id', $approval_id)->get('fullname');
+
+        $parsedData = json_decode($approval_name, true);
+        $fullname = $parsedData[0]["fullname"];
+
+        return $fullname;
+    }
+
+    public function getDivision()
+    {
+        $divisi_id = $this->divisi_id;
+        $division = Divisi::where('id', $divisi_id)->get('division');
+
+        $parsedData = json_decode($division, true);
+        $division = $parsedData[0]["division"];
+
+        return $division;
+    }
+
     public function getProfilePic()
     {
         if(!$this->profile_picture){

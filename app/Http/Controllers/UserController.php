@@ -137,10 +137,18 @@ class UserController extends Controller
     {
         $users = User::find($id);
         $divisions = Divisi::all();
+        $areas = Area::all();
+        $roles = Role::all();
+        $badan_usahas = BadanUsaha::all();
+        $approvals = User::all();
 
         return view('master.user.edit')->with([
             'user' => $users,
             'division' => $divisions,
+            'areas' => $areas,
+            'roles' => $roles,
+            'badan_usahas' => $badan_usahas,
+            'approvals' => $approvals,
         ]);
     }
 

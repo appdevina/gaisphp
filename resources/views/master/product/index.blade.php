@@ -32,11 +32,11 @@
                                     <th>NO</th>
                                     <th>Barang</th>
                                     <th>Kategori</th>
+                                    <th>Stok</th>
                                     <th>Tipe Unit</th>
                                     <th>Harga</th>
                                     <th>Deskripsi</th>
                                     <th>Image</th>
-                                    <th>Stok</th>
                                     <th>Diupdate pada</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -46,12 +46,12 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $product->product }}</td>
-                                    <td>{{ $product->category_id }}</td>
-                                    <td>{{ $product->unit_type_id }}</td>
+                                    <td>{{ $product->category->category }}</td>
+                                    <td>{{ $product->stock }}</td>
+                                    <td>{{ $product->unit_type->unit_type }}</td>
                                     <td>{{ $product->price }}</td>
                                     <td>{{ $product->description }}</td>
                                     <td><img src="{{ $product->getProductImage() }}" class="img" width="100px" alt="Barang"></td>
-                                    <td>{{ $product->stock }}</td>
                                     <td>{{ $product->updated_at->formatLocalized('%A, %d %b %Y') }}</td>
                                     <td>
                                         <a href="/product/{{$product->id}}/edit" class="btn btn-warning btn-sm">Edit</a>

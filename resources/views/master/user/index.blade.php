@@ -46,11 +46,11 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td><a href="/user/{{$user->id}}/profile">{{ $user->fullname }}</a></td>
                                     <td><a href="/user/{{$user->id}}/profile">{{ $user->username }}</a></td>
-                                    <td>{{ $user->area_id }}</td>
-                                    <td>{{ $user->badan_usaha_id }}</td>
-                                    <td>{{ $user->divisi_id }}</td>
-                                    <td>{{ $user->role_id }}</td>
-                                    <td>{{ $user->approval_id }}</td>
+                                    <td>{{ $user->area->area }}</td>
+                                    <td>{{ $user->badan_usaha->badan_usaha }}</td>
+                                    <td>{{ $user->getDivision() }}</td>
+                                    <td>{{ $user->role->role }}</td>
+                                    <td>{{ $user->approval() }}</td>
                                     <td>
                                         <a href="/user/{{$user->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
                                         <a href="/user/{{$user->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a>
@@ -94,7 +94,7 @@
                 </div>
                 <div class="form-group">
                     <label for="inputArea" class="form-label">Area</label>
-                    <select class="form-control" id="area_id" name="area_id" required>
+                        <select class="form-control" id="area_id" name="area_id" required>
                             <option selected disabled>-- Pilih Area --</option>
                             @foreach ($areas as $area)
                                 <option value="{{ $area->id }}">

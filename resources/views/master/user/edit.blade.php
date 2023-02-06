@@ -35,11 +35,25 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="inputArea" class="form-label">Area</label>
-                                    <input name="area_id" type="text" class="form-control" id="inputArea" value="{{$user->area_id}}" required>
+                                        <select class="form-control" id="area_id" name="area_id" required>
+                                            <option selected disabled>-- Pilih Area --</option>
+                                            @foreach ($areas as $area)
+                                                <option value="{{ $area->id }}"
+                                                    {{ $area->id === $user->area_id ? 'selected' : '' }}>
+                                                    {{ $area->area }}</option>
+                                            @endforeach
+                                        </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputBU" class="form-label">Badan Usaha</label>
-                                    <input name="badan_usaha_id" type="text" class="form-control" id="inputBU" value="{{$user->badan_usaha_id}}" required>
+                                    <select class="form-control" id="badan_usaha_id" name="badan_usaha_id" required>
+                                            <option selected disabled>-- Pilih Badan Usaha --</option>
+                                            @foreach ($badan_usahas as $bu)
+                                                <option value="{{ $bu->id }}"
+                                                    {{ $bu->id === $user->badan_usaha_id ? 'selected' : '' }}>
+                                                    {{ $bu->badan_usaha }}</option>
+                                            @endforeach
+                                        </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="divisi_id" class="form-label">Divisi</label>
@@ -54,11 +68,25 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="inputRole" class="form-label">Role</label>
-                                    <input name="role_id" type="text" class="form-control" id="inputRole" value="{{$user->role_id}}" required>
+                                        <select class="form-control" id="role_id" name="role_id" required>
+                                            <option selected disabled>-- Pilih Role --</option>
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->id }}"
+                                                    {{ $role->id === $user->role_id ? 'selected' : '' }}>
+                                                    {{ $role->role }}</option>
+                                            @endforeach
+                                        </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputApproval" class="form-label">Approval</label>
-                                    <input name="approval_id" type="text" class="form-control" id="inputApproval" value="{{$user->approval_id}}" required>
+                                        <select class="form-control" id="approval_id" name="approval_id" required>
+                                            <option selected disabled>-- Pilih Approval --</option>
+                                            @foreach ($approvals as $approval)
+                                                <option value="{{ $approval->id }}"
+                                                    {{ $approval->id === $user->approval_id ? 'selected' : '' }}>
+                                                    {{ $approval->fullname }}</option>
+                                            @endforeach
+                                        </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputAvatar" class="form-label">Avatar</label>
