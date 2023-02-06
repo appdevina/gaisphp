@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Category;
 
 use Illuminate\Http\Request;
 
@@ -14,6 +15,17 @@ class DashboardController extends Controller
     public function index()
     {
         return view('dashboard.index');
+    }
+
+    public function search(Request $request)
+    {
+        if($request->has('cari') && ($request->path() == 'category')){
+            $categories = Category::where('category', 'LIKE', '%'.$request->cari.'%')->get();
+
+            return view('master.category.index', [
+                'categories' => $categories,
+            ]);
+        }
     }
 
     /**

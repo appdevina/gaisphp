@@ -6,6 +6,7 @@ use App\Http\Controllers\BadanUsahaController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UnitTypeController;
@@ -40,6 +41,15 @@ Route::group(['middleware' => ['auth', 'checkRole:1']], function(){
     Route::get('/user/{id}/edit', [UserController::class, 'edit']);
     Route::post('/user/{id}/update', [UserController::class, 'update']);
     Route::get('/user/{id}/delete', [UserController::class, 'destroy']);
+
+    #BARANG
+    Route::get('product', [ProductController::class, 'index']);
+    Route::post('/product/create', [ProductController::class, 'create']);
+    Route::get('/product/{id}/edit', [ProductController::class, 'edit']);
+    Route::post('/product/{id}/update', [ProductController::class, 'update']);
+    Route::get('/product/{id}/delete', [ProductController::class, 'destroy']);
+
+    Route::get('/product/download', [ProductController::class, 'download']);
     
     #CATEGORY
     Route::get('category', [CategoryController::class, 'index']);
@@ -87,5 +97,6 @@ Route::group(['middleware' => ['auth', 'checkRole:1']], function(){
 
 Route::group(['middleware' => ['auth', 'checkRole:1,2']], function(){
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware();
+    Route::get('search', [DashboardController::class, 'search']);
 });
 

@@ -61,7 +61,7 @@
                                     <input name="approval_id" type="text" class="form-control" id="inputApproval" value="{{$user->approval_id}}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputApproval" class="form-label">Avatar</label>
+                                    <label for="inputAvatar" class="form-label">Avatar</label>
                                     <input type="file" name="profile_picture" class="form-control">
                                 </div>
                                 <br>

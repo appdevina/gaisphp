@@ -60,12 +60,22 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function badan_usaha()
+    {
+        return $this->belongsTo(BadanUsaha::class);
+    }
+
+    public function area()
+    {
+        return $this->belongsTo(Area::class);
+    }
+
     public function getProfilePic()
     {
         if(!$this->profile_picture){
             return asset('images/default.png');
         }
 
-        return asset('images/'.$this->profile_picture);
+        return asset('storage/profile/'.$this->profile_picture);
     }
 }

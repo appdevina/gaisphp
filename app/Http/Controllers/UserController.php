@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Area;
+use App\Models\BadanUsaha;
 use App\Models\Divisi;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Exception;
 
 class UserController extends Controller
@@ -26,12 +31,18 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(30);
         $divisions = Divisi::all();
+        $roles = Role::all();
+        $badan_usahas = BadanUsaha::all();
+        $areas = Area::all();
 
         return view('master.user.index')->with([
             'users' => $users,
             'division' => $divisions,
+            'roles' => $roles,
+            'badan_usahas' => $badan_usahas,
+            'areas' => $areas,
         ]);
     }
 
@@ -50,15 +61,47 @@ class UserController extends Controller
             $user->remember_token = Str::random(60);
             $user->save();
 
-            if ($request->hasFile('profile_picture')) {
-                $request->file('profile_picture')->move('images/', $request->file('profile_picture')->getClientOriginalName());
-                $user->profile_picture = $request->file('profile_picture')->getClientOriginalName();
-                $user->save();
-            }
+            $profile_picture = $this->storeImage($request);
+
+            $user->profile_picture = $profile_picture;
+            $user->save();
+
+            // if ($request->hasFile('profile_picture')) {
+            //     $request->file('profile_picture')->move('images/', $request->file('profile_picture')->getClientOriginalName());
+            //     $user->profile_picture = $request->file('profile_picture')->getClientOriginalName();
+            //     $user->save();
+            // }
 
             return redirect('user')->with('success', 'Data berhasil diinput !');
         } catch (Exception $e) {
             return redirect('user')->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function storeImage(Request $request, $disk = 'public')
+    {
+        try {
+            $this->validate($request, [
+                'profile_picture' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+    
+            $file = $request->file('profile_picture');
+            $date = Carbon::now()->format('Y-m-d');
+            $fullname = $request->fullname;
+            $extension = $file->getClientOriginalExtension();
+            $path = 'profile';
+            if (! Storage::disk($disk)->exists($path)) {
+                Storage::disk($disk)->makeDirectory($path);
+            }
+    
+            $filename = "Profile - ".$fullname." ".$date."_". time() .".".$extension;
+    
+            $file->storeAs($path, $filename, $disk);
+    
+            return $filename;
+
+        } catch (Exception $e) {
+            return redirect('product')->with(['error' => $e->getMessage()]);
         }
     }
 

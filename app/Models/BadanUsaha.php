@@ -21,4 +21,9 @@ class BadanUsaha extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function user()
+    {
+        return $this->hasMany(User::class);
+    }
 }

@@ -20,7 +20,7 @@ class Role extends Model
         'deleted_at',
     ];
 
-    public function role()
+    public function user()
     {
         return $this->hasMany(User::class);
     }

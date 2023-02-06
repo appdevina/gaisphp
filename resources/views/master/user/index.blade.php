@@ -59,6 +59,9 @@
                                 @endforeach
 								</tbody>
 							</table>
+                            <div style="float:right">
+                                {{ $users->links() }}
+                            </div>
 						</div>
 					</div>
                 </div>
@@ -71,8 +74,8 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title" id="userModalLabel">Tambah User</h1>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="lnr lnr-cross"></i></button>
+                    <h1 class="modal-title" id="userModalLabel">Tambah User</h1>
                 </div>
                 <div class="modal-body">
                 <form action="/user/create" method="POST" enctype="multipart/form-data">
@@ -91,16 +94,28 @@
                 </div>
                 <div class="form-group">
                     <label for="inputArea" class="form-label">Area</label>
-                    <input name="area_id" type="text" class="form-control" id="inputArea" required>
+                    <select class="form-control" id="area_id" name="area_id" required>
+                            <option selected disabled>-- Pilih Area --</option>
+                            @foreach ($areas as $area)
+                                <option value="{{ $area->id }}">
+                                    {{ $area->area }}</option>
+                            @endforeach
+                        </select>
                 </div>
                 <div class="form-group">
                     <label for="inputBU" class="form-label">Badan Usaha</label>
-                    <input name="badan_usaha_id" type="text" class="form-control" id="inputBU" required>
+                        <select class="form-control" id="badan_usaha_id" name="badan_usaha_id" required>
+                            <option selected disabled>-- Pilih Badan Usaha --</option>
+                            @foreach ($badan_usahas as $badan_usaha)
+                                <option value="{{ $badan_usaha->id }}">
+                                    {{ $badan_usaha->badan_usaha }}</option>
+                            @endforeach
+                        </select>
                 </div>
                 <div class="form-group">
                     <label for="divisi_id" class="form-label">Divisi</label>
-                        <select class="form-control" id="divisi_id" name="divisi_id" value="-- Pilih Divisi --"
-                            required>
+                        <select class="form-control" id="divisi_id" name="divisi_id" required>
+                            <option selected disabled>-- Pilih Divisi --</option>
                             @foreach ($division as $division)
                                 <option value="{{ $division->id }}">
                                     {{ $division->division }}</option>
@@ -109,14 +124,20 @@
                 </div>
                 <div class="form-group">
                     <label for="inputRole" class="form-label">Role</label>
-                    <input name="role_id" type="text" class="form-control" id="inputRole" required>
+                        <select class="form-control" id="role_id" name="role_id" required>
+                            <option selected disabled>-- Pilih Role --</option>
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->id }}">
+                                    {{ $role->role }}</option>
+                            @endforeach
+                        </select>
                 </div>
                 <div class="form-group">
                     <label for="inputApproval" class="form-label">Approval</label>
                     <input name="approval_id" type="text" class="form-control" id="inputApproval" required>
                 </div>
                 <div class="form-group">
-                    <label for="inputProfile" class="form-label">Avatar</label>
+                    <label for="inputProfile" class="form-label">Profil Picture</label>
                     <input type="file" name="profile_picture" class="form-control">
                 </div>
                 <br>
