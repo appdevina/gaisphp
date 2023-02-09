@@ -21,6 +21,8 @@
 	<link rel="icon" type="image/png" sizes="96x96" href="{{asset('admin/assets/img/favicon.png')}}">
 	<!-- Select2 -->
 	<link rel="stylesheet" href="{{ asset('template') }}/plugins/select2/css/select2.min.css">
+	<!-- datepicker -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -49,6 +51,16 @@
 	<script src="{{asset('admin/assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
 	<script src="{{asset('admin/assets/scripts/klorofil-common.js')}}"></script>
     <script src="{{asset('admin/assets/vendor/chartist/js/chartist.min.js')}}"></script>
+	<!-- datepicker -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+	<script>
+	$(document).ready(function () {
+		$('#tanggalScheduled').datepicker({
+			dateFormat: "yy-mm-dd",
+        	parentEl: "#editStatusModal .modal-body"
+   		});
+	});
+	</script>
 </body>
 
 </html>

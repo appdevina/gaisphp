@@ -19,6 +19,8 @@ class CreateProblemReportTable extends Migration
             $table->dateTime('date');
             $table->string('title');
             $table->string('description');
+            $table->string('status')->default('PENDING');
+            $table->dateTime('scheduled_at')->nullable();
             $table->integer('status_client')->default(0);
             $table->integer('closed_by')->nullable();
             $table->dateTime('closed_at')->nullable();

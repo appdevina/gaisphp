@@ -6,6 +6,7 @@ use App\Http\Controllers\BadanUsahaController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\ProblemReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RequestTypeController;
@@ -103,8 +104,14 @@ Route::group(['middleware' => ['auth', 'checkRole:1']], function(){
     Route::get('/area/{id}/delete', [AreaController::class, 'destroy']);
 });
 
-Route::group(['middleware' => ['auth', 'checkRole:1,2']], function(){
+Route::group(['middleware' => ['auth', 'checkRole:1,2,3,4']], function(){
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware();
     Route::get('search', [DashboardController::class, 'search']);
+
+    ##PROBLEM REPORT
+    Route::get('/problemReport', [ProblemReportController::class, 'index']);
+    Route::post('/problemReport/create', [ProblemReportController::class, 'create']);
+    Route::post('/problemReport/{id}/updateStatusClient', [ProblemReportController::class, 'updateStatusClient']);
+    Route::post('/problemReport/{id}/updateStatus', [ProblemReportController::class, 'updateStatus']);
 });
 

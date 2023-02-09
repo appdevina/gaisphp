@@ -73,7 +73,7 @@
                 </div>
                 <div class="form-group">
                     <label for="inputApproval" class="form-label">Approval</label>
-                    <select class="form-control" id="approval_id" name="approval_id" required>
+                        <select class="form-control" id="approval_id" name="approval_id" required>
                             <option selected disabled>-- Pilih Approval --</option>
                             @foreach ($approvals as $approval)
                                 <option value="{{ $approval->id }}">
