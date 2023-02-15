@@ -27,7 +27,7 @@
                             @endif
 							<h3 class="panel-title">Data Pengajuan</h3>
 						</div>
-						<div class="panel-body">
+						<div class="panel-body table-responsive">
 							<table class="table table-hover" id="reqbar_table">
 								<thead>
                                 <tr>
