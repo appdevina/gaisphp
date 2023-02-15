@@ -18,14 +18,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate(30);
-        $categories = Category::all();
-        $unit_types = UnitType::all();
-
         return view('master.product.index', [
-            'products' => $products,
-            'categories' => $categories,
-            'unit_types' => $unit_types,
+            'products' => Product::paginate(30),
+            'categories' => Category::all(),
+            'unit_types' => UnitType::all(),
         ]);
     }
 
@@ -37,7 +33,11 @@ class ProductController extends Controller
     public function create(Request $request, $disk = 'public')
     {
         try {
-            $product_image = $this->storeImage($request);
+            $product_image = null;
+            
+            if($request->product_image != null){
+                $product_image = $this->storeImage($request);
+            }
 
             $product = Product::create($request->all());
             $product->product_image = $product_image;
@@ -104,16 +104,12 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
-        $product = Product::find($id);
-        $categories = Category::all();
-        $unit_types = UnitType::all();
-
         return view('master.product.edit', [
             'product' => $product,
-            'categories' => $categories,
-            'unit_types' => $unit_types,
+            'categories' => Category::all(),
+            'unit_types' => UnitType::all(),
         ]);
     }
 
@@ -124,21 +120,22 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        try { 
-            $product = Product::find($id);
-            $product->update($request->all());
-
-            if($request->product_image == null){
-                $product->product_image = 'no_image.jpeg';
-                $product->save();
-            } else {
+        try {             
+            if ($request->product_image != null) {
                 $product_image = $this->storeImage($request);
-                
-                $product->product_image = $product_image;
-                $product->save();
             }
+
+            $product->update([
+                'product' => $request->product,
+                'category_id' => $request->category_id,
+                'unit_type_id' => $request->unit_type_id,
+                'price' => $request->price,
+                'description' => $request->description,
+                'stock' => $request->stock,
+                'product_image' => $request->product_image == null ? $product->product_image : $product_image,
+            ]);
 
             return redirect('product')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
@@ -152,11 +149,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
         try {
-            $product = Product::find($id);
-
             $this->deleteAssets($product);
 
             $product->delete($product);
@@ -173,26 +168,15 @@ class ProductController extends Controller
             return false;
         }
 
-        return (file_exists(storage_path('public/product/' . $path)));
+        return (file_exists(storage_path('app/public/product/' . $path)));
     }
 
     public function deleteAssets($product)
     {
-        //Asset belum terhapus
         if ($this->checkAssets($product->product_image)) {
-            unlink(storage_path('public/product/'.$product->product_image));
-            //Storage::delete('public/storage/product/' . $product->product_image);
-            //Storage::disk('local')->delete('public/product/Product - Stabilos 2023-02-04_1675528390.jpg');
+           
+            unlink(storage_path('app/public/product/'.$product->product_image));
             
-        }
-    }
-
-    public function download()
-    {
-        try {
-            return Storage::disk('local')->download('public/product/Product - Stabilos 2023-02-04_1675528390.jpg');
-        } catch (Exception $e) {
-            return $e->getMessage();
         }
     }
 }

@@ -34,19 +34,12 @@
                                     <input name="username" type="text" class="form-control" id="inputUsername" value="{{$user->username}}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputArea" class="form-label">Area</label>
-                                        <select class="form-control" id="area_id" name="area_id" required>
-                                            <option selected disabled>-- Pilih Area --</option>
-                                            @foreach ($areas as $area)
-                                                <option value="{{ $area->id }}"
-                                                    {{ $area->id === $user->area_id ? 'selected' : '' }}>
-                                                    {{ $area->area }}</option>
-                                            @endforeach
-                                        </select>
+                                    <label for="inputPassword" class="form-label">Password</label>
+                                    <input name="password" type="text" class="form-control" id="inputPassword" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputBU" class="form-label">Badan Usaha</label>
-                                    <select class="form-control" id="badan_usaha_id" name="badan_usaha_id" required>
+                                        <select class="form-control" id="badan_usaha_id" name="badan_usaha_id" required>
                                             <option selected disabled>-- Pilih Badan Usaha --</option>
                                             @foreach ($badan_usahas as $bu)
                                                 <option value="{{ $bu->id }}"
@@ -56,12 +49,12 @@
                                         </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="divisi_id" class="form-label">Divisi</label>
-                                        <select class="form-control" id="divisi_id" name="divisi_id"
+                                    <label for="division_id" class="form-label">Divisi</label>
+                                        <select class="form-control" id="division_id" name="division_id"
                                             required>
                                             @foreach ($division as $division)
                                                 <option value="{{ $division->id }}"
-                                                    {{ $division->id === $user->divisi_id ? 'selected' : '' }}>
+                                                    {{ $division->id === $user->division_id ? 'selected' : '' }}>
                                                     {{ $division->division }}</option>
                                             @endforeach
                                         </select>

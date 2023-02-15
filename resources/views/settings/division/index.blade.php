@@ -31,6 +31,7 @@
                                 <tr>
                                     <th>NO</th>
                                     <th>Divisi</th>
+                                    <th>Area</th>
                                     <th>Aksi</th>
                                 </tr>
 								</thead>
@@ -39,6 +40,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $division->division }}</td>
+                                    <td>{{ $division->area->area }}</td>
                                     <td>
                                         <a href="/division/{{$division->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
                                         <a href="/division/{{$division->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a>
@@ -68,6 +70,16 @@
                 <div class="form-group">
                     <label for="inputDivision" class="form-label">Divisi</label>
                     <input name="division" type="text" class="form-control" id="inputDivision" placeholder="Nama divisi.." required>
+                </div>
+                <div class="form-group">
+                    <label for="inputArea" class="form-label">Area</label>
+                        <select class="form-control" id="area_id" name="area_id" required>
+                            <option selected disabled>-- Pilih Area --</option>
+                            @foreach ($areas as $area)
+                                <option value="{{ $area->id }}">
+                                    {{ $area->area }}</option>
+                            @endforeach
+                        </select>
                 </div>
             </div>
             <div class="modal-footer">

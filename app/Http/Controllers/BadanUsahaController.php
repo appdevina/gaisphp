@@ -14,10 +14,8 @@ class BadanUsahaController extends Controller
      */
     public function index()
     {
-        $badan_usahas = BadanUsaha::all();
-
         return view('settings.bu.index', [
-            'badan_usahas' => $badan_usahas,
+            'badan_usahas' => BadanUsaha::all(),
         ]);
     }
 
@@ -65,12 +63,10 @@ class BadanUsahaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(BadanUsaha $bu)
     {
-        $badan_usaha = BadanUsaha::find($id);
-
         return view('settings.bu.edit', [
-            'badan_usaha' => $badan_usaha,
+            'badan_usaha' => $bu,
         ]);
     }
 
@@ -81,12 +77,10 @@ class BadanUsahaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, BadanUsaha $bu)
     {
         try {
-            $badan_usaha = BadanUsaha::find($id);
-
-            $badan_usaha->update($request->all());
+            $bu->update($request->all());
 
             return redirect('bu')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
@@ -100,12 +94,10 @@ class BadanUsahaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(BadanUsaha $bu)
     {
         try {
-            $badan_usaha = BadanUsaha::find($id);
-
-            $badan_usaha->delete($badan_usaha);
+            $bu->delete($bu);
 
             return redirect('bu')->with('success', 'Data berhasil dihapus !');
         } catch (Exception $e) {

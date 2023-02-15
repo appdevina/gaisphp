@@ -37,7 +37,7 @@
                                     <th>Divisi</th>
                                     <th>Role</th>
                                     <th>Approval</th>
-                                    <th>Aksi</th>
+                                    <th class="text-center">Aksi</th>
                                 </tr>
 								</thead>
 								<tbody>
@@ -46,14 +46,20 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td><a href="/user/{{$user->id}}/profile">{{ $user->fullname }}</a></td>
                                     <td><a href="/user/{{$user->id}}/profile">{{ $user->username }}</a></td>
-                                    <td>{{ $user->area->area }}</td>
+                                    <td>{{ $user->division->area->area }}</td>
                                     <td>{{ $user->badan_usaha->badan_usaha }}</td>
-                                    <td>{{ $user->getDivision() }}</td>
+                                    <td>{{ $user->division->division }}</td>
                                     <td>{{ $user->role->role }}</td>
-                                    <td>{{ $user->approval() }}</td>
-                                    <td>
+                                    <td>{{ $user->approval->fullname }}</td>
+                                    <td class="text-center">
                                         <a href="/user/{{$user->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="/user/{{$user->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a>
+                                        @if ($user->deleted_at)
+                                            <a href="/user/{{ $user->id }}/active" class="btn btn-danger btn-sm" style="width: 100px"
+                                                onclick="return confirm('Mengaktifkan kembali user {{ $user->fullname }}?')">NONAKTIF</a>
+                                        @else
+                                            <a href="/user/{{$user->id}}/delete" class="btn btn-success btn-sm" style="width: 100px"
+                                                onclick="return confirm('Apalah anda yakin menonaktifkan user {{ $user->fullname }}?')">AKTIF</a>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -93,16 +99,6 @@
                     <input name="password" type="text" class="form-control" id="inputPassword" placeholder="Password.." required>
                 </div>
                 <div class="form-group">
-                    <label for="inputArea" class="form-label">Area</label>
-                        <select class="form-control" id="area_id" name="area_id" required>
-                            <option selected disabled>-- Pilih Area --</option>
-                            @foreach ($areas as $area)
-                                <option value="{{ $area->id }}">
-                                    {{ $area->area }}</option>
-                            @endforeach
-                        </select>
-                </div>
-                <div class="form-group">
                     <label for="inputBU" class="form-label">Badan Usaha</label>
                         <select class="form-control" id="badan_usaha_id" name="badan_usaha_id" required>
                             <option selected disabled>-- Pilih Badan Usaha --</option>
@@ -113,8 +109,8 @@
                         </select>
                 </div>
                 <div class="form-group">
-                    <label for="divisi_id" class="form-label">Divisi</label>
-                        <select class="form-control" id="divisi_id" name="divisi_id" required>
+                    <label for="division_id" class="form-label">Divisi</label>
+                        <select class="form-control" id="division_id" name="division_id" required>
                             <option selected disabled>-- Pilih Divisi --</option>
                             @foreach ($division as $division)
                                 <option value="{{ $division->id }}">
@@ -134,7 +130,13 @@
                 </div>
                 <div class="form-group">
                     <label for="inputApproval" class="form-label">Approval</label>
-                    <input name="approval_id" type="text" class="form-control" id="inputApproval" required>
+                        <select class="form-control" id="approval_id" name="approval_id" required>
+                            <option selected disabled>-- Pilih Approval --</option>
+                                @foreach ($approvals as $approval)
+                                    <option value="{{ $approval->id }}">
+                                        {{ $approval->fullname }}</option>
+                                @endforeach
+                        </select>
                 </div>
                 <div class="form-group">
                     <label for="inputProfile" class="form-label">Profil Picture</label>

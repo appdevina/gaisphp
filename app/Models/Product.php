@@ -12,7 +12,7 @@ class Product extends Model
 
     protected $guarded = ['id'];
 
-    protected $fillable = ['product', 'category_id', 'unit_type_id', 'price', 'description', 'product_image', 'stock'];
+    protected $fillable = ['item_code', 'product', 'category_id', 'unit_type_id', 'price', 'description', 'product_image', 'stock'];
 
     protected $hidden = [
         'created_at',

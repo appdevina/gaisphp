@@ -21,54 +21,61 @@
                     <div class="panel">
 						<div class="panel-heading">
                             @if (auth()->user()->role_id != 1)
-                            <div class="btn-group pull-right">
-                                <a href="/problemReport/create" class="btn btn-info">TAMBAH</a>
+                            <div class="btn-group pull-right" id="add_reqbar_button">
+                                <a href="/request/create" class="btn btn-info">TAMBAH</a>
                             </div>
                             @endif
-							<h3 class="panel-title">Data Pelaporan</h3>
+							<h3 class="panel-title">Data Pengajuan</h3>
 						</div>
 						<div class="panel-body">
-							<table class="table table-hover">
+							<table class="table table-hover" id="reqbar_table">
 								<thead>
                                 <tr>
                                     <th>NO</th>
-                                    <th>Pelapor</th>
-                                    <th>Tanggal Pelaporan</th>
-                                    <th>Kategori</th>
-                                    <th>Detail Pelaporan</th>
-                                    <th>Status</th>
-                                    <th>Penjadwalan</th>
+                                    <th>Pengaju</th>
+                                    <th>Diajukan pada</th>
+                                    <th>Tipe Pengajuan</th>
+                                    <!-- <th>Barang</th> -->
+                                    <th>Lampiran</th>
+                                    <th>Status PO</th>
                                     <th>Diproses oleh</th>
                                     <th>Diproses pada</th>
-                                    <th>Hasil Pengerjaan</th>
                                     <th>Status Akhir</th>
-                                    <th> @if (auth()->user()->role_id == 4) Aksi @endif</th>
-                                    <th> @if (auth()->user()->role_id != 4) Aksi @endif </th>
+                                    <!-- <th>Approved by</th>
+                                    <th>Approved at</th> -->
+                                    <th> @if (auth()->user()->role_id >= 3) Edit Status Akhir @endif</th>
+                                    <th> @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 3) Aksi Proses @endif </th>
+                                    <th> @if (auth()->user()->role_id == 2) Aksi @endif </th>
                                 </tr>
 								</thead>
 								<tbody>
-                                @foreach ($problems as $problem)
+                                @foreach ($requestBarangs as $reqbar)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $problem->user->fullname }}</td>
-                                    <td>{{ Carbon\Carbon::parse($problem->date)->format('d M Y H:i') }}</td>
-                                    <!-- <td>{{ $problem->title }}</td> -->
-                                    <td>{{ $problem->prcategory->problem_report_category }}</td>
-                                    <td>{{ $problem->description }}</td>
-                                    <td class={{ $problem->status == 'PENDING' ? "text-warning" : ($problem->status == 'CANCELLED' ? "text-danger" : "text-success") }}>{{ $problem->status == 'PENDING' ? 'MENUNGGU' : ( $problem->status == 'CLOSED' ? 'SELESAI' : 'DIBATALKAN' ) }}</td>
-                                    <td>{{ $problem->scheduled_at == null ? '' : Carbon\Carbon::parse($problem->scheduled_at)->format('d M Y') }}</td>
-                                    <td>{{ $problem->closed_by == null ? '' : $problem->closedby->fullname }}</td>
-                                    <td>{{ $problem->closed_at == null ? '' : Carbon\Carbon::parse($problem->closed_at)->format('d M Y H:i') }}</td>
-                                    <td>{{ $problem->result_desc }}</td>
-                                    <td class={{ $problem->status_client == 0 ? "text-warning" : "text-success" }}> {{ $problem->status_client == 0 ? 'MENUNGGU' : 'SELESAI' }}</td>
+                                    <td>{{ $reqbar->user->fullname }}</td>
+                                    <td>{{ Carbon\Carbon::parse($reqbar->date)->format('d M Y H:i') }}</td>
+                                    <td>{{ $reqbar->request_type->request_type }}</td>
+                                    <!-- <td>{{ $reqbar->request_detail }}</td> -->
+                                    <td><a href="{{ asset('storage/') . '/Request_File/' . $reqbar->request_file }}">Lihat Dokumen</a></td>
+                                    <td class={{ $reqbar->status_po == 0 ? "text-danger" : "text-success" }}>{{ $reqbar->status_po == 0 ? '' : 'YA' }}</td>
+                                    <td>{{ $reqbar->closed_by == null ? '' : $reqbar->closedby->fullname }}</td>
+                                    <td>{{ $reqbar->closed_at == null ? '' : Carbon\Carbon::parse($reqbar->closed_at)->format('d M Y H:i') }}</td>
+                                    <td class={{ $reqbar->status_client == 0 ? "text-warning" : "text-success" }}> {{ $reqbar->status_client == 0 ? 'MENUNGGU' : 'DITERIMA' }}</td>
+                                    <!-- <td>{{ $reqbar->approved_by == null ? '' : $reqbar->approval->fullname }}</td>
+                                    <td>{{ $reqbar->approved_at == null ? '' : Carbon\Carbon::parse($reqbar->approved_at)->format('d M Y H:i') }}</td> -->
                                     <td>
-                                        @if (auth()->user()->role_id == 4 && $problem->status == 'CLOSED' && $problem->status_client != 1)
-                                        <a href="/problemReport/{{$problem->id}}/editStatusClient" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                        @if (auth()->user()->role_id >= 3 && $reqbar->closed_by != null && $reqbar->status_client == 0)
+                                        <a href="/request/{{$reqbar->id}}/editStatusClient" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
                                         @endif
                                     </td>
                                     <td>
-                                        @if (auth()->user()->role_id != 4 && ($problem->status != 'CLOSED' || $problem->status_client != 1))
-                                        <a href="/problemReport/{{$problem->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                        @if ((auth()->user()->role_id == 1 || auth()->user()->role_id == 3) && ($reqbar->closed_by == null || $reqbar->status_client == 0))
+                                        <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if (auth()->user()->role_id == 2 && ($reqbar->closed_by == null || $reqbar->status_po == 0))
+                                        <a href="/request/{{$reqbar->id}}/editStatusAcc" class="btn btn-default" data-toggle="modal" type="button">Edit</a>
                                         @endif
                                     </td>
                                 </tr>
@@ -76,7 +83,7 @@
 								</tbody>
 							</table>
                             <div style="float:right">
-                                {{ $problems->links() }}
+                                {{ $requestBarangs->links() }}
                             </div>
 						</div>
 					</div>
@@ -86,38 +93,56 @@
     </div>
 
     <!-- Modal Create -->
-    <div class="modal fade" id="addProblemsModal" role="dialog" aria-labelledby="addProblemsModalLabel">
+    <div class="modal fade" id="addRequestBarangModal" role="dialog" aria-labelledby="addRequestBarangModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="lnr lnr-cross"></i></button>
-                    <h1 class="modal-title" id="addProblemsModalLabel">Tambah Pelaporan</h1>
+                    <h1 class="modal-title" id="addRequestBarangModalLabel">Tambah Request</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="/problemReport/store" method="POST">
+                    <form action="/request/store" method="POST" enctype="multipart/form-data">
                     {{csrf_field()}}
                     <div class="form-group">
                         <label for="inputUser" class="form-label hidden">User</label>
                         <input name="user_id" type="hidden" class="form-control" id="inputUser" value="{{ auth()->user()->id }}">
                     </div>
-                    <!-- <div class="form-group">
-                        <label for="inputTitle" class="form-label">Judul Pelaporan</label>
-                        <input name="title" type="text" class="form-control" id="inputTitle" placeholder="Judul.." required>
-                    </div> -->
                     <div class="form-group">
-                    <label for="inputPRCategory" class="form-label">Kategori Problem Report</label>
-                        <select class="form-control" id="pr_category_id" name="pr_category_id" required>
-                            <option selected disabled>-- Pilih Kategori Probelm --</option>
-                            @foreach ($prcategories as $prcategory)
-                                <option value="{{ $prcategory->id }}">
-                                    {{ $prcategory->problem_report_category }}</option>
+                        <label for="request_type_id" class="form-label">Tipe Request</label>
+                        <select class="form-control" id="request_type_id" name="request_type_id" required>
+                            <option selected disabled>-- Pilih Tipe Request --</option>
+                            @foreach ($request_types as $reqtype)
+                                <option value="{{ $reqtype->id }}">
+                                    {{ $reqtype->request_type }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="inputDescription" class="form-label">Deskripsi Pelaporan</label>
+                        <label for="product_id" class="form-label">Barang</label>
+                        <select class="form-control" id="product_id" name="product_id" required>
+                            <option selected disabled>-- Pilih Barang --</option>
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}">
+                                    {{ $product->product }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputQtyRequest" class="form-label">Kuantitas Request</label>
+                        <input name="qty_request" type="number" class="form-control" id="inputQtyRequest" placeholder="Kuantitas Request.." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputQtyRemaining" class="form-label">Kuantitas Tersisa Saat Ini</label>
+                        <input name="qty_remaining" type="number" class="form-control" id="inputQtyRemaining" placeholder="Sisa.." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDescription" class="form-label">Deskripsi Pengajuan</label>
                         <input name="description" type="text" class="form-control" id="inputDescription" placeholder="Deskripsi.." required>
                     </div>
+                    <div class="form-group">
+                    <label for="inputRequestFile" class="form-label">File Pengajuan</label>
+                    <input type="file" name="request_file" class="form-control" required>
+                </div>
                 </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">BATAL</button>
@@ -138,16 +163,12 @@
                     <h1 class="modal-title" id="editStatusClientModalLabel">Ubah Status by Client</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="/problemReport/{{ $dataid }}/updateStatusClient" method="POST">
+                    <!-- id nya salah -->
+                    <form action="/request/{$requestBarang->id}/updateStatusClient" method="POST">
                     {{csrf_field()}}
                     <div class="form-group">
                         <label for="dataid" class="form-label">ID Pelaporan</label>
                         <input type="text" name="dataid" id="dataid" class="form-control" readonly/>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="form-label">Detail Pelaporan</label>
-                        <!-- belum ada valuenya -->
-                        <input type="text" name="description" id="description" class="form-control" readonly/>
                     </div>
                     <div class="form-group">
                         <label for="inputStatus" class="form-label">Status Client</label>
@@ -176,24 +197,18 @@
                     <h1 class="modal-title" id="editStatusModalLabel">Ubah Status</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="/problemReport/{{ $problemid }}/updateStatus" method="POST">
+                     <!-- id nya salah -->
+                    <form action="/request/{$requestBarang->id}/updateStatus" method="POST">
                     {{csrf_field()}}
                     <div class="form-group">
-                        <label for="problemid" class="form-label">ID Pelaporan</label>
-                        <!-- belum ada valuenya -->
-                        <input type="text" name="problemid" id="problemid" class="form-control" readonly/>
-                    </div>
-                    <!-- belum ada if scheduled_at -->
-                    <div class="form-group">
-                        <label for="inputScheduledAt" class="form-label">Penjadwalan</label>
-                        <input type="text" class="form-control float-right" value="" name="scheduled_at" id="tanggalScheduled" required>
+                        <label for="requestId" class="form-label">ID Pelaporan</label>
+                        <input type="text" name="requestId" id="requestId" class="form-control" readonly/>
                     </div>
                     <div class="form-group">
                         <label for="inputStatus" class="form-label">Status</label>
                             <select class="form-control" id="status" name="status">
                                 <option selected value="PENDING">PENDING</option>
                                 <option value="CLOSED">CLOSED</option>
-                                <option value="CANCELLED">CANCELLED</option>
                             </select>
                     </div>
                 </div>

@@ -27,6 +27,11 @@ class RequestType extends Model
         return $this->hasMany(User::class);
     }
 
+    public function request()
+    {
+        return $this->hasMany(Request::class);
+    }
+
     public function getApproval()
     {
         $approval_id = $this->approval_id;

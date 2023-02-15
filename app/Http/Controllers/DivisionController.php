@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Area;
 use App\Models\Divisi;
 use Illuminate\Http\Request;
 
@@ -14,10 +15,9 @@ class DivisionController extends Controller
      */
     public function index()
     {
-        $divisions = Divisi::all();
-
         return view('settings.division.index', [
-            'divisions' => $divisions,
+            'divisions' =>  Divisi::with('area')->get(),
+            'areas' => Area::all(),
         ]);
     }
 
@@ -65,12 +65,11 @@ class DivisionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Divisi $division)
     {
-        $division = Divisi::find($id);
-
         return view('settings.division.edit', [
             'division' => $division,
+            'areas' => Area::all(),
         ]);
     }
 
@@ -81,11 +80,9 @@ class DivisionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Divisi $division)
     {
         try {
-            $division = Divisi::find($id);
-
             $division->update($request->all());
 
             return redirect('division')->with('success', 'Data berhasil diupdate !');
@@ -100,11 +97,9 @@ class DivisionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Divisi $division)
     {
         try {
-            $division = Divisi::find($id);
-
             $division->delete($division);
 
             return redirect('division')->with('success', 'Data berhasil dihapus !');

@@ -23,14 +23,14 @@
                             <div class="btn-group pull-right">
                                 <a class="btn btn-info" data-toggle="modal" data-target="#requestTypeModal">TAMBAH</a>
                             </div>
-							<h3 class="panel-title">Data Tipe Request</h3>
+							<h3 class="panel-title">Data Tipe Pengajuan</h3>
 						</div>
 						<div class="panel-body">
 							<table class="table table-hover">
 								<thead>
                                 <tr>
                                     <th>NO</th>
-                                    <th>Tipe Request</th>
+                                    <th>Tipe Pengajuan</th>
                                     <th>Approval</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -62,14 +62,14 @@
                 <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="lnr lnr-cross"></i></button>
-                    <h1 class="modal-title" id="requestTypeModalLabel">Tambah Tipe Request</h1>
+                    <h1 class="modal-title" id="requestTypeModalLabel">Tambah Tipe Pengajuan</h1>
                 </div>
                 <div class="modal-body">
                 <form action="/requesttype/create" method="POST">
                 {{csrf_field()}}
                 <div class="form-group">
                     <label for="inputRequestType" class="form-label">Kategori</label>
-                    <input name="request_type" type="text" class="form-control" id="inputRequestType" placeholder="Nama tipe request.." required>
+                    <input name="request_type" type="text" class="form-control" id="inputRequestType" placeholder="Nama tipe pengajuan.." required>
                 </div>
                 <div class="form-group">
                     <label for="inputApproval" class="form-label">Approval</label>

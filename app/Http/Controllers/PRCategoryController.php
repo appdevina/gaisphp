@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Area;
+use App\Models\PRCategory;
 use Illuminate\Http\Request;
 
-class AreaController extends Controller
+class PRCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,8 @@ class AreaController extends Controller
      */
     public function index()
     {
-        return view('settings.area.index', [
-            'areas' => Area::all(),
+        return view('settings.prcategory.index', [
+            'prcategories' => PRCategory::all(),
         ]);
     }
 
@@ -27,11 +27,11 @@ class AreaController extends Controller
     public function create(Request $request)
     {
         try {
-            Area::create($request->all());
+            PRCategory::create($request->all());
 
-            return redirect('area')->with('success', 'Data berhasil diinput !');
+            return redirect('prcategory')->with('success', 'Data berhasil diinput !');
         } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
+            return redirect('prcategory')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -63,10 +63,10 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Area $area)
+    public function edit(PRCategory $prcategory)
     {
-        return view('settings.area.edit', [
-            'area' => $area,
+        return view('settings.prcategory.edit', [
+            'prcategory' => $prcategory,
         ]);
     }
 
@@ -77,14 +77,14 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Area $area)
+    public function update(Request $request, PRCategory $prcategory)
     {
         try {
-            $area->update($request->all());
+            $prcategory->update($request->all());
 
-            return redirect('area')->with('success', 'Data berhasil diupdate !');
+            return redirect('prcategory')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
+            return redirect('prcategory')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -94,14 +94,14 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Area $area)
+    public function destroy(PRCategory $prcategory)
     {
         try {
-            $area->delete($area);
+            $prcategory->delete($prcategory);
 
-            return redirect('area')->with('success', 'Data berhasil dihapus !');
+            return redirect('prcategory')->with('success', 'Data berhasil dihapus !');
         } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
+            return redirect('prcategory')->with(['error' => $e->getMessage()]);
         }
     }
 }

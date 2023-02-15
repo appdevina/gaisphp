@@ -22,9 +22,8 @@ class User extends Authenticatable
         'username',
         'fullname',
         'password',
-        'area_id',
         'badan_usaha_id',
-        'divisi_id',
+        'division_id',
         'role_id',
         'profile_picture',
         'approval_id',
@@ -65,11 +64,6 @@ class User extends Authenticatable
         return $this->belongsTo(BadanUsaha::class);
     }
 
-    public function area()
-    {
-        return $this->belongsTo(Area::class);
-    }
-
     public function request_type()
     {
         return $this->belongsTo(RequestType::class);
@@ -77,24 +71,12 @@ class User extends Authenticatable
 
     public function approval()
     {
-        $approval_id = $this->approval_id;
-        $approval_name = User::where('id', $approval_id)->get('fullname');
-
-        $parsedData = json_decode($approval_name, true);
-        $fullname = $parsedData[0]["fullname"];
-
-        return $fullname;
+        return $this->belongsTo(User::class, 'approval_id');
     }
 
-    public function getDivision()
+    public function problem_report()
     {
-        $divisi_id = $this->divisi_id;
-        $division = Divisi::where('id', $divisi_id)->get('division');
-
-        $parsedData = json_decode($division, true);
-        $division = $parsedData[0]["division"];
-
-        return $division;
+        return $this->hasMany(ProblemReport::class);
     }
 
     public function getProfilePic()

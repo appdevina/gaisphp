@@ -14,10 +14,8 @@ class UnitTypeController extends Controller
      */
     public function index()
     {
-        $unit_types = UnitType::all();
-
         return view('master.unit_type.index', [
-            'unit_types' => $unit_types,
+            'unit_types' => UnitType::all(),
         ]);
     }
 
@@ -65,10 +63,8 @@ class UnitTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(UnitType $unit_type)
     {
-        $unit_type = UnitType::find($id);
-
         return view('master.unit_type.edit', [
             'unit_type' => $unit_type
         ]);
@@ -81,11 +77,9 @@ class UnitTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, UnitType $unit_type)
     {
         try {
-            $unit_type = UnitType::find($id);
-
             $unit_type->update($request->all());
 
             return redirect('unittype')->with('success', 'Data berhasil diupdate !');
@@ -100,11 +94,9 @@ class UnitTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(UnitType $unit_type)
     {
         try {
-            $unit_type = UnitType::find($id);
-
             $unit_type->delete($unit_type);
 
             return redirect('unittype')->with('success', 'Data berhasil dihapus !');

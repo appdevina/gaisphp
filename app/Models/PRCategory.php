@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Divisi extends Model
+class PRCategory extends Model
 {
-    use HasFactory, SoftDeletes;
+     use HasFactory, SoftDeletes;
 
-    protected $table = 'divisions';
+    protected $table = 'problem_report_categories';
 
     protected $guarded = ['id'];
 
-    protected $fillable = ['division', 'area_id'];
+    protected $fillable = ['problem_report_category'];
 
     protected $hidden = [
         'created_at',
@@ -22,13 +22,8 @@ class Divisi extends Model
         'deleted_at',
     ];
 
-    public function user()
+    public function problem_report()
     {
-        return $this->hasMany(User::class);
-    }
-
-    public function area()
-    {
-        return $this->belongsTo(Area::class);
+        return $this->hasMany(ProblemReport::class);
     }
 }

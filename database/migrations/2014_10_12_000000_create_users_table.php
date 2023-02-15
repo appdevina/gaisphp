@@ -20,9 +20,8 @@ class CreateUsersTable extends Migration
             //$table->string('email')->unique();
             //$table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->foreignId('area_id');
             $table->foreignId('badan_usaha_id');
-            $table->foreignId('divisi_id');
+            $table->foreignId('division_id');
             $table->foreignId('role_id');
             $table->string('profile_picture')->nullable();
             $table->foreignId('approval_id');

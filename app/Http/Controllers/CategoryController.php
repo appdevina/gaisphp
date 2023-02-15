@@ -17,9 +17,9 @@ class CategoryController extends Controller
     {
         if($request->has('cari')){
             $categories = Category::where('category', 'LIKE', '%'.$request->cari.'%')->get();
-        } else {
-            $categories = Category::all();
         }
+        
+        $categories = Category::all();
 
         return view('master.category.index', [
             'categories' => $categories,
@@ -70,10 +70,8 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        $category = Category::find($id);
-
         return view('master.category.edit', [
             'category' => $category
         ]);
@@ -86,11 +84,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
         try {
-            $category = Category::find($id);
-
             $category->update($request->all());
 
             return redirect('category')->with('success', 'Data berhasil diupdate !');
@@ -106,11 +102,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
         try {
-            $category = Category::find($id);
-
             $category->delete($category);
 
             return redirect('category')->with('success', 'Data berhasil dihapus !');

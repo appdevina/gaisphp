@@ -23,24 +23,23 @@
                                 <h3 class="panel-title">Edit</h3>
                             </div>
                             <div class="panel-body">
-                            <form action="/requesttype/{{$request_type->id}}/update" method="POST">
+                            <form action="/problemReport/{{$problem->id}}/updateStatusClient" method="POST">
                                 {{csrf_field()}}
-                                <div class="form-group">
-                                    <label for="inputRequestType" class="form-label">Tipe Pengajuan</label>
-                                    <input name="request_type" type="text" class="form-control" id="inputRequestType" value="{{$request_type->request_type}}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputApproval" class="form-label">Approval</label>
-                                    <select class="form-control" id="approval_id" name="approval_id" required>
-                                            <option selected disabled>-- Pilih Approval --</option>
-                                            @foreach ($approvals as $approval)
-                                                <option value="{{ $approval->id }}" 
-                                                    {{ $approval->id === $request_type->approval_id ? 'selected' : '' }}>
-                                                    {{ $approval->fullname }}</option>
-                                            @endforeach
-                                        </select>
-                                </div>
-                                <br>
+                           <div class="form-group">
+                                <label for="id" class="form-label">ID Pelaporan</label>
+                                <input type="text" name="id" id="id" class="form-control" value="{{ $problem->id }}" readonly/>
+                            </div>
+                            <div class="form-group">
+                                <label for="description" class="form-label">Detail Pelaporan</label>
+                                <input type="text" name="description" id="description" class="form-control" value="{{ $problem->description }}" readonly/>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputStatus" class="form-label">Status Client</label>
+                                    <select class="form-control" id="status_client" name="status_client">
+                                        <option selected value="0">MENUNGGU</option>
+                                        <option value="1">SELESAI</option>
+                                    </select>
+                            </div>
                                 <button type="submit" class="btn btn-warning">UPDATE</button>
                             </form>
                             </div>

@@ -66,7 +66,7 @@
                 <form action="/bu/create" method="POST">
                 {{csrf_field()}}
                 <div class="form-group">
-                    <label for="inputBadanUsaha" class="form-label">BadanUsaha</label>
+                    <label for="inputBadanUsaha" class="form-label">Badan Usaha</label>
                     <input name="badan_usaha" type="text" class="form-control" id="inputBadanUsaha" placeholder="Nama badan usaha.." required>
                 </div>
             </div>

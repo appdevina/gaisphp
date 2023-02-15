@@ -16,14 +16,13 @@ use Exception;
 
 class UserController extends Controller
 {
-    public function profile($id)
+    public function profile(User $user)
     {
-        $user = User::find($id);
-
         return view('master.user.profile', [
             'user' => $user,
         ]);
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -31,18 +30,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(30);
-        $divisions = Divisi::all();
-        $roles = Role::all();
-        $badan_usahas = BadanUsaha::all();
-        $areas = Area::all();
-
         return view('master.user.index')->with([
-            'users' => $users,
-            'division' => $divisions,
-            'roles' => $roles,
-            'badan_usahas' => $badan_usahas,
-            'areas' => $areas,
+            'users' => User::with('division')->withTrashed()->paginate(30),
+            'division' => Divisi::all(),
+            'roles' => Role::all(),
+            'badan_usahas' => BadanUsaha::all(),
+            'areas' => Area::all(),
+            'approvals' => User::all(),
         ]);
     }
 
@@ -65,12 +59,6 @@ class UserController extends Controller
 
             $user->profile_picture = $profile_picture;
             $user->save();
-
-            // if ($request->hasFile('profile_picture')) {
-            //     $request->file('profile_picture')->move('images/', $request->file('profile_picture')->getClientOriginalName());
-            //     $user->profile_picture = $request->file('profile_picture')->getClientOriginalName();
-            //     $user->save();
-            // }
 
             return redirect('user')->with('success', 'Data berhasil diinput !');
         } catch (Exception $e) {
@@ -133,22 +121,15 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        $users = User::find($id);
-        $divisions = Divisi::all();
-        $areas = Area::all();
-        $roles = Role::all();
-        $badan_usahas = BadanUsaha::all();
-        $approvals = User::all();
-
         return view('master.user.edit')->with([
-            'user' => $users,
-            'division' => $divisions,
-            'areas' => $areas,
-            'roles' => $roles,
-            'badan_usahas' => $badan_usahas,
-            'approvals' => $approvals,
+            'user' => $user,
+            'division' => Divisi::all(),
+            'areas' => Area::all(),
+            'roles' => Role::all(),
+            'badan_usahas' => BadanUsaha::all(),
+            'approvals' => User::all(),
         ]);
     }
 
@@ -159,23 +140,27 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
         try {
-            //dd($request->all());
-            $user = User::find($id);
-
-            $user->update($request->all());
-
-            if ($request->hasFile('profile_picture')) {
-                $request->file('profile_picture')->move('images/', $request->file('profile_picture')->getClientOriginalName());
-                $user->profile_picture = $request->file('profile_picture')->getClientOriginalName();
-                $user->save();
+            if ($request->profile_picture != null) {
+                $profile_picture = $this->storeImage($request);
             }
+
+            $user->update([
+                'fullname' => $request->fullname,
+                'username' => $request->username,
+                'password' => bcrypt($request->password),
+                'badan_usaha_id' => $request->badan_usaha_id,
+                'divisi_id' => $request->divisi_id,
+                'role_id' => $request->role_id,
+                'approval_id' => $request->approval_id,
+                'profile_picture' => $request->profile_picture == null ? $user->profile_picture : $profile_picture,
+            ]);
 
             return redirect('user')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
-            //throw $th;
+             return redirect('user')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -185,16 +170,22 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
         try {
-            $user = User::find($id);
-
             $user->delete($user);
 
             return redirect('user')->with('success', 'Data berhasil dihapus !');
         } catch (Exception $e) {
-            //throw $th;
+             return redirect('user')->with(['error' => $e->getMessage()]);
         }
+    }
+
+    public function active(Request $request, $id)
+    {
+        $user = User::onlyTrashed()->find($id);
+        $user->deleted_at = null;
+        $user->save();
+        return redirect('user')->with(['success' => "Berhasil mengatifkan kembali user " . $user->fullname]);
     }
 }

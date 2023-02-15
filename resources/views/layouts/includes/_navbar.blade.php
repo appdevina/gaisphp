@@ -7,17 +7,13 @@
 			<button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle"></i></button>
 		</div>
 		<form class="navbar-form navbar-left" method="GET" action="/category">
-			<div class="input-group">
-				<input name="cari" type="text" value="" class="form-control" placeholder="Search dashboard...">
-				<span class="input-group-btn"><button type="submit" class="btn btn-primary">Go</button></span>
-			</div>
 		</form>
 		<div id="navbar-menu">
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{auth()->user()->getProfilePic()}}" class="img-circle" alt="Avatar"> <span>{{auth()->user()->fullname}}</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
 					<ul class="dropdown-menu">
-						<li><a href="/logout"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>
+						<li><a href="/logout"><i class="lnr lnr-exit"></i> <span>KELUAR</span></a></li>
 					</ul>
 				</li>
 			</ul>

@@ -20,12 +20,24 @@
                     <div class="col-md-12">
                     <div class="panel">
 						<div class="panel-heading">
-                            <div class="btn-group pull-right">
-                                <a class="btn btn-info" data-toggle="modal" data-target="#productModal">TAMBAH</a>
+                            <div class="col-md-7">
+                                <h3 class="panel-title">Data Barang</h3>
                             </div>
-							<h3 class="panel-title">Data Barang</h3>
+                            <div class="col-md-4">
+                                <form class="form-inline" id="my_form" action="/product">
+                                    <div class="form-group">
+                                      <input type="text" class="form-control" name="search" placeholder="Enter your text">
+                                      <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" >Cari</a>
+                                    </div>
+                                  </form>
+                                  
+                            </div>
+                            <div class="col-md-1 text-right">
+                                <a class="btn btn-info" data-toggle="modal" data-target="#productModal">TAMBAH</a>
+                            </div>                            
 						</div>
-						<div class="panel-body">
+                        <br><br>
+						<div class="panel-body mt-4">
 							<table class="table table-hover">
 								<thead>
                                 <tr>
@@ -36,7 +48,7 @@
                                     <th>Tipe Unit</th>
                                     <th>Harga</th>
                                     <th>Deskripsi</th>
-                                    <th>Image</th>
+                                    <th>Gambar</th>
                                     <th>Diupdate pada</th>
                                     <th>Aksi</th>
                                 </tr>

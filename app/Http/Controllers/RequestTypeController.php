@@ -15,12 +15,9 @@ class RequestTypeController extends Controller
      */
     public function index()
     {
-        $request_types = RequestType::all();
-        $approvals = User::all();
-
         return view('master.request_type.index', [
-            'request_types' => $request_types,
-            'approvals' => $approvals,
+            'request_types' => RequestType::all(),
+            'approvals' => User::all(),
         ]);
     }
 
@@ -68,14 +65,11 @@ class RequestTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(RequestType $request_type)
     {
-        $request_type = RequestType::find($id);
-        $approvals = User::all();
-
         return view('master.request_type.edit', [
             'request_type' => $request_type,
-            'approvals' => $approvals,
+            'approvals' => User::all(),
         ]);
     }
 
@@ -86,11 +80,9 @@ class RequestTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, RequestType $request_type)
     {
         try {
-            $request_type = RequestType::find($id);
-
             $request_type->update($request->all());
 
             return redirect('requesttype')->with('success', 'Data berhasil diupdate !');
@@ -105,11 +97,9 @@ class RequestTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(RequestType $request_type)
     {
         try {
-            $request_type = RequestType::find($id);
-
             $request_type->delete($request_type);
 
             return redirect('requesttype')->with('success', 'Data berhasil dihapus !');

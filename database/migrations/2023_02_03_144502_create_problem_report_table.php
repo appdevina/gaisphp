@@ -17,13 +17,15 @@ class CreateProblemReportTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->dateTime('date');
-            $table->string('title');
-            $table->string('description');
+            $table->string('title')->nullable();
+            $table->string('description')->nullable();
             $table->string('status')->default('PENDING');
             $table->dateTime('scheduled_at')->nullable();
             $table->integer('status_client')->default(0);
             $table->integer('closed_by')->nullable();
             $table->dateTime('closed_at')->nullable();
+            $table->foreignId('pr_category_id');
+            $table->string('result_desc')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

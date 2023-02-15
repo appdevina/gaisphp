@@ -14,7 +14,7 @@ class ProblemReport extends Model
 
     protected $guarded = ['id'];
 
-    protected $fillable = ['user_id', 'date', 'title', 'description', 'status', 'scheduled_at', 'status_client', 'closed_by', 'closed_at'];
+    protected $fillable = ['user_id', 'date', 'title', 'description', 'status', 'scheduled_at', 'status_client', 'closed_by', 'closed_at', 'pr_category_id', 'result_desc'];
 
     protected $hidden = [
         'created_at',
@@ -22,26 +22,19 @@ class ProblemReport extends Model
         'deleted_at',
     ];
 
-    public function getUsername()
+    public function prcategory()
     {
-        $user_id = $this->user_id;
-        $username = User::where('id', $user_id)->get('fullname');
-
-        $parsedData = json_decode($username, true);
-        $fullname = $parsedData[0]["fullname"];
-
-        return $fullname;
+        return $this->belongsTo(PRCategory::class, 'pr_category_id');
     }
 
-    public function getClosedByname()
+    public function user()
     {
-        $user_id = $this->closed_by;
-        $username = User::where('id', $user_id)->get('fullname');
+        return $this->belongsTo(User::class);
+    }
 
-        $parsedData = json_decode($username, true);
-        $fullname = $parsedData[0]["fullname"];
-
-        return $fullname;
+    public function closedby()
+    {
+        return $this->belongsTo(User::class, 'closed_by');
     }
 
 }

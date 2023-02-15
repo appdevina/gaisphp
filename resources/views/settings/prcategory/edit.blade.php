@@ -23,22 +23,11 @@
                                 <h3 class="panel-title">Edit</h3>
                             </div>
                             <div class="panel-body">
-                            <form action="/requesttype/{{$request_type->id}}/update" method="POST">
+                            <form action="/prcategory/{{$prcategory->id}}/update" method="POST">
                                 {{csrf_field()}}
                                 <div class="form-group">
-                                    <label for="inputRequestType" class="form-label">Tipe Pengajuan</label>
-                                    <input name="request_type" type="text" class="form-control" id="inputRequestType" value="{{$request_type->request_type}}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputApproval" class="form-label">Approval</label>
-                                    <select class="form-control" id="approval_id" name="approval_id" required>
-                                            <option selected disabled>-- Pilih Approval --</option>
-                                            @foreach ($approvals as $approval)
-                                                <option value="{{ $approval->id }}" 
-                                                    {{ $approval->id === $request_type->approval_id ? 'selected' : '' }}>
-                                                    {{ $approval->fullname }}</option>
-                                            @endforeach
-                                        </select>
+                                    <label for="inputPRCategory" class="form-label">Jenis Ganguan</label>
+                                    <input name="problem_report_category" type="text" class="form-control" id="inputPRCategory" value="{{$prcategory->problem_report_category}}" required>
                                 </div>
                                 <br>
                                 <button type="submit" class="btn btn-warning">UPDATE</button>

@@ -14,10 +14,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
-
         return view('settings.role.index', [
-            'roles' => $roles,
+            'roles' => Role::all(),
         ]);
     }
 
@@ -65,10 +63,8 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Role $role)
     {
-        $role = Role::find($id);
-
         return view('settings.role.edit', [
             'role' => $role,
         ]);
@@ -81,11 +77,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Role $role)
     {
         try {
-            $role = Role::find($id);
-
             $role->update($request->all());
 
             return redirect('role')->with('success', 'Data berhasil diupdate !');
@@ -100,11 +94,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Role $role)
     {
         try {
-            $role = Role::find($id);
-
             $role->delete($role);
 
             return redirect('role')->with('success', 'Data berhasil dihapus !');

@@ -20,8 +20,8 @@ class Area extends Model
         'deleted_at',
     ];
 
-    public function user()
+    public function division()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(Divisi::class);
     }
 }

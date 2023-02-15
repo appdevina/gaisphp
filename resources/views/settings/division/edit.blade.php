@@ -29,6 +29,17 @@
                                     <label for="inputDivision" class="form-label">Divisi</label>
                                     <input name="division" type="text" class="form-control" id="inputDivision" value="{{$division->division}}" required>
                                 </div>
+                                <div class="form-group">
+                                    <label for="inputArea" class="form-label">Area</label>
+                                        <select class="form-control" id="area_id" name="area_id" required>
+                                            <option selected disabled>-- Pilih Area --</option>
+                                            @foreach ($areas as $area)
+                                                <option value="{{ $area->id }}"
+                                                    {{ $area->id === $division->area_id ? 'selected' : '' }}>
+                                                    {{ $area->area }}</option>
+                                            @endforeach
+                                        </select>
+                                </div>
                                 <br>
                                 <button type="submit" class="btn btn-warning">UPDATE</button>
                             </form>
