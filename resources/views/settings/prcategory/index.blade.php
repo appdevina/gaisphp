@@ -41,7 +41,8 @@
                                     <td>{{ $prcategory->problem_report_category }}</td>
                                     <td>
                                         <a href="/prcategory/{{$prcategory->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="/prcategory/{{$prcategory->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a>
+                                        <!-- BUTTON DELETE -->
+                                        <!-- <a href="/prcategory/{{$prcategory->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
                                     </td>
                                 </tr>
                                 @endforeach

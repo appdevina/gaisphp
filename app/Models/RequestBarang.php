@@ -39,7 +39,7 @@ class RequestBarang extends Model
 
     public function request_detail()
     {
-        return $this->hasMany(RequestDetail::class, 'id');
+        return $this->hasMany(RequestDetail::class, 'request_id');
     }
 
     public function approval()

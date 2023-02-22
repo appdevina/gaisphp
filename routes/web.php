@@ -36,6 +36,26 @@ Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('/postlogin', [AuthController::class, 'postlogin']);
 Route::get('logout', [AuthController::class, 'logout']);
 
+Route::get('product/get', [ProductController::class, 'get']);
+
+##EXPORT
+    ##USER
+    Route::get('/user/export',[UserController::class,'export']);
+    Route::get('/user/export/template',[UserController::class,'template']);
+
+    ##PRODUCT
+    Route::get('/product/export',[ProductController::class,'export']);
+
+    ##PROBLEM REPORT
+    Route::post('/problemReport/export',[ProblemReportController::class,'export']);
+
+    ##REQUEST
+    Route::post('/request/export',[RequestController::class,'export']);
+
+#IMPORT
+    ##USER
+    Route::post('/user/import',[UserController::class,'import']);
+
 Route::group(['middleware' => ['auth', 'checkRole:1']], function(){
     ##MASTER DATA
     #USER
@@ -129,6 +149,7 @@ Route::group(['middleware' => ['auth', 'checkRole:1,2,3,4']], function(){
     Route::get('/request', [RequestController::class, 'index']);
     Route::get('/request/create', [RequestController::class, 'create']);
     Route::post('/request/store', [RequestController::class, 'store']);
+    Route::get('/request/{id}', [RequestController::class, 'show']);
     Route::get('/request/{requestBarang}/editStatus', [RequestController::class, 'editStatus']);
     Route::post('/request/{requestBarang}/updateStatus', [RequestController::class, 'updateStatus']);
     Route::get('/request/{requestBarang}/editStatusClient', [RequestController::class, 'editStatusClient']);

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProblemReportExport;
 use App\Models\ProblemReport;
 use App\Models\PRCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProblemReportController extends Controller
 {
@@ -15,11 +17,28 @@ class ProblemReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user()->id;
         $userRole = Auth::user()->role_id;
-
+          
+        if ($request->search) {
+            $data = explode('-', preg_replace('/\s+/', '', $request->search));
+            $date1 = Carbon::parse($data[0])->format('Y-m-d');
+            $date2 = Carbon::parse($data[1])->format('Y-m-d');
+            $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+            $problems = ProblemReport::with('prcategory','user','closedby')
+            ->whereBetween('date', [$date1, $date2])
+            ->orderBy('date')
+            ->paginate(30);
+        } else {
+            $problems = ProblemReport::with('prcategory','user','closedby')
+            ->orderBy('status','desc')
+            ->orderBy('status_client', 'asc')
+            ->orderBy('date', 'desc')
+            ->paginate(30);
+        }
+        
         if ($userRole >= 3) {
             $problems = ProblemReport::with('prcategory','user','closedby')
             ->where('user_id', $user)
@@ -29,20 +48,9 @@ class ProblemReportController extends Controller
             ->paginate(30);
         }
 
-        $problems = ProblemReport::with('prcategory','user','closedby')
-            ->orderBy('status','desc')
-            ->orderBy('status_client', 'asc')
-            ->orderBy('date', 'desc')
-            ->paginate(30);
-
-        $dataid = null;
-        $problemid = null;
-
         return view('problems.index', [
             'problems' => $problems,
             'prcategories' => PRCategory::all(),
-            'dataid' => $dataid,
-            'problemid' => $problemid,
         ]);
     }
 
@@ -145,5 +153,20 @@ class ProblemReportController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function export(Request $request){
+        if ($request->exportProblemReport) {
+            $data = explode('-', preg_replace('/\s+/', '', $request->exportProblemReport));
+            $date1 = Carbon::parse($data[0])->format('Y-m-d');
+            $date2 = Carbon::parse($data[1])->format('Y-m-d');
+            $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+            $problems = ProblemReport::with('prcategory','user','closedby')
+                ->whereBetween('date', [$date1, $date2])
+                ->orderBy('date')
+                ->get();
+        }
+
+        return Excel::download(new ProblemReportExport($date1, $date2), 'laporan_gangguan_' . $date1 . '_to_' . $date2 . '.xlsx',);
     }
 }

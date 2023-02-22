@@ -27,7 +27,6 @@ class CreateRequestsTable extends Migration
             $table->foreignId('request_type_id');
             $table->string('request_file')->nullable();
             $table->string('approved_file')->nullable();
-            $table->string('new_product')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

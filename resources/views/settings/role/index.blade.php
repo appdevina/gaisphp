@@ -41,7 +41,8 @@
                                     <td>{{ $role->role }}</td>
                                     <td>
                                         <a href="/role/{{$role->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="/role/{{$role->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a>
+                                        <!-- BUTTON DELETE -->
+                                        <!-- <a href="/role/{{$role->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
                                     </td>
                                 </tr>
                                 @endforeach

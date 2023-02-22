@@ -18,68 +18,87 @@
                 @endif
                 <div class="row">
                     <div class="col-md-12">
-                    <div class="panel">
-						<div class="panel-heading">
-                            @if (auth()->user()->role_id != 1)
-                            <div class="btn-group pull-right">
-                                <a href="/problemReport/create" class="btn btn-info">TAMBAH</a>
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <div class="col-md-2">
+                                    <h3 class="panel-title">Data Pelaporan</h3>
+                                </div>
+                                <div class="col-md-4 text-right">
+                                    <form class="form-inline" id="my_form" action="/problemReport">
+                                        <div class="form-group">
+                                        <input type="text" class="form-control" name="search" id="tanggal-problem" placeholder="Enter your text">
+                                        <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" >Cari</a>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    @if (auth()->user()->role_id == 1)
+                                    <div class="btn-group pull-right">
+                                        <a href="#exportProblemReport" data-toggle="modal" class="btn btn-primary">EXPORT</a>
+                                    </div>
+                                    @endif
+                                    @if (auth()->user()->role_id != 1)
+                                    <div class="btn-group pull-right">
+                                        <a href="/problemReport/create" class="btn btn-info">TAMBAH</a>
+                                    </div>
+                                    @endif
+                                </div>
                             </div>
-                            @endif
-							<h3 class="panel-title">Data Pelaporan</h3>
-						</div>
-						<div class="panel-body table-responsive">
-							<table class="table table-hover">
-								<thead>
-                                <tr>
-                                    <th>NO</th>
-                                    <th>Pelapor</th>
-                                    <th>Tanggal Pelaporan</th>
-                                    <th>Kategori</th>
-                                    <th>Detail Pelaporan</th>
-                                    <th>Status</th>
-                                    <th>Penjadwalan</th>
-                                    <th>Diproses oleh</th>
-                                    <th>Diproses pada</th>
-                                    <th>Hasil Pengerjaan</th>
-                                    <th>Status Akhir</th>
-                                    <th> @if (auth()->user()->role_id == 4) Aksi @endif</th>
-                                    <th> @if (auth()->user()->role_id != 4) Aksi @endif </th>
-                                </tr>
-								</thead>
-								<tbody>
-                                @foreach ($problems as $problem)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $problem->user->fullname }}</td>
-                                    <td>{{ Carbon\Carbon::parse($problem->date)->format('d M Y H:i') }}</td>
-                                    <!-- <td>{{ $problem->title }}</td> -->
-                                    <td>{{ $problem->prcategory->problem_report_category }}</td>
-                                    <td>{{ $problem->description }}</td>
-                                    <td class={{ $problem->status == 'PENDING' ? "text-warning" : ($problem->status == 'CANCELLED' ? "text-danger" : "text-success") }}>{{ $problem->status == 'PENDING' ? 'MENUNGGU' : ( $problem->status == 'CLOSED' ? 'SELESAI' : 'DIBATALKAN' ) }}</td>
-                                    <td>{{ $problem->scheduled_at == null ? '' : Carbon\Carbon::parse($problem->scheduled_at)->format('d M Y') }}</td>
-                                    <td>{{ $problem->closed_by == null ? '' : $problem->closedby->fullname }}</td>
-                                    <td>{{ $problem->closed_at == null ? '' : Carbon\Carbon::parse($problem->closed_at)->format('d M Y H:i') }}</td>
-                                    <td>{{ $problem->result_desc }}</td>
-                                    <td class={{ $problem->status_client == 0 ? "text-warning" : "text-success" }}> {{ $problem->status_client == 0 ? 'MENUNGGU' : 'SELESAI' }}</td>
-                                    <td>
-                                        @if (auth()->user()->role_id == 4 && $problem->status == 'CLOSED' && $problem->status_client != 1)
-                                        <a href="/problemReport/{{$problem->id}}/editStatusClient" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if (auth()->user()->role_id != 4 && ($problem->status != 'CLOSED' || $problem->status_client != 1))
-                                        <a href="/problemReport/{{$problem->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach
-								</tbody>
-							</table>
-                            <div style="float:right">
-                                {{ $problems->links() }}
+                            <br><br>
+                            <div class="panel-body table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>NO</th>
+                                        <th>Pelapor</th>
+                                        <th>Tanggal Pelaporan</th>
+                                        <th>Kategori</th>
+                                        <th>Detail Pelaporan</th>
+                                        <th>Status</th>
+                                        <th>Penjadwalan</th>
+                                        <th>Diproses oleh</th>
+                                        <th>Diproses pada</th>
+                                        <th>Hasil Pengerjaan</th>
+                                        <th>Status Akhir</th>
+                                        <th> @if (auth()->user()->role_id == 4) Aksi @endif</th>
+                                        <th> @if (auth()->user()->role_id != 4) Aksi @endif </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($problems as $problem)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $problem->user->fullname }}</td>
+                                        <td>{{ Carbon\Carbon::parse($problem->date)->format('d M Y H:i') }}</td>
+                                        <!-- <td>{{ $problem->title }}</td> -->
+                                        <td>{{ $problem->prcategory->problem_report_category }}</td>
+                                        <td>{{ $problem->description }}</td>
+                                        <td class={{ $problem->status == 'PENDING' ? "text-warning" : ($problem->status == 'CANCELLED' ? "text-danger" : "text-success") }}>{{ $problem->status == 'PENDING' ? 'MENUNGGU' : ( $problem->status == 'CLOSED' ? 'SELESAI' : 'DIBATALKAN' ) }}</td>
+                                        <td>{{ $problem->scheduled_at == null ? '' : Carbon\Carbon::parse($problem->scheduled_at)->format('d M Y') }}</td>
+                                        <td>{{ $problem->closed_by == null ? '' : $problem->closedby->fullname }}</td>
+                                        <td>{{ $problem->closed_at == null ? '' : Carbon\Carbon::parse($problem->closed_at)->format('d M Y H:i') }}</td>
+                                        <td>{{ $problem->result_desc }}</td>
+                                        <td class={{ $problem->status_client == 0 ? "text-warning" : "text-success" }}> {{ $problem->status_client == 0 ? 'MENUNGGU' : 'SELESAI' }}</td>
+                                        <td>
+                                            @if (auth()->user()->role_id == 4 && $problem->status == 'CLOSED' && $problem->status_client != 1)
+                                            <a href="/problemReport/{{$problem->id}}/editStatusClient" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (auth()->user()->role_id != 4 && ($problem->status != 'CLOSED' || $problem->status_client != 1))
+                                            <a href="/problemReport/{{$problem->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                                <div style="float:right">
+                                    {{ $problems->links() }}
+                                </div>
                             </div>
-						</div>
-					</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -107,7 +126,7 @@
                     <div class="form-group">
                     <label for="inputPRCategory" class="form-label">Kategori Problem Report</label>
                         <select class="form-control" id="pr_category_id" name="pr_category_id" required>
-                            <option selected disabled>-- Pilih Kategori Probelm --</option>
+                            <option selected disabled>-- Pilih Jenis Gangguan --</option>
                             @foreach ($prcategories as $prcategory)
                                 <option value="{{ $prcategory->id }}">
                                     {{ $prcategory->problem_report_category }}</option>
@@ -138,11 +157,11 @@
                     <h1 class="modal-title" id="editStatusClientModalLabel">Ubah Status by Client</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="/problemReport/{{ $dataid }}/updateStatusClient" method="POST">
+                    <form action="/problemReport/{{ $problem->id }}/updateStatusClient" method="POST">
                     {{csrf_field()}}
                     <div class="form-group">
-                        <label for="dataid" class="form-label">ID Pelaporan</label>
-                        <input type="text" name="dataid" id="dataid" class="form-control" readonly/>
+                        <label for="problem_report_id" class="form-label">ID Pelaporan</label>
+                        <input type="text" name="problem_report_id" id="problem_report_id" class="form-control" readonly/>
                     </div>
                     <div class="form-group">
                         <label for="description" class="form-label">Detail Pelaporan</label>
@@ -176,12 +195,12 @@
                     <h1 class="modal-title" id="editStatusModalLabel">Ubah Status</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="/problemReport/{{ $problemid }}/updateStatus" method="POST">
+                    <form action="/problemReport/{{ $problem->id }}/updateStatus" method="POST">
                     {{csrf_field()}}
                     <div class="form-group">
-                        <label for="problemid" class="form-label">ID Pelaporan</label>
+                        <label for="problem_report_id" class="form-label">ID Pelaporan</label>
                         <!-- belum ada valuenya -->
-                        <input type="text" name="problemid" id="problemid" class="form-control" readonly/>
+                        <input type="text" name="problem_report_id" id="problem_report_id" class="form-control" readonly/>
                     </div>
                     <!-- belum ada if scheduled_at -->
                     <div class="form-group">
@@ -206,4 +225,31 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Export -->
+    <form action="problemReport/export" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="modal fade" id="exportProblemReport" aria-labelledby="exportProblemReporttLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="exportProblemReporttLabel">Export Laporan Gangguan</h3>
+                    </div>
+                    <div class="modal-body">
+                        <label for="date" class="form-label">Tanggal</label>
+                            <div class="form-group">
+                                <form action="problemReport">
+                                    <input type="text" class="form-control float-right" value="" name="exportProblemReport"
+                                        id="tanggal-problem-report" required>
+                                </form>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Export</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 @stop

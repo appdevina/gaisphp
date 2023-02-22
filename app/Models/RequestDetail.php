@@ -24,7 +24,7 @@ class RequestDetail extends Model
 
     public function request_product()
     {
-        return $this->belongsTo(Request::class, 'request_id');
+        return $this->belongsTo(RequestBarang::class, 'request_id');
     }
 
     public function product()

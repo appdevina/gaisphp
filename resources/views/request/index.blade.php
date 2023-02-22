@@ -20,13 +20,31 @@
                     <div class="col-md-12">
                     <div class="panel">
 						<div class="panel-heading">
-                            @if (auth()->user()->role_id != 1)
-                            <div class="btn-group pull-right" id="add_reqbar_button">
-                                <a href="/request/create" class="btn btn-info">TAMBAH</a>
+                            <div class="col-md-2">
+                                <h3 class="panel-title">Data Pengajuan</h3>
                             </div>
-                            @endif
-							<h3 class="panel-title">Data Pengajuan</h3>
+                            <div class="col-md-4 text-right">
+                                <form class="form-inline" id="my_form" action="/request">
+                                    <div class="form-group">
+                                    <input type="text" class="form-control" name="search" id="tanggal-request" placeholder="Enter your text">
+                                    <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" >Cari</a>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                @if (auth()->user()->role_id == 1)
+                                    <div class="btn-group pull-right">
+                                        <a href="#exportRequest" data-toggle="modal" class="btn btn-primary">EXPORT</a>
+                                    </div>
+                                @endif
+                                @if (auth()->user()->role_id != 1)
+                                <div class="btn-group pull-right" id="add_reqbar_button">
+                                    <a href="/request/create" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Tambah pengajuan">TAMBAH</a>
+                                </div>
+                                @endif
+                            </div>
 						</div>
+                        <br><br>
 						<div class="panel-body table-responsive">
 							<table class="table table-hover" id="reqbar_table">
 								<thead>
@@ -46,6 +64,7 @@
                                     <th> @if (auth()->user()->role_id >= 3) Edit Status Akhir @endif</th>
                                     <th> @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 3) Aksi Proses @endif </th>
                                     <th> @if (auth()->user()->role_id == 2) Aksi @endif </th>
+                                    <th></th>
                                 </tr>
 								</thead>
 								<tbody>
@@ -75,8 +94,11 @@
                                     </td>
                                     <td>
                                         @if (auth()->user()->role_id == 2 && ($reqbar->closed_by == null || $reqbar->status_po == 0))
-                                        <a href="/request/{{$reqbar->id}}/editStatusAcc" class="btn btn-default" data-toggle="modal" type="button">Edit</a>
+                                        <a href="/request/{{$reqbar->id}}/editStatusAcc" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
                                         @endif
+                                    </td>
+                                    <td>
+                                        <a href="/request/{{$reqbar->id}}" class="btn btn-default" type="button">Lihat</a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -221,4 +243,31 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Export -->
+    <form action="request/export" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="modal fade" id="exportRequest" aria-labelledby="exportRequesttLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="exportRequesttLabel">Export Laporan Pengajuan</h3>
+                    </div>
+                    <div class="modal-body">
+                        <label for="date" class="form-label">Tanggal</label>
+                            <div class="form-group">
+                                <form action="request">
+                                    <input type="text" class="form-control float-right" value="" name="exportRequest"
+                                        id="tanggal-export-request" required>
+                                </form>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Export</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 @stop

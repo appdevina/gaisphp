@@ -20,24 +20,24 @@
                     <div class="col-md-12">
                     <div class="panel">
 						<div class="panel-heading">
-                            <div class="col-md-7">
+                            <div class="col-md-2">
                                 <h3 class="panel-title">Data Barang</h3>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 text-right">
                                 <form class="form-inline" id="my_form" action="/product">
                                     <div class="form-group">
                                       <input type="text" class="form-control" name="search" placeholder="Enter your text">
                                       <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" >Cari</a>
                                     </div>
                                   </form>
-                                  
                             </div>
-                            <div class="col-md-1 text-right">
+                            <div class="col-md-6 text-right">
                                 <a class="btn btn-info" data-toggle="modal" data-target="#productModal">TAMBAH</a>
+                                <a href="/product/export" class="btn btn-primary">EXPORT</a>
                             </div>                            
 						</div>
                         <br><br>
-						<div class="panel-body mt-4">
+						<div class="panel-body mt-4 table-responsive">
 							<table class="table table-hover">
 								<thead>
                                 <tr>

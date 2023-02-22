@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductExport;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\UnitType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -16,13 +18,29 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $products = Product::paginate(30);
+
+        if($request->has('search')){
+            $products = Product::with('category', 'unit_type')
+            ->where('product', 'LIKE', '%'.$request->search.'%')
+            ->withTrashed()
+            ->paginate(30);
+        }
+
         return view('master.product.index', [
-            'products' => Product::paginate(30),
+            'products' => $products,
             'categories' => Category::all(),
             'unit_types' => UnitType::all(),
         ]);
+    }
+
+    public function get()
+    {
+        $product = Product::orderBy('product')->get();
+
+        return response()->json($product);
     }
 
     /**
@@ -178,5 +196,10 @@ class ProductController extends Controller
             unlink(storage_path('app/public/product/'.$product->product_image));
             
         }
+    }
+
+    public function export()
+    {
+        return Excel::download(new ProductExport, 'barang.xlsx');
     }
 }

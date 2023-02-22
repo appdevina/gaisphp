@@ -1,34 +1,28 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="main">
-        <div class="main-content">
-            <div class="container-fluid">
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <i class="fa fa-check-circle"></i> {{session('success')}}
-                </div>
-            @endif
-            @if (session('error'))
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <i class="fa fa-check-circle"></i> {{session('error')}}
-                </div>
-            @endif
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Tambah Pengajuan</h3>
-                            </div>
-                            <div class="panel-body">
-                            <form action="/request/store" method="POST" enctype="multipart/form-data">
-                            {{csrf_field()}}
-                            <div class="form-group">
-                                <label for="inputUser" class="form-label hidden">User</label>
-                                <input name="user_id" type="hidden" class="form-control" id="inputUser" value="{{ auth()->user()->id }}">
-                            </div>
+<div class="main">
+    <div class="main-content">
+        <div class="container-fluid">
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-check-circle"></i> {{session('success')}}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-check-circle"></i> {{session('error')}}
+            </div>
+        @endif
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Tambah Pengajuan</h3>
+                        </div>
+                        <div class="panel-body" >
                             <div class="form-group">
                                 <label for="request_type_id" class="form-label">Tipe Pengajuan</label>
                                 <select class="form-control" id="request_type_id" name="request_type_id" required>
@@ -38,6 +32,56 @@
                                             {{ $reqtype->request_type }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="" id="formaddmanyproduct" >
+                                <form action="/request/store" method="POST" enctype="multipart/form-data">
+                                {{csrf_field()}}
+                                <div class="form-group">
+                                    <label for="inputUser" class="form-label hidden">User</label>
+                                    <input name="user_id" type="hidden" class="form-control" id="inputUser" value="{{ auth()->user()->id }}">
+                                </div>
+                                <div class="form-group">
+                                    <input name="request_type_id" type="text" class="form-control" id="inputRequestTypeId" value="">
+                                </div>
+                                <div>
+                                    <div class="form-group" >
+                                        <div class="card-body table-responsive p-0" style="height: 300px;">
+                                            <table class="table table-head-fixed text-nowrap">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Barang</th>
+                                                        <th style="width:15%;">Jml Req</th>
+                                                        <th style="width:15%;">Jml Sisa</th>
+                                                        <th style="width:30%;">Keterangan</th>
+                                                        <th style="width:10%;">
+                                                            <a href="#addproduct" class="badge bg-success" id="addProduct">Add <span class="lnr lnr-plus-circle"></span></a>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tableproduct">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="inputRequestFile">
+                                        <label for="inputRequestFile" class="form-label">File Pengajuan</label>
+                                        <input type="file" name="request_file" class="form-control">
+                                    </div>
+                                </div>
+                                <br>
+                                <button type="submit" class="btn btn-info">SIMPAN</button>
+                            </div>
+                            </form>
+
+                        <!-- <div class=""  id="formaddproduct">
+                            <form action="/request/store" method="POST" enctype="multipart/form-data">
+                            {{csrf_field()}}
+                            <div class="form-group">
+                                <label for="inputUser" class="form-label hidden">User</label>
+                                <input name="user_id" type="hidden" class="form-control" id="inputUser" value="{{ auth()->user()->id }}">
+                            </div>
+                            <div class="form-group">
+                                <input name="request_type_id" type="text" class="form-control" id="inputRequestTypeId2" value="">
                             </div>
                             <div class="form-group">
                                 <label for="product_id" class="form-label">Barang</label>
@@ -69,10 +113,10 @@
                             <button type="submit" class="btn btn-info">SIMPAN</button>
                             </div>
                             </form>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
-        </div>
     </div>
+</div>
 @stop

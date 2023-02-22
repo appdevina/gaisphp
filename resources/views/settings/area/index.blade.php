@@ -41,7 +41,8 @@
                                     <td>{{ $area->area }}</td>
                                     <td>
                                         <a href="/area/{{$area->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="/area/{{$area->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a>
+                                        <!-- BUTTON DELETE -->
+                                        <!-- <a href="/area/{{$area->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
                                     </td>
                                 </tr>
                                 @endforeach

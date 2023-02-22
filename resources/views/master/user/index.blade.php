@@ -20,12 +20,26 @@
                     <div class="col-md-12">
                     <div class="panel">
 						<div class="panel-heading">
-                            <div class="btn-group pull-right">
-                                <a class="btn btn-info" data-toggle="modal" data-target="#userModal">TAMBAH</a>
+                            <div class="col-md-2">
+                                <h3 class="panel-title">Data User</h3>
                             </div>
-							<h3 class="panel-title">Data User</h3>
+                            <div class="col-md-4 text-right">
+                                <form class="form-inline" id="my_form" action="/user">
+                                    <div class="form-group">
+                                      <input type="text" class="form-control" name="search" placeholder="Enter your text">
+                                      <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" >Cari</a>
+                                    </div>
+                                  </form>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <a class="btn btn-info" data-toggle="modal" data-target="#userModal">TAMBAH</a>
+                                <a href="/user/export" class="btn btn-primary">EXPORT</a>
+                                <a class="btn btn-success" data-toggle="modal" data-target=".importModal">IMPORT</a>
+                                <a href="/user/export/template" class="btn btn-default">TEMPLATE</a>
+                            </div>
 						</div>
-						<div class="panel-body">
+                        <br><br>
+						<div class="panel-body table-responsive">
 							<table class="table table-hover">
 								<thead>
                                 <tr>
@@ -77,8 +91,8 @@
 
     <!-- Modal -->
     <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="lnr lnr-cross"></i></button>
                     <h1 class="modal-title" id="userModalLabel">Tambah User</h1>
@@ -143,12 +157,39 @@
                     <input type="file" name="profile_picture" class="form-control">
                 </div>
                 <br>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">BATAL</button>
-                <button type="submit" class="btn btn-primary">SIMPAN</button>
-            </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">BATAL</button>
+                    <button type="submit" class="btn btn-primary">SIMPAN</button>
+                </form>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <form action="/user/import" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="modal fade importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="lnr lnr-cross"></i></button>
+                    <h1 class="modal-title" id="importModalLabel">Import User</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="">Pilih File</label>
+                        <input type="file" class="form-control" name="fileImport">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">BATAL</button>
+                    <button type="submit" class="btn btn-primary">IMPORT</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</form>
 @stop

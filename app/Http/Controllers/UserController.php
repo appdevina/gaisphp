@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserExport;
+use App\Exports\UserTemplateExport;
+use App\Imports\UserImport;
 use App\Models\Area;
 use App\Models\BadanUsaha;
 use App\Models\Divisi;
@@ -12,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 use Exception;
 
 class UserController extends Controller
@@ -28,10 +32,19 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $users = User::with('division')->withTrashed()->paginate(30);
+
+        if($request->has('search')){
+            $users = User::with('division')
+            ->where('fullname', 'LIKE', '%'.$request->search.'%')
+            ->withTrashed()
+            ->paginate(30);
+        }
+
         return view('master.user.index')->with([
-            'users' => User::with('division')->withTrashed()->paginate(30),
+            'users' => $users,
             'division' => Divisi::all(),
             'roles' => Role::all(),
             'badan_usahas' => BadanUsaha::all(),
@@ -187,5 +200,31 @@ class UserController extends Controller
         $user->deleted_at = null;
         $user->save();
         return redirect('user')->with(['success' => "Berhasil mengatifkan kembali user " . $user->fullname]);
+    }
+
+    public function export()
+    {
+        return Excel::download(new UserExport, 'user.xlsx');
+    }
+
+    public function import(Request $request, $disk = 'public')
+    {
+        $file = $request->file('fileImport');
+        $namaFile = $file->getClientOriginalName();
+
+        $path = 'import';
+        if (! Storage::disk($disk)->exists($path)) {
+            Storage::disk($disk)->makeDirectory($path);
+        }
+        $file->storeAs($path, $namaFile, $disk);
+
+        $file->move(storage_path('import/'), $namaFile);
+        Excel::import(new UserImport, storage_path('import/' . $namaFile));
+        return redirect('user')->with(['success' => 'Berhasil import user']);
+    }
+
+    public function template()
+    {
+        return Excel::download(new UserTemplateExport, 'user_template.xlsx');
     }
 }

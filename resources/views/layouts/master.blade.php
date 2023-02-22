@@ -23,6 +23,8 @@
 	<link rel="stylesheet" href="{{ asset('template') }}/plugins/select2/css/select2.min.css">
 	<!-- datepicker -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
+	<!-- daterange picker -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
 </head>
 
 <body>
@@ -53,6 +55,9 @@
     <script src="{{asset('admin/assets/vendor/chartist/js/chartist.min.js')}}"></script>
 	<!-- datepicker -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+	<!-- date-range-picker -->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>	
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 	<script>
 	$(document).ready(function () {
 		$('#tanggalScheduled').datepicker({
@@ -61,6 +66,7 @@
    		});
 	});
 	</script>
+	<script src="{{ asset('script.js') }}"></script>
 </body>
 
 </html>
