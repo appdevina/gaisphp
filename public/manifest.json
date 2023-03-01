@@ -1,0 +1,18 @@
+{
+    "name": "GAIS by Business Development",
+    "short_name": "GAIS",
+    "start_url": "http://gais.ddnsku.my.id:3990/",
+    "id": "http://gais.ddnsku.my.id:3990/",
+    "background_color": "#ffffff",
+    "description": "",
+    "display": "fullscreen",
+    "theme_color": "#ffffff",
+    "icons": [
+        {
+            "src": "admin/assets/img/gais-block.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

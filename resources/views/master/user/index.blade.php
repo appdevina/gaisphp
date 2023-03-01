@@ -58,8 +58,9 @@
                                 @foreach ($users as $user)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td><a href="/user/{{$user->id}}/profile">{{ $user->fullname }}</a></td>
-                                    <td><a href="/user/{{$user->id}}/profile">{{ $user->username }}</a></td>
+                                    <!-- Kalau mau tampilin halaman profile kasih : <a href="/user/{{$user->id}}/profile"> -->
+                                    <td><a href="#">{{ $user->fullname }}</a></td>
+                                    <td><a href="#">{{ $user->username }}</a></td>
                                     <td>{{ $user->division->area->area }}</td>
                                     <td>{{ $user->badan_usaha->badan_usaha }}</td>
                                     <td>{{ $user->division->division }}</td>
