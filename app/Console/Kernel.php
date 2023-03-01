@@ -16,13 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // Masukkan Kode Anda Disini
-        $schedule->call(function () {
-            
-        //Pengecekan apakah cronjob berhasil atau tidak
-	    //Mencatat info log 
-        Log::info('Cronjob berhasil dijalankan');
-        })->everyTwoMinutes();
+        $schedule->command('autoapprove')->daily()->appendOutputTo(storage_path('logs/scheduler.log'));
     }
 
     /**

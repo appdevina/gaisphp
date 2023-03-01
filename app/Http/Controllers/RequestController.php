@@ -41,7 +41,7 @@ class RequestController extends Controller
             ->paginate(30);
         }
         
-        if ($userRole >= 3) {
+        if ($userRole > 3) {
             $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
             ->where('user_id', $user)
             ->orderBy('status_client', 'asc')

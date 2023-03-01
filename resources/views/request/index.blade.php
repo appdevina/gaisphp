@@ -22,6 +22,7 @@
 						<div class="panel-heading">
                             <div class="col-md-2">
                                 <h3 class="panel-title">Data Pengajuan</h3>
+                                <br>
                             </div>
                             <div class="col-md-4 text-right">
                                 <form class="form-inline" id="my_form" action="/request">
@@ -75,7 +76,11 @@
                                     <td>{{ Carbon\Carbon::parse($reqbar->date)->format('d M Y H:i') }}</td>
                                     <td>{{ $reqbar->request_type->request_type }}</td>
                                     <!-- <td>{{ $reqbar->request_detail }}</td> -->
-                                    <td><a href="{{ asset('storage/') . '/Request_File/' . $reqbar->request_file }}">Lihat Dokumen</a></td>
+                                    @if (Storage::exists('public/Request_File/' . $reqbar->request_file) && Storage::size('public/Request_File/' . $reqbar->request_file) > 0)
+                                        <td><a href="{{ asset('storage/Request_File/' . $reqbar->request_file) }}">Lihat Dokumen</a></td>
+                                    @else
+                                        <td>Tidak ada file</td>
+                                    @endif
                                     <td class={{ $reqbar->status_po == 0 ? "text-danger" : "text-success" }}>{{ $reqbar->status_po == 0 ? '' : 'YA' }}</td>
                                     <td>{{ $reqbar->closed_by == null ? '' : $reqbar->closedby->fullname }}</td>
                                     <td>{{ $reqbar->closed_at == null ? '' : Carbon\Carbon::parse($reqbar->closed_at)->format('d M Y H:i') }}</td>
@@ -83,12 +88,12 @@
                                     <!-- <td>{{ $reqbar->approved_by == null ? '' : $reqbar->approval->fullname }}</td>
                                     <td>{{ $reqbar->approved_at == null ? '' : Carbon\Carbon::parse($reqbar->approved_at)->format('d M Y H:i') }}</td> -->
                                     <td>
-                                        @if (auth()->user()->role_id >= 3 && $reqbar->closed_by != null && $reqbar->status_client == 0)
+                                        @if (auth()->user()->role_id >= 3 && ($reqbar->closed_by != null && $reqbar->status_client == 0))
                                         <a href="/request/{{$reqbar->id}}/editStatusClient" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
                                         @endif
                                     </td>
                                     <td>
-                                        @if ((auth()->user()->role_id == 1 || auth()->user()->role_id == 3) && ($reqbar->closed_by == null || $reqbar->status_client == 0))
+                                        @if ((auth()->user()->role_id == 1 || auth()->user()->role_id == 3) && ($reqbar->closed_by == null && $reqbar->status_client == 0))
                                         <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
                                         @endif
                                     </td>

@@ -41,7 +41,7 @@
                                     <input name="user_id" type="hidden" class="form-control" id="inputUser" value="{{ auth()->user()->id }}">
                                 </div>
                                 <div class="form-group">
-                                    <input name="request_type_id" type="text" class="form-control" id="inputRequestTypeId" value="">
+                                    <input name="request_type_id" type="hidden" class="form-control" id="inputRequestTypeId" value="">
                                 </div>
                                 <div>
                                     <div class="form-group" >

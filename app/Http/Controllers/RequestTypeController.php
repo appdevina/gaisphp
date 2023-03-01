@@ -16,7 +16,7 @@ class RequestTypeController extends Controller
     public function index()
     {
         return view('master.request_type.index', [
-            'request_types' => RequestType::all(),
+            'request_types' => RequestType::with('approval')->get(),
             'approvals' => User::all(),
         ]);
     }

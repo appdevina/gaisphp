@@ -40,7 +40,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $request_type->request_type }}</td>
-                                    <td>{{ $request_type->getApproval() }}</td>
+                                    <td>{{ $request_type->approval->fullname }}</td>
                                     <td>
                                         <a href="/requesttype/{{$request_type->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
                                         <!-- BUTTON DELETE -->

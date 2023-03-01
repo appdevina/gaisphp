@@ -22,6 +22,7 @@
                             <div class="panel-heading">
                                 <div class="col-md-2">
                                     <h3 class="panel-title">Data Pelaporan</h3>
+                                    <br>
                                 </div>
                                 <div class="col-md-4 text-right">
                                     <form class="form-inline" id="my_form" action="/problemReport">
@@ -157,7 +158,7 @@
                     <h1 class="modal-title" id="editStatusClientModalLabel">Ubah Status by Client</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="/problemReport/{{ $problem->id }}/updateStatusClient" method="POST">
+                    <form action="#" method="POST">
                     {{csrf_field()}}
                     <div class="form-group">
                         <label for="problem_report_id" class="form-label">ID Pelaporan</label>
@@ -195,7 +196,7 @@
                     <h1 class="modal-title" id="editStatusModalLabel">Ubah Status</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="/problemReport/{{ $problem->id }}/updateStatus" method="POST">
+                    <form action="#" method="POST">
                     {{csrf_field()}}
                     <div class="form-group">
                         <label for="problem_report_id" class="form-label">ID Pelaporan</label>

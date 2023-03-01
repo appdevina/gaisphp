@@ -39,7 +39,7 @@ class ProblemReportController extends Controller
             ->paginate(30);
         }
         
-        if ($userRole >= 3) {
+        if ($userRole > 3) {
             $problems = ProblemReport::with('prcategory','user','closedby')
             ->where('user_id', $user)
             ->orderBy('status','desc')
