@@ -51,7 +51,7 @@
 								<thead>
                                 <tr>
                                     <th>NO</th>
-                                    <th>Pengaju</th>
+                                    <th>Pemohon</th>
                                     <th>Diajukan pada</th>
                                     <th>Tipe Pengajuan</th>
                                     <!-- <th>Barang</th> -->

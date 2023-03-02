@@ -55,7 +55,7 @@
                                         <th>Tanggal Pelaporan</th>
                                         <th>Kategori</th>
                                         <th>Detail Pelaporan</th>
-                                        <th>Status</th>
+                                        <th>Status Pengerjaan</th>
                                         <th>Penjadwalan</th>
                                         <th>Diproses oleh</th>
                                         <th>Diproses pada</th>

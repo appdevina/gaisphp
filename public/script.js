@@ -16,7 +16,7 @@ $(document).ready(function () {
                         productindex +
                         '"><td><select class="form-control" id="selectproduct' +
                         productindex +
-                        '" name="products[]" required></select></td><td><input type="number" placeholder="Req" class="form-control col-lg-3" name="qty_requests[]" min="1"></td><td><input type="number" placeholder="Sisa saat ini" class="form-control col-lg-3" name="qty_remainings[]" min="0"></td><td><input type="text" placeholder="Ket" class="form-control col-lg-3" name="descriptions[]"></td><td><a href="#formreplaceproduct" class="badge bg-danger btn_remove" id="product' +
+                        '" name="products[]" required></select></td><td><input type="number" placeholder="Req" class="form-control col-lg-3" name="qty_requests[]" min="1"></td><td><input type="text" placeholder="Ket" class="form-control col-lg-3" name="descriptions[]"></td><td><a href="#formreplaceproduct" class="badge bg-danger btn_remove" id="product' +
                         productindex +
                         '"><span class="lnr lnr-circle-minus"></span></a></td></tr>'
                 );

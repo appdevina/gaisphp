@@ -139,7 +139,7 @@ class RequestController extends Controller
                         $temp['request_id'] = $requestBarang->id;
                         $temp['product_id'] = $request->get('products')[$i];
                         $temp['qty_request'] = $request->get('qty_requests')[$i];
-                        $temp['qty_remaining'] = $request->get('qty_remainings')[$i];
+                        // $temp['qty_remaining'] = $request->get('qty_remainings')[$i];
                         $temp['description'] = $request->get('descriptions')[$i];
 
                         $insertDetail = RequestDetail::create($temp);

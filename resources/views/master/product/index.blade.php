@@ -67,7 +67,7 @@
                                     <td>{{ $product->updated_at->formatLocalized('%A, %d %b %Y') }}</td>
                                     <td>
                                         <a href="/product/{{$product->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="/product/{{$product->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a>
+                                        <!-- <a href="/product/{{$product->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
                                     </td>
                                 </tr>
                                 @endforeach
