@@ -33,6 +33,9 @@ class ProblemReportCategorySeeder extends Seeder
             [
                 'problem_report_category' => 'CCTV',
             ],
+            [
+                'problem_report_category' => 'UMUM',
+            ],
         ],
     );
     }

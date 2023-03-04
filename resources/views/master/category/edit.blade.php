@@ -26,7 +26,7 @@
                             <form action="/category/{{$category->id}}/update" method="POST">
                                 {{csrf_field()}}
                                 <div class="form-group">
-                                    <label for="inputCategory" class="form-label">Kategori</label>
+                                    <label for="inputCategory" class="form-label">Kategori Barang</label>
                                     <input name="category" type="text" class="form-control" id="inputCategory" value="{{$category->category}}" required>
                                 </div>
                                 <br>

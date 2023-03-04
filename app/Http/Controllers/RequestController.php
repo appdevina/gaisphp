@@ -24,33 +24,88 @@ class RequestController extends Controller
     {
         $user = Auth::user()->id;
         $userRole = Auth::user()->role_id;
+        $userDivisi = Auth::user()->division_id;
         
-        if ($request->search) {
-            $data = explode('-', preg_replace('/\s+/', '', $request->search));
-            $date1 = Carbon::parse($data[0])->format('Y-m-d');
-            $date2 = Carbon::parse($data[1])->format('Y-m-d');
-            $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
-            $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-            ->whereBetween('date', [$date1, $date2])
-            ->orderBy('date')
-            ->paginate(30);
-        } else {
-            $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-            ->orderBy('status_client', 'asc')
-            ->orderBy('date', 'desc')
-            ->paginate(30);
+        switch ($userRole) {
+            case 1:
+                if ($request->search) {
+                    $data = explode('-', preg_replace('/\s+/', '', $request->search));
+                    $date1 = Carbon::parse($data[0])->format('Y-m-d');
+                    $date2 = Carbon::parse($data[1])->format('Y-m-d');
+                    $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->whereBetween('date', [$date1, $date2])
+                    ->orderBy('date')
+                    ->paginate(30);
+                } else {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->orderBy('status_client', 'asc')
+                    ->orderBy('date', 'desc')
+                    ->paginate(30);
+                }
+                break;
+            case 2:
+                if ($request->search) {
+                    $data = explode('-', preg_replace('/\s+/', '', $request->search));
+                    $date1 = Carbon::parse($data[0])->format('Y-m-d');
+                    $date2 = Carbon::parse($data[1])->format('Y-m-d');
+                    $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->where('request_type_id',1)
+                    ->whereBetween('date', [$date1, $date2])
+                    ->orderBy('date')
+                    ->paginate(30);
+                } else {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->where('request_type_id',1)
+                    ->orderBy('status_client', 'asc')
+                    ->orderBy('date', 'desc')
+                    ->paginate(30);
+                }
+                break; 
+            case 3:
+                if ($request->search) {
+                    $data = explode('-', preg_replace('/\s+/', '', $request->search));
+                    $date1 = Carbon::parse($data[0])->format('Y-m-d');
+                    $date2 = Carbon::parse($data[1])->format('Y-m-d');
+                    $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    //whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi) })
+                    ->whereBetween('date', [$date1, $date2])
+                    ->orderBy('date')
+                    ->paginate(30);
+                } else {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    //whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi) })
+                    ->orderBy('status_client', 'asc')
+                    ->orderBy('date', 'desc')
+                    ->paginate(30);
+                }
+                break;
+            default:
+                if ($request->search){
+                    //handle user melakukan pencarian
+                    $data = explode('-', preg_replace('/\s+/', '', $request->search));
+                    $date1 = Carbon::parse($data[0])->format('Y-m-d');
+                    $date2 = Carbon::parse($data[1])->format('Y-m-d');
+                    $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->whereBetween('date', [$date1, $date2])
+                    ->where('user_id', $user)
+                    ->orderBy('date')
+                    ->paginate(30);
+                } else {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->where('user_id', $user)
+                    ->orderBy('status_client', 'asc')
+                    ->orderBy('date', 'desc')
+                    ->paginate(30);
+                }            
+                break;
         }
+        $request_types = RequestType::all();
+        $products = Product::all();
         
-        if ($userRole > 3) {
-            $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-            ->where('user_id', $user)
-            ->orderBy('status_client', 'asc')
-            ->orderBy('date', 'desc')
-            ->paginate(30);
-            $request_types = RequestType::all();
-            $products = Product::all();
-        }
-
         return view('request.index', [
             'requestBarangs' => $requestBarangs,
             'request_types' => RequestType::all(),
@@ -77,13 +132,20 @@ class RequestController extends Controller
         try {
             $user = Auth::user()->id;
             
+            //SEMUA TIPE PENGAJUAN KALAU USER BELUM CLOSE GABISA NAMBAH
             $clientPending = RequestBarang::with('user')
             ->where('user_id', $user)
             ->where('status_client', '0')
             ->count();
 
-            if ($clientPending >= 1) {
-                return redirect('request')->with(['error' => 'Harap ubah status akhir pengajuan terlebih dahulu !']);
+            $pengajuanAsset = RequestBarang::with('user')
+            ->where('user_id', $user)
+            ->where('request_type_id', '1')
+            ->where('status_client', '0')
+            ->count();
+
+            if ($pengajuanAsset >= 1) {
+                return redirect('request')->with(['error' => 'Harap ubah status akhir pengajuan asset/non asset terlebih dahulu !']);
             }
 
             return view('request.addRequest', [
@@ -101,6 +163,10 @@ class RequestController extends Controller
          try {
             $date = Carbon::now()->format('Y-m-d H:i:s');
 
+            if ($request->request_type_id == 1 && $request->request_file == null) {
+                return redirect('request/create')->with('error', 'Harap upload file pengajuan !');
+            }
+
             if ($request->request_type_id == 1) {
                 $request_file = $this->storeImage($request);
 
@@ -114,13 +180,25 @@ class RequestController extends Controller
                 $requestBarang->request_file = $request_file;
                 $requestBarang->save();
 
-                RequestDetail::create([
-                    'request_id' => $requestBarang->id,
-                    'product_id' => $request->product_id,
-                    'qty_request' => $request->qty_request,
-                    'qty_remaining' => $request->qty_remaining,
-                    'description' => $request->description,
-                ]);
+                for ($i = 0; $i < count($request->get('qty_requests')); $i++) {
+                    $temp = array();
+                    $temp['request_id'] = $requestBarang->id;
+                    $temp['product_id'] = $request->get('products')[$i];
+                    $temp['qty_request'] = $request->get('qty_requests')[$i];
+                    // $temp['qty_remaining'] = $request->get('qty_remainings')[$i];
+                    $temp['description'] = $request->get('descriptions')[$i];
+
+                    $insertDetail = RequestDetail::create($temp);
+                }
+
+                // Input data barangnya satuan
+                // RequestDetail::create([
+                //     'request_id' => $requestBarang->id,
+                //     'product_id' => $request->product_id,
+                //     'qty_request' => $request->qty_request,
+                //     // 'qty_remaining' => $request->qty_remaining,
+                //     'description' => $request->description,
+                // ]);
 
                 return redirect('request')->with('success', 'Pengajuan Barang Baru berhasil diinput !');
             }

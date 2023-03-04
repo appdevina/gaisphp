@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('*', function ($view) {
             // BADGE REQUEST
-            $notifRequestAcc = RequestBarang::where('status_po', 0)->count();
+            $notifRequestAcc = RequestBarang::where('status_po', 0)->where('request_type_id', 1)->count();
             if($notifRequestAcc == '0') {
                 $notifRequestAcc = '';
             }

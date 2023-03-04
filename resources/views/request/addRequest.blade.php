@@ -49,10 +49,10 @@
                                             <table class="table table-head-fixed text-nowrap">
                                                 <thead>
                                                     <tr>
-                                                        <th>Barang</th>
-                                                        <th style="width:15%;">Jml Req</th>
+                                                        <th>Nama Barang</th>
+                                                        <th style="width:15%;">Qty Req</th>
                                                         <!-- <th style="width:15%;">Jml Sisa</th> -->
-                                                        <th style="width:30%;">Keterangan</th>
+                                                        <th style="width:30%;">Alasan</th>
                                                         <th style="width:10%;">
                                                             <a href="#addproduct" class="badge bg-success" id="addProduct">Add <span class="lnr lnr-plus-circle"></span></a>
                                                         </th>

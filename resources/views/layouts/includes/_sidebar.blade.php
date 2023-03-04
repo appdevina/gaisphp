@@ -20,10 +20,10 @@
 					<div id="subPagesMaster" class="collapse ">
 						<ul class="nav">
 							<li><a href="/product" class="{{ Request::is('product') ? 'active' : '' }}"><i class="lnr lnr-inbox"></i>BARANG</a></li>
-                            <li><a href="/category" class="{{ Request::is('category') ? 'active' : '' }}"><i class="lnr lnr-inbox"></i>KATEGORI</a></li>
-                            <li><a href="/unittype" class="{{ Request::is('unittype') ? 'active' : '' }}"><i class="lnr lnr-inbox"></i>TIPE UNIT</a></li>
-							<li><a href="/requesttype" class="{{ Request::is('requesttype') ? 'active' : '' }}"><i class="lnr lnr-bubble"></i>TIPE PENGAJUAN</a></li>
-							<li><a href="/prcategory" class="{{ Request::is('prcategory') ? 'active' : '' }}"><i class="lnr lnr-bubble"></i>JENIS GANGGUAN</a></li>
+                            <li><a href="/category" class="{{ Request::is('category') ? 'active' : '' }}"><i class="lnr lnr-inbox"></i>KATEGORI BARANG</a></li>
+                            <li><a href="/unittype" class="{{ Request::is('unittype') ? 'active' : '' }}"><i class="lnr lnr-inbox"></i>TIPE UNIT BARANG</a></li>
+							<li><a href="/requesttype" class="{{ Request::is('requesttype') ? 'active' : '' }}"><i class="lnr lnr-book"></i>TIPE PENGAJUAN</a></li>
+							<li><a href="/prcategory" class="{{ Request::is('prcategory') ? 'active' : '' }}"><i class="lnr lnr-book"></i>JENIS GANGGUAN</a></li>
 						</ul>
 					</div>
 				</li>

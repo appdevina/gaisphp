@@ -42,6 +42,7 @@ class AutoApprove extends Command
     {
         ##AUTO APPROVE PROBLEM REPORT
         $problems = DB::table('problem_report')
+        ->where('closed_by','!=', null)
         ->where('status_client', 0)->get();
         
         foreach ($problems as $problem) {
@@ -51,6 +52,7 @@ class AutoApprove extends Command
 
         ##AUTO APPROVE REQUEST
         $requestBarangs = DB::table('requests')
+        ->where('closed_by','!=', null)
         ->where('status_client', 0)->get();
 
         foreach ($requestBarangs as $requestBarang) {

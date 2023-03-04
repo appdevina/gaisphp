@@ -16,7 +16,7 @@ class RequestTypeSeeder extends Seeder
     {
         DB::table('request_type')->insert([
             [
-                'request_type' => 'BARANG BARU',
+                'request_type' => 'ASSET/NON ASSET',
                 'approval_id' => 1,   
             ],
             [

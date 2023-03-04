@@ -93,12 +93,12 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ((auth()->user()->role_id == 1 || auth()->user()->role_id == 3) && ($reqbar->closed_by == null && $reqbar->status_client == 0))
+                                        @if ((auth()->user()->role_id == 1 || auth()->user()->role_id == 3) && ($reqbar->closed_by == null && $reqbar->status_client == 0 && $reqbar->status_po == 1))
                                         <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
                                         @endif
                                     </td>
                                     <td>
-                                        @if (auth()->user()->role_id == 2 && ($reqbar->closed_by == null || $reqbar->status_po == 0))
+                                        @if ((auth()->user()->role_id == 2 && $reqbar->request_type_id == 1) && ($reqbar->closed_by == null && $reqbar->status_po == 0))
                                         <a href="/request/{{$reqbar->id}}/editStatusAcc" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
                                         @endif
                                     </td>
