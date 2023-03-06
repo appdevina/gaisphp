@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Divisi;
 use App\Models\User;
 use App\Models\RequestType;
 use Illuminate\Http\Request;
@@ -16,8 +17,8 @@ class RequestTypeController extends Controller
     public function index()
     {
         return view('master.request_type.index', [
-            'request_types' => RequestType::with('approval')->get(),
-            'approvals' => User::all(),
+            'request_types' => RequestType::with('division')->get(),
+            'divisions' => Divisi::all(),
         ]);
     }
 
@@ -69,7 +70,7 @@ class RequestTypeController extends Controller
     {
         return view('master.request_type.edit', [
             'request_type' => $request_type,
-            'approvals' => User::all(),
+            'divisions' => Divisi::all(),
         ]);
     }
 

@@ -14,7 +14,7 @@ class RequestType extends Model
 
     protected $guarded = ['id'];
 
-    protected $fillable = ['request_type', 'approval_id'];
+    protected $fillable = ['request_type', 'pic_division_id'];
 
     protected $hidden = [
         'created_at',
@@ -32,9 +32,9 @@ class RequestType extends Model
         return $this->hasMany(Request::class);
     }
 
-    public function approval()
+    public function division()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Divisi::class, 'pic_division_id');
     }
 
 }

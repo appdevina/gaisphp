@@ -24,15 +24,23 @@
                                     <h3 class="panel-title">Data Pelaporan</h3>
                                     <br>
                                 </div>
-                                <div class="col-md-4 text-right">
+                                <div class="col-md-3 text-right">
                                     <form class="form-inline" id="my_form" action="/problemReport">
                                         <div class="form-group">
                                         <input type="text" class="form-control" name="search" id="tanggal-problem" placeholder="Enter your text">
-                                        <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" >Cari</a>
+                                        <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-6 text-right">
+                                <div class="col-md-3 text-right">
+                                    <form class="form-inline" id="code_form" action="/problemReport">
+                                        <div class="form-group">
+                                        <input type="text" class="form-control" name="code" placeholder="Enter code">
+                                        <a href="javascript:{}" onclick="document.getElementById('code_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-4 text-right">
                                     @if (auth()->user()->role_id == 1)
                                     <div class="btn-group pull-right">
                                         <a href="#exportProblemReport" data-toggle="modal" class="btn btn-primary">EXPORT</a>
@@ -51,6 +59,7 @@
                                     <thead>
                                     <tr>
                                         <th>NO</th>
+                                        <th>Kode</th>
                                         <th>Pelapor</th>
                                         <th>Divisi</th>
                                         <th>Tanggal Pelaporan</th>
@@ -70,6 +79,7 @@
                                     @foreach ($problems as $problem)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $problem->problem_report_code }}</td>
                                         <td>{{ $problem->user->fullname }}</td>
                                         <td>{{ $problem->user->division->division }}</td>
                                         <td>{{ Carbon\Carbon::parse($problem->date)->format('d M Y H:i') }}</td>

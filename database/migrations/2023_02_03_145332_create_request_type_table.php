@@ -16,7 +16,7 @@ class CreateRequestTypeTable extends Migration
         Schema::create('request_type', function (Blueprint $table) {
             $table->id();
             $table->string('request_type');
-            $table->foreignId('approval_id');
+            $table->foreignId('pic_division_id');
             $table->timestamps();
             $table->softDeletes();
         });

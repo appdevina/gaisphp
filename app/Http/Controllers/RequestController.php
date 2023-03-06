@@ -37,6 +37,11 @@ class RequestController extends Controller
                     ->whereBetween('date', [$date1, $date2])
                     ->orderBy('date')
                     ->paginate(30);
+                } else if ($request->code) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->where('request_code', $request->code)
+                    ->orderBy('date')
+                    ->paginate(30);
                 } else {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
                     ->orderBy('status_client', 'asc')
@@ -55,6 +60,12 @@ class RequestController extends Controller
                     ->whereBetween('date', [$date1, $date2])
                     ->orderBy('date')
                     ->paginate(30);
+                } else if ($request->code) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->where('request_type_id',1)
+                    ->where('request_code', $request->code)
+                    ->orderBy('date')
+                    ->paginate(30);
                 } else {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
                     ->where('request_type_id',1)
@@ -70,13 +81,18 @@ class RequestController extends Controller
                     $date2 = Carbon::parse($data[1])->format('Y-m-d');
                     $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-                    //whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi) })
+                    ->whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi); })
                     ->whereBetween('date', [$date1, $date2])
+                    ->orderBy('date')
+                    ->paginate(30);
+                } else if ($request->code) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->where('request_code', $request->code)
                     ->orderBy('date')
                     ->paginate(30);
                 } else {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-                    //whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi) })
+                    ->whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi); })
                     ->orderBy('status_client', 'asc')
                     ->orderBy('date', 'desc')
                     ->paginate(30);
@@ -94,6 +110,12 @@ class RequestController extends Controller
                     ->where('user_id', $user)
                     ->orderBy('date')
                     ->paginate(30);
+                } else if ($request->code) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->where('user_id', $user)
+                    ->where('request_code', $request->code)
+                    ->orderBy('date')
+                    ->paginate(30);
                 } else {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
                     ->where('user_id', $user)
@@ -103,8 +125,6 @@ class RequestController extends Controller
                 }            
                 break;
         }
-        $request_types = RequestType::all();
-        $products = Product::all();
         
         return view('request.index', [
             'requestBarangs' => $requestBarangs,
@@ -178,6 +198,7 @@ class RequestController extends Controller
                     'request_type_id' => $request->request_type_id,
                 ]);
                 $requestBarang->request_file = $request_file;
+                $requestBarang->request_code = "REQ".$requestBarang->id;
                 $requestBarang->save();
 
                 for ($i = 0; $i < count($request->get('qty_requests')); $i++) {
@@ -210,6 +231,7 @@ class RequestController extends Controller
                     'status_po' => 0,
                     'request_type_id' => $request->request_type_id,
                 ]);
+                $requestBarang->request_code = "REQ".$requestBarang->id;
                 $requestBarang->save();
 
                 for ($i = 0; $i < count($request->get('qty_requests')); $i++) {

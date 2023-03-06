@@ -24,15 +24,23 @@
                                 <h3 class="panel-title">Data Pengajuan</h3>
                                 <br>
                             </div>
-                            <div class="col-md-4 text-right">
+                            <div class="col-md-3 text-right">
                                 <form class="form-inline" id="my_form" action="/request">
                                     <div class="form-group">
                                     <input type="text" class="form-control" name="search" id="tanggal-request" placeholder="Enter your text">
-                                    <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" >Cari</a>
+                                    <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
                                     </div>
                                 </form>
                             </div>
-                            <div class="col-md-6 text-right">
+                            <div class="col-md-3 text-right">
+                                <form class="form-inline" id="code_form" action="/request">
+                                    <div class="form-group">
+                                    <input type="text" class="form-control" name="code" placeholder="Enter code">
+                                    <a href="javascript:{}" onclick="document.getElementById('code_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-4 text-right">
                                 @if (auth()->user()->role_id == 1)
                                     <div class="btn-group pull-right">
                                         <a href="#exportRequest" data-toggle="modal" class="btn btn-primary">EXPORT</a>
@@ -51,6 +59,7 @@
 								<thead>
                                 <tr>
                                     <th>NO</th>
+                                    <th>Kode</th>
                                     <th>Pemohon</th>
                                     <th>Diajukan pada</th>
                                     <th>Tipe Pengajuan</th>
@@ -72,6 +81,7 @@
                                 @foreach ($requestBarangs as $reqbar)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $reqbar->request_code }}</td>
                                     <td>{{ $reqbar->user->fullname }}</td>
                                     <td>{{ Carbon\Carbon::parse($reqbar->date)->format('d M Y H:i') }}</td>
                                     <td>{{ $reqbar->request_type->request_type }}</td>

@@ -15,6 +15,7 @@ class CreateProblemReportTable extends Migration
     {
         Schema::create('problem_report', function (Blueprint $table) {
             $table->id();
+            $table->string('problem_report_code')->nullable();
             $table->foreignId('user_id');
             $table->dateTime('date');
             $table->string('title')->nullable();

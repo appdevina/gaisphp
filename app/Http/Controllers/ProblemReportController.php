@@ -21,31 +21,113 @@ class ProblemReportController extends Controller
     {
         $user = Auth::user()->id;
         $userRole = Auth::user()->role_id;
-          
-        if ($request->search) {
-            $data = explode('-', preg_replace('/\s+/', '', $request->search));
-            $date1 = Carbon::parse($data[0])->format('Y-m-d');
-            $date2 = Carbon::parse($data[1])->format('Y-m-d');
-            $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
-            $problems = ProblemReport::with('prcategory','user','closedby')
-            ->whereBetween('date', [$date1, $date2])
-            ->orderBy('date')
-            ->paginate(30);
-        } else {
-            $problems = ProblemReport::with('prcategory','user','closedby')
-            ->orderBy('status','desc')
-            ->orderBy('status_client', 'asc')
-            ->orderBy('date', 'desc')
-            ->paginate(30);
-        }
-        
-        if ($userRole > 3) {
-            $problems = ProblemReport::with('prcategory','user','closedby')
-            ->where('user_id', $user)
-            ->orderBy('status','desc')
-            ->orderBy('status_client', 'asc')
-            ->orderBy('date', 'desc')
-            ->paginate(30);
+        $userDivisi = Auth::user()->division_id;
+
+        switch ($userRole) {
+            case 1:
+                if ($request->search) {
+                    $data = explode('-', preg_replace('/\s+/', '', $request->search));
+                    $date1 = Carbon::parse($data[0])->format('Y-m-d');
+                    $date2 = Carbon::parse($data[1])->format('Y-m-d');
+                    $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+                    $problems = ProblemReport::with('prcategory','user','closedby')
+                    ->whereBetween('date', [$date1, $date2])
+                    ->orderBy('date')
+                    ->paginate(30);
+                } else if ($request->code) {
+                    $problems = ProblemReport::with('prcategory','user','closedby')
+                    ->where('problem_report_code',$request->code)
+                    ->orderBy('date')
+                    ->paginate(30);
+                } else {
+                    $problems = ProblemReport::with('prcategory','user','closedby')
+                    ->orderBy('status','desc')
+                    ->orderBy('status_client', 'asc')
+                    ->orderBy('date', 'desc')
+                    ->paginate(30);
+                }
+                break;
+            case 3: 
+                //KALAU DVISINYA HCM, TAMPILIN GANGGUAN UMUM AJA
+                if ($userDivisi == 4) {
+                    if ($request->search) {
+                        $data = explode('-', preg_replace('/\s+/', '', $request->search));
+                        $date1 = Carbon::parse($data[0])->format('Y-m-d');
+                        $date2 = Carbon::parse($data[1])->format('Y-m-d');
+                        $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+                        $problems = ProblemReport::with('prcategory','user','closedby')
+                        ->where('pr_category_id', 7)
+                        ->whereBetween('date', [$date1, $date2])
+                        ->orderBy('date')
+                        ->paginate(30);
+                    } else if ($request->code) {
+                        $problems = ProblemReport::with('prcategory','user','closedby')
+                        ->where('pr_category_id', 7)
+                        ->where('problem_report_code',$request->code)
+                        ->orderBy('date')
+                        ->paginate(30); 
+                    } else {
+                        $problems = ProblemReport::with('prcategory','user','closedby')
+                        ->where('pr_category_id', 7)
+                        ->orderBy('status','desc')
+                        ->orderBy('status_client', 'asc')
+                        ->orderBy('date', 'desc')
+                        ->paginate(30);
+                    }
+                } else {
+                    if ($request->search) {
+                        $data = explode('-', preg_replace('/\s+/', '', $request->search));
+                        $date1 = Carbon::parse($data[0])->format('Y-m-d');
+                        $date2 = Carbon::parse($data[1])->format('Y-m-d');
+                        $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+                        $problems = ProblemReport::with('prcategory','user','closedby')
+                        ->where('pr_category_id', '!=', 7)
+                        ->whereBetween('date', [$date1, $date2])
+                        ->orderBy('date')
+                        ->paginate(30);
+                    } else if ($request->code) {
+                        $problems = ProblemReport::with('prcategory','user','closedby')
+                        ->where('pr_category_id', '!=', 7)
+                        ->where('problem_report_code',$request->code)
+                        ->orderBy('date')
+                        ->paginate(30); 
+                    } else {
+                        $problems = ProblemReport::with('prcategory','user','closedby')
+                        ->where('pr_category_id', '!=', 7)
+                        ->orderBy('status','desc')
+                        ->orderBy('status_client', 'asc')
+                        ->orderBy('date', 'desc')
+                        ->paginate(30);
+                        
+                    }
+                }
+                break;
+            default:
+                if ($request->search) {
+                    $data = explode('-', preg_replace('/\s+/', '', $request->search));
+                    $date1 = Carbon::parse($data[0])->format('Y-m-d');
+                    $date2 = Carbon::parse($data[1])->format('Y-m-d');
+                    $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+                    $problems = ProblemReport::with('prcategory','user','closedby')
+                    ->whereBetween('date', [$date1, $date2])
+                    ->where('user_id', $user)
+                    ->orderBy('date')
+                    ->paginate(30);
+                } else if ($request->code) {
+                    $problems = ProblemReport::with('prcategory','user','closedby')
+                    ->where('user_id', $user)
+                    ->where('problem_report_code',$request->code)
+                    ->orderBy('date')
+                    ->paginate(30); 
+                } else {
+                    $problems = ProblemReport::with('prcategory','user','closedby')
+                    ->where('user_id', $user)
+                    ->orderBy('status','desc')
+                    ->orderBy('status_client', 'asc')
+                    ->orderBy('date', 'desc')
+                    ->paginate(30);
+                }
+                break;
         }
 
         return view('problems.index', [
@@ -86,7 +168,10 @@ class ProblemReportController extends Controller
     {
         try {
             $request['date'] = Carbon::now()->format('Y-m-d H:i:s');
-            ProblemReport::create($request->all());
+            $problem = ProblemReport::create($request->all());
+            
+            $problem->problem_report_code = "PR".$problem->id;
+            $problem->save();
 
             return redirect('problemReport')->with('success', 'Data berhasil diinput !');
         } catch (Exception $e) {

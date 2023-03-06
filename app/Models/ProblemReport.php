@@ -14,7 +14,7 @@ class ProblemReport extends Model
 
     protected $guarded = ['id'];
 
-    protected $fillable = ['user_id', 'date', 'title', 'description', 'status', 'scheduled_at', 'status_client', 'closed_by', 'closed_at', 'pr_category_id', 'result_desc'];
+    protected $fillable = ['problem_report_code', 'user_id', 'date', 'title', 'description', 'status', 'scheduled_at', 'status_client', 'closed_by', 'closed_at', 'pr_category_id', 'result_desc'];
 
     protected $hidden = [
         'created_at',

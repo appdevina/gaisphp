@@ -15,6 +15,7 @@ class CreateRequestsTable extends Migration
     {
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
+            $table->string('request_code')->nullable();
             $table->foreignId('user_id');
             $table->dateTime('date');
             $table->double('total_cost');

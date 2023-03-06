@@ -31,4 +31,9 @@ class Divisi extends Model
     {
         return $this->belongsTo(Area::class);
     }
+
+    public function request_type()
+    {
+        return $this->hasMany(RequestType::class);
+    }
 }

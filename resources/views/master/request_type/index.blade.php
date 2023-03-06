@@ -31,7 +31,7 @@
                                 <tr>
                                     <th>NO</th>
                                     <th>Tipe Pengajuan</th>
-                                    <th>Approval</th>
+                                    <th>Divisi Approval</th>
                                     <th>Aksi</th>
                                 </tr>
 								</thead>
@@ -40,7 +40,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $request_type->request_type }}</td>
-                                    <td>{{ $request_type->approval->fullname }}</td>
+                                    <td>{{ $request_type->division->division }}</td>
                                     <td>
                                         <a href="/requesttype/{{$request_type->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
                                         <!-- BUTTON DELETE -->
@@ -73,12 +73,12 @@
                     <input name="request_type" type="text" class="form-control" id="inputRequestType" placeholder="Nama tipe pengajuan.." required>
                 </div>
                 <div class="form-group">
-                    <label for="inputApproval" class="form-label">Approval</label>
-                        <select class="form-control" id="approval_id" name="approval_id" required>
-                            <option selected disabled>-- Pilih Approval --</option>
-                            @foreach ($approvals as $approval)
-                                <option value="{{ $approval->id }}">
-                                    {{ $approval->fullname }}</option>
+                    <label for="inputApproval" class="form-label">Divisi PIC</label>
+                        <select class="form-control" id="pic_division_id" name="pic_division_id" required>
+                            <option selected disabled>-- Pilih Divisi untuk PIC --</option>
+                            @foreach ($divisions as $division)
+                                <option value="{{ $division->id }}">
+                                    {{ $division->division }}</option>
                             @endforeach
                         </select>
                 </div>

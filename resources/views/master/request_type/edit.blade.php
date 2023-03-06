@@ -30,13 +30,13 @@
                                     <input name="request_type" type="text" class="form-control" id="inputRequestType" value="{{$request_type->request_type}}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputApproval" class="form-label">Approval</label>
-                                    <select class="form-control" id="approval_id" name="approval_id" required>
-                                            <option selected disabled>-- Pilih Approval --</option>
-                                            @foreach ($approvals as $approval)
-                                                <option value="{{ $approval->id }}" 
-                                                    {{ $approval->id === $request_type->approval_id ? 'selected' : '' }}>
-                                                    {{ $approval->fullname }}</option>
+                                    <label for="inputDivisi" class="form-label">Divisi PIC</label>
+                                    <select class="form-control" id="pic_division_id" name="pic_division_id" required>
+                                            <option selected disabled>-- Pilih Divisi untuk PIC --</option>
+                                            @foreach ($divisions as $division)
+                                                <option value="{{ $division->id }}" 
+                                                    {{ $division->id === $request_type->pic_division_id ? 'selected' : '' }}>
+                                                    {{ $division->division }}</option>
                                             @endforeach
                                         </select>
                                 </div>

@@ -6,7 +6,7 @@
 				<li id="dashboard"><a href="/dashboard" class="{{ Request::is('dashboard') ? 'active' : '' }}"><i class="lnr lnr-home"></i> <span>BERANDA</span></a></li>
 				<li id="request"><a href="/request" class="{{ Request::is('request') ? 'active' : '' }}"><i class="lnr lnr-cart"></i> 
 				<span>PENGAJUAN 
-					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ auth()->user()->role_id == 2 ? $notifRequestAcc : (auth()->user()->role_id == 4 ? $notifRequestUser : $notifRequestAdmin ) }}</span>
+					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ auth()->user()->role_id == 2 ? $notifRequestAcc : ( auth()->user()->role_id == 3 ? $notifRequestApprov : (auth()->user()->role_id >= 4 ? $notifRequestUser : $notifRequestAdmin )) }}</span>
 				</span></a></li>
 				@if (auth()->user()->role_id == 1 || auth()->user()->role_id >= 3 )
 				<li id="problemReport"><a href="/problemReport" class="{{ Request::is('problemReport') ? 'active' : '' }}"><i class="lnr lnr-bubble"></i> 

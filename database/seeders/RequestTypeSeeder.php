@@ -17,11 +17,11 @@ class RequestTypeSeeder extends Seeder
         DB::table('request_type')->insert([
             [
                 'request_type' => 'ASSET/NON ASSET',
-                'approval_id' => 1,   
+                'pic_division_id' => 4,   
             ],
             [
                 'request_type' => 'ATK',
-                'approval_id' => 1,
+                'pic_division_id' => 4,
             ],
         ],
     );
