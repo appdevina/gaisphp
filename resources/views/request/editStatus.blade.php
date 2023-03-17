@@ -33,6 +33,7 @@
                                     <select class="form-control" id="status" name="status">
                                         <option selected value="PENDING">MENUNGGU</option>
                                         <option value="CLOSED">SELESAI</option>
+                                        <option value="CANCELLED">DIBATALKAN</option>
                                     </select>
                             </div>
                                 <button type="submit" class="btn btn-warning">UPDATE</button>

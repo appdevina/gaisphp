@@ -5,7 +5,7 @@
 	<!-- PWA  -->
 	<meta name="theme-color" content="#090089"/>
 	<link rel="manifest" href="{{ asset('/manifest.json') }}">
-	<title>GAIS | by Business Development</title>
+	<title>SUMO | by Business Development</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -20,8 +20,8 @@
 	<!-- GOOGLE FONTS -->
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
 	<!-- ICONS -->
-	<link rel="apple-touch-icon" sizes="76x76" href="{{asset('admin/assets/img/gais-white.png')}}">
-	<link rel="icon" type="image/png" sizes="96x96" href="{{asset('admin/assets/img/gais-white.png')}}">
+	<link rel="apple-touch-icon" sizes="76x76" href="{{asset('admin/assets/img/gais-block.png')}}">
+	<link rel="icon" type="image/png" sizes="96x96" href="{{asset('admin/assets/img/gais-block.png')}}">
 	<!-- Select2 -->
 	<link rel="stylesheet" href="{{ asset('template') }}/plugins/select2/css/select2.min.css">
 	<!-- datepicker -->

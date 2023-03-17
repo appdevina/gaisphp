@@ -37,6 +37,7 @@ Route::post('/postlogin', [AuthController::class, 'postlogin']);
 Route::get('logout', [AuthController::class, 'logout']);
 
 Route::get('product/get', [ProductController::class, 'get']);
+Route::get('unit_type/get', [UnitTypeController::class, 'get']);
 
 ##EXPORT
     ##USER
@@ -45,6 +46,7 @@ Route::get('product/get', [ProductController::class, 'get']);
 
     ##PRODUCT
     Route::get('/product/export',[ProductController::class,'export']);
+    Route::get('/product/export/template',[ProductController::class,'template']);
 
     ##PROBLEM REPORT
     Route::post('/problemReport/export',[ProblemReportController::class,'export']);
@@ -56,7 +58,10 @@ Route::get('product/get', [ProductController::class, 'get']);
     ##USER
     Route::post('/user/import',[UserController::class,'import']);
 
-Route::group(['middleware' => ['auth', 'checkRole:1']], function(){
+    ##PRODUCT
+    Route::post('/product/import',[ProductController::class,'import']);
+
+Route::group(['middleware' => ['auth', 'checkRole:1,3']], function(){
     ##MASTER DATA
     #USER
     Route::get('user', [UserController::class, 'index']);
@@ -149,12 +154,16 @@ Route::group(['middleware' => ['auth', 'checkRole:1,2,3,4']], function(){
     Route::get('/request', [RequestController::class, 'index']);
     Route::get('/request/create', [RequestController::class, 'create']);
     Route::post('/request/store', [RequestController::class, 'store']);
+    Route::post('/fixRequest/{id}', [RequestController::class, 'fixRequest']);
     Route::get('/request/{id}', [RequestController::class, 'show']);
+    Route::get('/editRequest/{id}', [RequestController::class, 'showEditPage']);
+    Route::post('/request/{id}/updateRequest', [RequestController::class, 'updateRequest']);
     Route::get('/request/{requestBarang}/editStatus', [RequestController::class, 'editStatus']);
     Route::post('/request/{requestBarang}/updateStatus', [RequestController::class, 'updateStatus']);
     Route::get('/request/{requestBarang}/editStatusClient', [RequestController::class, 'editStatusClient']);
     Route::post('/request/{requestBarang}/updateStatusClient', [RequestController::class, 'updateStatusClient']);
     Route::get('/request/{requestBarang}/editStatusAcc', [RequestController::class, 'editStatusAcc']);
     Route::post('/request/{requestBarang}/updateStatusAcc', [RequestController::class, 'updateStatusAcc']);
+    Route::get('/request/{requestBarang}/cancelRequest', [RequestController::class, 'cancelRequest']);
 });
 

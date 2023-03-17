@@ -58,18 +58,18 @@
                                                         </th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id="tableproduct">
+                                                <tbody id="tableproduct" class="tableproduct">
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                     <div class="form-group" id="inputRequestFile">
-                                        <label for="inputRequestFile" class="form-label">File Pengajuan</label>
+                                        <label for="inputRequestFile" class="form-label">Upload bukti foto bahwa pengajuan telah disetujui:</label>
                                         <input type="file" name="request_file" class="form-control">
                                     </div>
                                 </div>
                                 <br>
-                                <button type="submit" class="btn btn-info">SIMPAN</button>
+                                <button type="submit" class="btn btn-info" onclick="return confirm('Pengajuan ini tanpa revisi, pastikan pengajuan sudah benar!!')">SIMPAN</button>
                             </div>
                             </form>
 

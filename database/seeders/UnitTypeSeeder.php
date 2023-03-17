@@ -16,13 +16,22 @@ class UnitTypeSeeder extends Seeder
     {
         DB::table('unit_types')->insert([
             [
-                'unit_type' => 'PCS',   
+                'unit_type' => 'BUAH',   
             ],
             [
                 'unit_type' => 'PACK',   
             ],
             [
                 'unit_type' => 'ROLL',   
+            ],
+            [
+                'unit_type' => 'TUBE',   
+            ],
+            [
+                'unit_type' => 'RIM',   
+            ],
+            [
+                'unit_type' => 'DUS',   
             ],
         ],
     );

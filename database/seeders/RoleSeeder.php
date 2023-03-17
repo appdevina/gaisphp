@@ -22,10 +22,10 @@ class RoleSeeder extends Seeder
                 'role' => 'ACCOUNTING',
             ],
             [
-                'role' => 'APPROVAL',
+                'role' => 'EXECUTOR',
             ],
             [
-                'role' => 'STAFF',
+                'role' => 'USER',
             ],
         ],
     );

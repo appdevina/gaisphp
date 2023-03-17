@@ -20,11 +20,11 @@
                     <div class="col-md-12">
                         <div class="panel">
                             <div class="panel-heading">
-                                <div class="col-md-2">
-                                    <h3 class="panel-title">Data Pelaporan</h3>
+                                <div class="col-md-1">
+                                    <h3 class="panel-title">Pelaporan</h3>
                                     <br>
                                 </div>
-                                <div class="col-md-3 text-right">
+                                <div class="col-md-4 text-right">
                                     <form class="form-inline" id="my_form" action="/problemReport">
                                         <div class="form-group">
                                         <input type="text" class="form-control" name="search" id="tanggal-problem" placeholder="Enter your text">
@@ -32,11 +32,11 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-3 text-right">
+                                <div class="col-md-3 text-left">
                                     <form class="form-inline" id="code_form" action="/problemReport">
                                         <div class="form-group">
-                                        <input type="text" class="form-control" name="code" placeholder="Enter code">
-                                        <a href="javascript:{}" onclick="document.getElementById('code_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                        <input type="text" class="form-control" name="code" placeholder="Cari nama ..">
+                                        <!-- <a href="javascript:{}" onclick="document.getElementById('code_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a> -->
                                         </div>
                                     </form>
                                 </div>
@@ -59,7 +59,7 @@
                                     <thead>
                                     <tr>
                                         <th>NO</th>
-                                        <th>Kode</th>
+                                        <!-- <th>Kode</th> -->
                                         <th>Pelapor</th>
                                         <th>Divisi</th>
                                         <th>Tanggal Pelaporan</th>
@@ -79,7 +79,7 @@
                                     @foreach ($problems as $problem)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $problem->problem_report_code }}</td>
+                                        <!-- <td>{{ $problem->problem_report_code }}</td> -->
                                         <td>{{ $problem->user->fullname }}</td>
                                         <td>{{ $problem->user->division->division }}</td>
                                         <td>{{ Carbon\Carbon::parse($problem->date)->format('d M Y H:i') }}</td>
@@ -98,7 +98,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if (auth()->user()->role_id != 4 && ($problem->status != 'CLOSED' || $problem->status_client != 1))
+                                            @if (auth()->user()->role_id != 4 && (($problem->status != 'CLOSED' && $problem->status != 'CANCELLED') || $problem->status_client != 1))
                                             <a href="/problemReport/{{$problem->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
                                             @endif
                                         </td>

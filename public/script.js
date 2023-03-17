@@ -2,13 +2,14 @@ $(document).ready(function () {
     var productindex = 0;
     var selectedproduct = ["1"];
 
-    var requesttype = jQuery("#request_type_id");
     var select = this.value;
 
     $("#addProduct").on("click", function () {
+        var request_type_id = $("#request_type_id").val();
+
         $.ajax({
             type: "get",
-            url: "http://gais.ddnsku.my.id:3990/product/get",
+            url: `http://sumo.completeselular.com:3990/product/get?req_type_id=${request_type_id}`,
             success: function (data) {
                 console.log(data);
                 $("#tableproduct").append(
@@ -22,11 +23,17 @@ $(document).ready(function () {
                 );
 
                 $.each(data, function (index, value) {
+                    var productUnitType =
+                        value.product +
+                        " - " +
+                        value.unit_type.unit_type +
+                        " - " +
+                        value.category.category;
                     $("#selectproduct" + productindex).append(
                         '<option value="' +
                             value.id +
                             '"> ' +
-                            value.product +
+                            productUnitType +
                             " </option>"
                     );
                 });
@@ -44,11 +51,11 @@ $(document).ready(function () {
         $("#row" + button_id + "").remove();
     });
 
-    $("#request_type_id").change(function () {
+    $("#request_type_id").on("change", function () {
         $("#inputRequestTypeId").val($(this).val());
-        $("#inputRequestTypeId2").val($(this).val());
 
-        console.log($(this).val());
+        $("#tableproduct").empty();
+
         if ($(this).val() == "1") {
             $("#inputRequestFile").show();
             $("#formaddmanyproduct").show();

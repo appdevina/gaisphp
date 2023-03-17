@@ -37,6 +37,11 @@ class RequestBarang extends Model
         return $this->belongsTo(User::class, 'closed_by');
     }
 
+    public function approvedby()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
     public function request_detail()
     {
         return $this->hasMany(RequestDetail::class, 'request_id');
@@ -45,6 +50,11 @@ class RequestBarang extends Model
     public function approval()
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function request_approval()
+    {
+        return $this->hasMany(RequestApproval::class, 'request_id');
     }
 
     public function product()

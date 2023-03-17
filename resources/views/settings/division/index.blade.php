@@ -25,7 +25,7 @@
                             </div>
 							<h3 class="panel-title">Data Divisi</h3>
 						</div>
-						<div class="panel-body">
+						<div class="panel-body table-responsive">
 							<table class="table table-hover">
 								<thead>
                                 <tr>

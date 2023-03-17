@@ -1,8 +1,8 @@
 {
-    "name": "GAIS by Business Development",
-    "short_name": "GAIS",
-    "start_url": "http://gais.ddnsku.my.id:3990/",
-    "id": "http://gais.ddnsku.my.id:3990/",
+    "name": "SUMO by Business Development",
+    "short_name": "SUMO",
+    "start_url": "http://sumo.completeselular.com:3990/",
+    "id": "http://sumo.completeselular.com:3990/",
     "background_color": "#ffffff",
     "description": "",
     "display": "fullscreen",

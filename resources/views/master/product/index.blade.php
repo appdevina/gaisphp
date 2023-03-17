@@ -34,6 +34,8 @@
                             <div class="col-md-6 text-right">
                                 <a class="btn btn-info" data-toggle="modal" data-target="#productModal">TAMBAH</a>
                                 <a href="/product/export" class="btn btn-primary">EXPORT</a>
+                                <a class="btn btn-success" data-toggle="modal" data-target=".importModal">IMPORT</a>
+                                <a href="/product/export/template" class="btn btn-default">TEMPLATE</a>
                             </div>                            
 						</div>
                         <br><br>
@@ -44,11 +46,11 @@
                                     <th>NO</th>
                                     <th>Barang</th>
                                     <th>Kategori</th>
-                                    <th>Stok</th>
+                                    <!-- <th>Stok</th> -->
                                     <th>Tipe Unit</th>
                                     <th>Harga</th>
                                     <th>Deskripsi</th>
-                                    <th>Gambar</th>
+                                    <!-- <th>Gambar</th> -->
                                     <th>Diupdate pada</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -59,11 +61,11 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $product->product }}</td>
                                     <td>{{ $product->category->category }}</td>
-                                    <td>{{ $product->stock }}</td>
+                                    <!-- <td>{{ $product->stock }}</td> -->
                                     <td>{{ $product->unit_type->unit_type }}</td>
-                                    <td>{{ $product->price }}</td>
+                                    <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
                                     <td>{{ $product->description }}</td>
-                                    <td><img src="{{ $product->getProductImage() }}" class="img" width="100px" alt="Barang"></td>
+                                    <!-- <td><img src="{{ $product->getProductImage() }}" class="img" width="100px" alt="Barang"></td> -->
                                     <td>{{ $product->updated_at->formatLocalized('%A, %d %b %Y') }}</td>
                                     <td>
                                         <a href="/product/{{$product->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
@@ -85,61 +87,88 @@
 
     <!-- Modal -->
     <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="lnr lnr-cross"></i></button>
                     <h1 class="modal-title" id="productModalLabel">Tambah Barang</h1>
                 </div>
                 <div class="modal-body">
-                <form action="/product/create" method="POST" enctype="multipart/form-data">
-                {{csrf_field()}}
-                <div class="form-group">
-                    <label for="inputProduct" class="form-label">Nama Barang</label>
-                    <input name="product" type="text" class="form-control" id="inputProduct" placeholder="Nama barang.." required>
+                    <form action="/product/create" method="POST" enctype="multipart/form-data">
+                    {{csrf_field()}}
+                    <div class="form-group">
+                        <label for="inputProduct" class="form-label">Nama Barang</label>
+                        <input name="product" type="text" class="form-control" id="inputProduct" placeholder="Nama barang.." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputCategory" class="form-label">Kategori</label>
+                            <select class="form-control" id="category_id" name="category_id" required>
+                                <option selected disabled>-- Pilih Kategori --</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">
+                                        {{ $category->category }}</option>
+                                @endforeach
+                            </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUnitType" class="form-label">Tipe Unit</label>
+                        <select class="form-control" id="unit_type_id" name="unit_type_id" required>
+                                <option selected disabled>-- Pilih Tipe Unit --</option>
+                                @foreach ($unit_types as $unit_type)
+                                    <option value="{{ $unit_type->id }}">
+                                        {{ $unit_type->unit_type }}</option>
+                                @endforeach
+                            </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPrice" class="form-label">Harga</label>
+                        <input name="price" type="number" class="form-control" id="inputPrice" placeholder="Harga.." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDescription" class="form-label">Keterangan</label>
+                        <input name="description" type="text" class="form-control" id="inputDescription" placeholder="Keterangan.." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputProductImage" class="form-label">Foto Barang</label>
+                        <input type="file" name="product_image" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputStock" class="form-label">Stok</label>
+                        <input name="stock" type="number" class="form-control" id="inputStock" placeholder="Stok.." required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="inputCategory" class="form-label">Kategori</label>
-                        <select class="form-control" id="category_id" name="category_id" required>
-                            <option selected disabled>-- Pilih Kategori --</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">
-                                    {{ $category->category }}</option>
-                            @endforeach
-                        </select>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">BATAL</button>
+                    <button type="submit" class="btn btn-primary">SIMPAN</button>
+                </form>
                 </div>
-                <div class="form-group">
-                    <label for="inputUnitType" class="form-label">Tipe Unit</label>
-                    <select class="form-control" id="unit_type_id" name="unit_type_id" required>
-                            <option selected disabled>-- Pilih Tipe Unit --</option>
-                            @foreach ($unit_types as $unit_type)
-                                <option value="{{ $unit_type->id }}">
-                                    {{ $unit_type->unit_type }}</option>
-                            @endforeach
-                        </select>
-                </div>
-                <div class="form-group">
-                    <label for="inputPrice" class="form-label">Harga</label>
-                    <input name="price" type="number" class="form-control" id="inputPrice" placeholder="Harga.." required>
-                </div>
-                <div class="form-group">
-                    <label for="inputDescription" class="form-label">Keterangan</label>
-                    <input name="description" type="text" class="form-control" id="inputDescription" placeholder="Keterangan.." required>
-                </div>
-                <div class="form-group">
-                    <label for="inputProductImage" class="form-label">Foto Barang</label>
-                    <input type="file" name="product_image" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="inputStock" class="form-label">Stok</label>
-                    <input name="stock" type="number" class="form-control" id="inputStock" placeholder="Stok.." required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">BATAL</button>
-                <button type="submit" class="btn btn-primary">SIMPAN</button>
-            </form>
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <form action="/product/import" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="modal fade importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="lnr lnr-cross"></i></button>
+                    <h1 class="modal-title" id="importModalLabel">Import Data Barang</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="">Pilih File</label>
+                        <input type="file" class="form-control" name="fileImport">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">BATAL</button>
+                    <button type="submit" class="btn btn-primary">IMPORT</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</form>
 @stop

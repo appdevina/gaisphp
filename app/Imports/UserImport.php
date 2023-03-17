@@ -18,6 +18,11 @@ class UserImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
+        if (empty($row['username'])) {
+            // stop processing if username is empty
+            return null;
+        }
+        
         $user = new User();
         $user = $user->where('username', strtolower($row['username']));
         if ($user->first()) {
@@ -34,6 +39,7 @@ class UserImport implements ToModel, WithHeadingRow
             ]);
         } else {
             $divisi_id = Divisi::where('division', preg_replace('/\s+/', '', $row['divisi']))->first()->id;
+            error_log($row['username'] . $row['divisi']);
             return new User([
                 'username' => strtolower($row['username']),
                 'fullname' => strtoupper($row['fullname']),

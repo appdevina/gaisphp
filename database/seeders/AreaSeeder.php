@@ -19,31 +19,19 @@ class AreaSeeder extends Seeder
                 'area' => '-',   
             ],
             [
-                'area' => 'COO',   
+                'area' => 'HO',   
             ],
             [
-                'area' => 'CSO',   
+                'area' => 'TOKO',   
             ],
             [
-                'area' => 'RETAIL',
+                'area' => 'TOP',
             ],
             [
-                'area' => 'DEPO',
+                'area' => 'MKLI-DEPO',
             ],
             [
-                'area' => 'CME',
-            ],
-            [
-                'area' => 'AMZ',
-            ],
-            [
-                'area' => 'ANN',
-            ],
-            [
-                'area' => 'CMM',
-            ],
-            [
-                'area' => 'DLP',
+                'area' => 'MKLI-4S',
             ],
         ],
     );

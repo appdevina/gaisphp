@@ -19,6 +19,13 @@ class UnitTypeController extends Controller
         ]);
     }
 
+    public function get()
+    {
+        $unit_type = UnitType::orderBy('unit_type')->get();
+
+        return response()->json($unit_type);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

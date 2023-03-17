@@ -48,7 +48,7 @@
                                 <input name="description" type="text" class="form-control" id="inputDescription" placeholder="Deskripsi.." required>
                             </div>
                             <br>
-                            <button type="submit" class="btn btn-info">SIMPAN</button>
+                            <button type="submit" class="btn btn-info" onclick="return confirm('Laporan ini tidak dapat dibatalkan/revisi, yakin mengirim laporan ?')">SIMPAN</button>
                         </div>
                             </form>
                     </div>

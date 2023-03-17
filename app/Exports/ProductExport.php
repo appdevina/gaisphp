@@ -20,12 +20,12 @@ class ProductExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
-            'nama barang',
+            'nama_barang',
             'kategori',
-            'stok',
-            'tipe unit',
+            'tipe_unit',
             'harga',
-            'deskripsi',
+            'keterangan',
+            'stok',
         ];
     }
 
@@ -34,10 +34,10 @@ class ProductExport implements FromCollection, WithHeadings, WithMapping
         return [
             $product->product,
             $product->category->category,
-            $product->stock,
             $product->unit_type->unit_type,
             $product->price,
             $product->description,
+            $product->stock,
         ];
     }
 }

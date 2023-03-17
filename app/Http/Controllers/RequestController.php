@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Exports\RequestExport;
+use App\Models\Area;
 use App\Models\RequestType;
 use App\Models\RequestBarang;
 use App\Models\RequestDetail;
+use App\Models\RequestApproval;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Http\UploadedFile;
 
 class RequestController extends Controller
 {
@@ -38,13 +42,15 @@ class RequestController extends Controller
                     ->orderBy('date')
                     ->paginate(30);
                 } else if ($request->code) {
+                    //DIGANTI DULU JADI PENCARIAN BY NAME TADINYA KODE PENGAJUAN
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-                    ->where('request_code', $request->code)
-                    ->orderBy('date')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('fullname', 'like', '%'.$request->code.'%');
+                    })
+                    ->orderBy('date','DESC')
                     ->paginate(30);
                 } else {
-                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-                    ->orderBy('status_client', 'asc')
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type', 'request_approval')
                     ->orderBy('date', 'desc')
                     ->paginate(30);
                 }
@@ -61,15 +67,17 @@ class RequestController extends Controller
                     ->orderBy('date')
                     ->paginate(30);
                 } else if ($request->code) {
+                    //DIGANTI DULU JADI PENCARIAN BY NAME TADINYA KODE PENGAJUAN
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('fullname', 'like', '%'.$request->code.'%');
+                    })
                     ->where('request_type_id',1)
-                    ->where('request_code', $request->code)
-                    ->orderBy('date')
+                    ->orderBy('date','DESC')
                     ->paginate(30);
                 } else {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
                     ->where('request_type_id',1)
-                    ->orderBy('status_client', 'asc')
                     ->orderBy('date', 'desc')
                     ->paginate(30);
                 }
@@ -86,14 +94,31 @@ class RequestController extends Controller
                     ->orderBy('date')
                     ->paginate(30);
                 } else if ($request->code) {
+                    //DIGANTI DULU JADI PENCARIAN BY NAME TADINYA KODE PENGAJUAN
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-                    ->where('request_code', $request->code)
-                    ->orderBy('date')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('fullname', 'like', '%'.$request->code.'%');
+                    })
+                    ->orderBy('date','DESC')
+                    ->paginate(30);
+                ##DIVISI WHM
+                } else if ($userDivisi == 9) {
+                    $requestBarangs = RequestBarang::with('user.division.area','closedby','request_detail','request_type','request_approval')
+                    ->whereHas('user.division.area', function ($query) {
+                        $query->whereIn('area_id', [4,5]);
+                    })
+                    ->where('request_type_id', 2)
+                    ->orderBy('date', 'desc')
+                    ->paginate(30);
+                ##DIVISI IT
+                } else if ($userDivisi == 11) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type','request_approval')
+                    ->where('user_id', $user)
+                    ->orderBy('date', 'desc')
                     ->paginate(30);
                 } else {
-                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type','request_approval')
                     ->whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi); })
-                    ->orderBy('status_client', 'asc')
                     ->orderBy('date', 'desc')
                     ->paginate(30);
                 }
@@ -111,15 +136,17 @@ class RequestController extends Controller
                     ->orderBy('date')
                     ->paginate(30);
                 } else if ($request->code) {
+                    //DIGANTI DULU JADI PENCARIAN BY NAME TADINYA KODE PENGAJUAN
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('fullname', 'like', '%'.$request->code.'%');
+                    })
                     ->where('user_id', $user)
-                    ->where('request_code', $request->code)
-                    ->orderBy('date')
+                    ->orderBy('date','DESC')
                     ->paginate(30);
                 } else {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
                     ->where('user_id', $user)
-                    ->orderBy('status_client', 'asc')
                     ->orderBy('date', 'desc')
                     ->paginate(30);
                 }            
@@ -130,6 +157,7 @@ class RequestController extends Controller
             'requestBarangs' => $requestBarangs,
             'request_types' => RequestType::all(),
             'products' => Product::all(),
+            'areas' => Area::all(),
         ]);
     }
 
@@ -153,8 +181,9 @@ class RequestController extends Controller
             $user = Auth::user()->id;
             
             //SEMUA TIPE PENGAJUAN KALAU USER BELUM CLOSE GABISA NAMBAH
-            $clientPending = RequestBarang::with('user')
+            $pengajuanATK = RequestBarang::with('user')
             ->where('user_id', $user)
+            ->where('request_type_id', '2')
             ->where('status_client', '0')
             ->count();
 
@@ -164,13 +193,14 @@ class RequestController extends Controller
             ->where('status_client', '0')
             ->count();
 
-            if ($pengajuanAsset >= 1) {
-                return redirect('request')->with(['error' => 'Harap ubah status akhir pengajuan asset/non asset terlebih dahulu !']);
+            if ($pengajuanAsset >= 1 && $pengajuanATK >=1) {
+                return redirect('request')->with(['error' => 'Harap menunggu hingga pengajuan diproses dan status akhir diselesaikan !']);
             }
 
             return view('request.addRequest', [
-                'request_types' => RequestType::all(),
+                'request_types' => $pengajuanAsset == 1 ? RequestType::where('id', '!=', 1)->get() : ($pengajuanATK == 1 ? RequestType::where('id', '!=', 2)->get() : RequestType::all()),
                 'products' => Product::all(),
+                'pengajuanAsset' => $pengajuanAsset,
             ]);
         } catch (Exception $e) {
             return redirect('request')->with(['error' => $e->getMessage()]);
@@ -201,6 +231,22 @@ class RequestController extends Controller
                 $requestBarang->request_code = "REQ".$requestBarang->id;
                 $requestBarang->save();
 
+                //INSERT APPROVAL
+                $approval = [
+                    'ACCOUNTING',
+                    'MANAGER',
+                    'EXECUTOR',
+                    'ENDUSER',
+                ];
+
+                for ($i = 0; $i < 4; $i++) {
+                    $temp = array();
+                    $temp['request_id'] = $requestBarang->id;
+                    $temp['approval_type'] = $approval[$i];
+
+                    $insertApproval = RequestApproval::create($temp);
+                }
+
                 for ($i = 0; $i < count($request->get('qty_requests')); $i++) {
                     $temp = array();
                     $temp['request_id'] = $requestBarang->id;
@@ -212,18 +258,9 @@ class RequestController extends Controller
                     $insertDetail = RequestDetail::create($temp);
                 }
 
-                // Input data barangnya satuan
-                // RequestDetail::create([
-                //     'request_id' => $requestBarang->id,
-                //     'product_id' => $request->product_id,
-                //     'qty_request' => $request->qty_request,
-                //     // 'qty_remaining' => $request->qty_remaining,
-                //     'description' => $request->description,
-                // ]);
-
                 return redirect('request')->with('success', 'Pengajuan Barang Baru berhasil diinput !');
             }
-
+                ##REQUEST_TYPE_ID SELAIN 1
                 $requestBarang = RequestBarang::create([
                     'user_id' => $request->user_id,
                     'date' => $date,
@@ -233,6 +270,22 @@ class RequestController extends Controller
                 ]);
                 $requestBarang->request_code = "REQ".$requestBarang->id;
                 $requestBarang->save();
+
+                //INSERT APPROVAL
+                $approval = [
+                    'ACCOUNTING',
+                    'MANAGER',
+                    'EXECUTOR',
+                    'ENDUSER',
+                ];
+
+                for ($i = 0; $i < 4; $i++) {
+                    $temp = array();
+                    $temp['request_id'] = $requestBarang->id;
+                    $temp['approval_type'] = $approval[$i];
+
+                    $insertApproval = RequestApproval::create($temp);
+                }
 
                 for ($i = 0; $i < count($request->get('qty_requests')); $i++) {
                         $temp = array();
@@ -255,7 +308,7 @@ class RequestController extends Controller
     {
         try {
             $this->validate($request, [
-                'request_file' => 'required|file|image|mimes:jpeg,png,jpg,pdf|max:2048',
+                'request_file' => 'required|file|image|mimes:jpeg,png,jpg,pdf',
             ]);
     
             $file = $request->file('request_file');
@@ -268,6 +321,14 @@ class RequestController extends Controller
             }
     
             $filename = "Req-".$request_id."_".$date."_". time() .".".$extension;
+
+            // Use Intervention Image to convert the image
+            if (in_array($extension, ['jpeg', 'png', 'jpg']) && $file->getSize() > 2048 * 1024) {
+                $compressedImage = Image::make($file)->encode($extension, 30);
+                $tmpFile = tempnam(sys_get_temp_dir(), 'compressed-');
+                file_put_contents($tmpFile, $compressedImage);
+                $file = new UploadedFile($tmpFile, $file->getClientOriginalName(), $file->getClientMimeType(), null, true);
+            }
     
             $file->storeAs($path, $filename, $disk);
     
@@ -305,6 +366,14 @@ class RequestController extends Controller
             $requestBarang->status_client = $request->status_client;
             $requestBarang->save();
 
+            $getData = RequestApproval::where('request_id', $requestBarang->id)
+            ->where('approval_type', 'ENDUSER')
+            ->first();
+            
+            $getData->approved_by = Auth::user()->id;
+            $getData->approved_at = Carbon::now()->format('Y-m-d H:i:s');
+            $getData->save();
+
             return redirect('request')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
             return redirect('request')->with(['error' => $e->getMessage()]);
@@ -316,6 +385,14 @@ class RequestController extends Controller
         try {
             $requestBarang->status_po = $request->status_po;
             $requestBarang->save();
+            
+            $getData = RequestApproval::where('request_id', $requestBarang->id)
+            ->where('approval_type', 'ACCOUNTING')
+            ->first();
+            
+            $getData->approved_by = Auth::user()->id;
+            $getData->approved_at = Carbon::now()->format('Y-m-d H:i:s');
+            $getData->save();
 
             return redirect('request')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
@@ -327,14 +404,94 @@ class RequestController extends Controller
     {
         try {
             $user = Auth::user()->id;
+
+            $getData = RequestApproval::where('request_id', $requestBarang->id)
+            ->where('approval_type', 'EXECUTOR')
+            ->first();
             
             if($request->status == 'CLOSED'){
-                $requestBarang->closed_by = $user;
-                $requestBarang->closed_at = Carbon::now()->format('Y-m-d H:i:s');
+                $getData->approved_by = Auth::user()->id;
+                $getData->approved_at = Carbon::now()->format('Y-m-d H:i:s');
+                $getData->save();
+            }
+            
+            if($request->status == 'CANCELLED'){
+                $getData->approved_by = Auth::user()->id;
+                $getData->approved_at = Carbon::now()->format('Y-m-d H:i:s');
+                $getData->save();
+                
+                $requestBarang->status_client = 2;
                 $requestBarang->save();
             }
 
             return redirect('request')->with('success', 'Data berhasil diupdate !');
+        } catch (Exception $e) {
+            return redirect('request')->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function showEditPage($id)
+    {
+        $detail = RequestDetail::with('product')->find($id);
+
+        return view('request.showEdit', [
+            'detail' => $detail,
+        ]);
+    }
+
+    public function updateRequest(Request $request, $id)
+    {
+        try {
+            $detail = RequestDetail::find($id);
+
+            $detail->qty_approved = $request->qty_approved;
+            $detail->save();
+
+            return redirect('request/'.$request->request_id)->with('success', 'Data berhasil diupdate !');
+        } catch (Exception $e) {
+            return redirect('request/'.$request->request_id)->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function fixRequest(Request $request, $id)
+    {
+        try {
+            $requestApprov = RequestApproval::where('request_id', $id)
+            ->where('approval_type', 'MANAGER')
+            ->first();
+
+            $detailRequestNull = RequestDetail::where('request_id', $id)->whereNull('qty_approved')->get();
+
+            if ($detailRequestNull->count() === 0) {
+                $requestApprov->approved_by = Auth::user()->id;
+                $requestApprov->approved_at = Carbon::now()->format('Y-m-d H:i:s');
+                $requestApprov->save();
+
+                return redirect('request')->with('success', 'Pengajuan telah disetujui !');
+            }
+
+            foreach ($detailRequestNull as $requestDetail) {
+                $requestDetail->qty_approved = $requestDetail->qty_request;
+                $requestDetail->save();
+            }
+
+            $requestApprov->approved_by = Auth::user()->id;
+            $requestApprov->approved_at = Carbon::now()->format('Y-m-d H:i:s');
+            $requestApprov->save();
+
+            return redirect('request')->with('success', 'Pengajuan telah disetujui !');
+        } catch (Exception $e) {
+            return redirect('request')->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function cancelRequest(Request $request, RequestBarang $requestBarang)
+    {
+        try {
+            $requestBarang->status_client = 2;
+            $requestBarang->save();
+
+            return redirect('request')->with('success', 'Pengajuan telah dibatalkan !');
         } catch (Exception $e) {
             return redirect('request')->with(['error' => $e->getMessage()]);
         }
@@ -352,17 +509,18 @@ class RequestController extends Controller
     }
 
     public function export(Request $request){
+        
         if ($request->exportRequest) {
             $data = explode('-', preg_replace('/\s+/', '', $request->exportRequest));
             $date1 = Carbon::parse($data[0])->format('Y-m-d');
             $date2 = Carbon::parse($data[1])->format('Y-m-d');
             $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
-            $problems = RequestBarang::with('user','closedby','request_detail','request_type')
-                ->whereBetween('date', [$date1, $date2])
-                ->orderBy('date')
-                ->get();
+            //GET ADDITIONAL ID
+            $area_id = $request->area_id;
+            $request_type_id = $request->request_type_id;
+            $request_type = RequestType::where('id', $request_type_id)->value('request_type');
         }
 
-        return Excel::download(new RequestExport($date1, $date2), 'pengajuan_'. $date1 . '_to_' . $date2 . '.xlsx',);
+        return Excel::download(new RequestExport($date1, $date2, $area_id, $request_type_id), 'pengajuan_'. str_replace(['/', '\\'], '_', $request_type) . '_'. $date1 . '_to_' . $date2 . '.xlsx');
     }
 }

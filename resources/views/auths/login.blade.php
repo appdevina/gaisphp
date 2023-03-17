@@ -5,7 +5,7 @@
 	<!-- PWA  -->
 	<meta name="theme-color" content="#090089"/>
 	<link rel="manifest" href="{{ asset('/manifest.json') }}">
-	<title>LOGIN GAIS | by Business Development</title>
+	<title>LOGIN SUMO | by Business Development</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -20,8 +20,8 @@
 	<!-- GOOGLE FONTS -->
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
 	<!-- ICONS -->
-	<link rel="apple-touch-icon" sizes="76x76" href="{{asset('admin/assets/img/gais-white.png')}}">
-	<link rel="icon" type="image/png" sizes="96x96" href="{{asset('admin/assets/img/gais-white.png')}}">
+	<link rel="apple-touch-icon" sizes="76x76" href="{{asset('admin/assets/img/gais-block.png')}}">
+	<link rel="icon" type="image/png" sizes="96x96" href="{{asset('admin/assets/img/gais-block.png')}}">
 </head>
 
 <body>
@@ -33,7 +33,7 @@
 					<div class="left">
 						<div class="content">
 							<div class="header">
-								<div class="logo text-center"><img src="{{asset('admin/assets/img/logo-gais.png')}}" alt="Klorofil Logo"></div>
+								<div class="logo text-center"><img src="{{asset('admin/assets/img/logo-sumo.png')}}" alt="Klorofil Logo"></div>
 								<p class="lead">Login to your account</p>
 							</div>
 							<form class="form-auth-small" action="/postlogin" method="POST">
@@ -53,7 +53,7 @@
 					<div class="right">
 						<div class="overlay"></div>
 						<div class="content text">
-							<h1 class="heading">General Affair Information System</h1>
+							<h1 class="heading">Submission Mobile</h1>
 							<p>by Business Development</p>
 						</div>
 					</div>

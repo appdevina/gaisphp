@@ -35,21 +35,22 @@ class ProblemReportController extends Controller
                     ->orderBy('date')
                     ->paginate(30);
                 } else if ($request->code) {
+                    //DIGANTI DULU JADI PENCARIAN BY NAME TADINYA KODE GANGGUAN
                     $problems = ProblemReport::with('prcategory','user','closedby')
-                    ->where('problem_report_code',$request->code)
-                    ->orderBy('date')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('fullname', 'like', '%'.$request->code.'%');
+                    })
+                    ->orderBy('date','DESC')
                     ->paginate(30);
                 } else {
                     $problems = ProblemReport::with('prcategory','user','closedby')
-                    ->orderBy('status','desc')
-                    ->orderBy('status_client', 'asc')
                     ->orderBy('date', 'desc')
                     ->paginate(30);
                 }
                 break;
             case 3: 
                 //KALAU DVISINYA HCM, TAMPILIN GANGGUAN UMUM AJA
-                if ($userDivisi == 4) {
+                if ($userDivisi == 6) {
                     if ($request->search) {
                         $data = explode('-', preg_replace('/\s+/', '', $request->search));
                         $date1 = Carbon::parse($data[0])->format('Y-m-d');
@@ -61,16 +62,17 @@ class ProblemReportController extends Controller
                         ->orderBy('date')
                         ->paginate(30);
                     } else if ($request->code) {
+                        //DIGANTI DULU JADI PENCARIAN BY NAME TADINYA KODE GANGGUAN
                         $problems = ProblemReport::with('prcategory','user','closedby')
+                        ->whereHas('user', function ($query) use ($request) {
+                            $query->where('fullname', 'like', '%'.$request->code.'%');
+                        })
                         ->where('pr_category_id', 7)
-                        ->where('problem_report_code',$request->code)
-                        ->orderBy('date')
+                        ->orderBy('date','DESC')
                         ->paginate(30); 
                     } else {
                         $problems = ProblemReport::with('prcategory','user','closedby')
                         ->where('pr_category_id', 7)
-                        ->orderBy('status','desc')
-                        ->orderBy('status_client', 'asc')
                         ->orderBy('date', 'desc')
                         ->paginate(30);
                     }
@@ -86,19 +88,19 @@ class ProblemReportController extends Controller
                         ->orderBy('date')
                         ->paginate(30);
                     } else if ($request->code) {
+                        //DIGANTI DULU JADI PENCARIAN BY NAME TADINYA KODE GANGGUAN
                         $problems = ProblemReport::with('prcategory','user','closedby')
+                        ->whereHas('user', function ($query) use ($request) {
+                            $query->where('fullname', 'like', '%'.$request->code.'%');
+                        })
                         ->where('pr_category_id', '!=', 7)
-                        ->where('problem_report_code',$request->code)
-                        ->orderBy('date')
+                        ->orderBy('date','DESC')
                         ->paginate(30); 
                     } else {
                         $problems = ProblemReport::with('prcategory','user','closedby')
                         ->where('pr_category_id', '!=', 7)
-                        ->orderBy('status','desc')
-                        ->orderBy('status_client', 'asc')
                         ->orderBy('date', 'desc')
                         ->paginate(30);
-                        
                     }
                 }
                 break;
@@ -114,16 +116,17 @@ class ProblemReportController extends Controller
                     ->orderBy('date')
                     ->paginate(30);
                 } else if ($request->code) {
+                    //DIGANTI DULU JADI PENCARIAN BY NAME TADINYA KODE GANGGUAN
                     $problems = ProblemReport::with('prcategory','user','closedby')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('fullname', 'like', '%'.$request->code.'%');
+                    })
                     ->where('user_id', $user)
-                    ->where('problem_report_code',$request->code)
-                    ->orderBy('date')
+                    ->orderBy('date','DESC')
                     ->paginate(30); 
                 } else {
                     $problems = ProblemReport::with('prcategory','user','closedby')
                     ->where('user_id', $user)
-                    ->orderBy('status','desc')
-                    ->orderBy('status_client', 'asc')
                     ->orderBy('date', 'desc')
                     ->paginate(30);
                 }
@@ -153,7 +156,7 @@ class ProblemReportController extends Controller
             ->count();
 
             if ($clientPending >= 1) {
-                return redirect('problemReport')->with(['error' => 'Harap ubah status akhir laporan terlebih dahulu !']);
+                return redirect('problemReport')->with(['error' => 'Harap menunggu hingga diproses dan status akhir diselesaikan !']);
             }
 
             return view('problems.addProblem', [
@@ -213,6 +216,12 @@ class ProblemReportController extends Controller
             if($request->status == "CLOSED"){
                 $problem->closed_by = $user;
                 $problem->closed_at = Carbon::now()->format('Y-m-d H:i:s');
+            }
+
+            if($request->status == "CANCELLED"){
+                $problem->closed_by = $user;
+                $problem->closed_at = Carbon::now()->format('Y-m-d H:i:s');
+                $problem->status_client = 1;
             }
 
             if ($request->scheduled_at != null){

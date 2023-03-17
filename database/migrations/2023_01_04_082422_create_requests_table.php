@@ -20,6 +20,7 @@ class CreateRequestsTable extends Migration
             $table->dateTime('date');
             $table->double('total_cost');
             $table->integer('status_po')->nullable();
+            $table->string('po_number')->nullable();
             $table->integer('status_client')->default(0);
             $table->integer('closed_by')->nullable();
             $table->dateTime('closed_at')->nullable();

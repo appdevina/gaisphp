@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ProductExport;
+use App\Exports\ProductTemplateExport;
+use App\Imports\ProductImport;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\UnitType;
@@ -20,7 +22,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::paginate(30);
+        $products = Product::orderBy('product')->paginate(30);
 
         if($request->has('search')){
             $products = Product::with('category', 'unit_type')
@@ -36,9 +38,12 @@ class ProductController extends Controller
         ]);
     }
 
-    public function get()
+    public function get(Request $request)
     {
-        $product = Product::orderBy('product')->get();
+        $product = Product::with('unit_type','category')
+        ->where('category_id', $request->req_type_id)
+        ->orderBy('product')
+        ->get();
 
         return response()->json($product);
     }
@@ -201,5 +206,27 @@ class ProductController extends Controller
     public function export()
     {
         return Excel::download(new ProductExport, 'barang.xlsx');
+    }
+
+    public function import(Request $request, $disk = 'public')
+    {
+        $file = $request->file('fileImport');
+        $namaFile = $file->getClientOriginalName();
+
+        $path = 'import';
+        if (! Storage::disk($disk)->exists($path)) {
+            Storage::disk($disk)->makeDirectory($path);
+        }
+        $file->storeAs($path, $namaFile, $disk);
+
+        $file->move(storage_path('import/'), $namaFile);
+        Excel::import(new ProductImport, storage_path('import/' . $namaFile));
+        
+        return redirect('product')->with(['success' => 'Berhasil import data barang !']);
+    }
+
+    public function template()
+    {
+        return Excel::download(new ProductTemplateExport, 'barang_template.xlsx');
     }
 }

@@ -102,7 +102,7 @@ class UserController extends Controller
             return $filename;
 
         } catch (Exception $e) {
-            return redirect('product')->with(['error' => $e->getMessage()]);
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -165,7 +165,7 @@ class UserController extends Controller
                 'username' => $request->username,
                 'password' => bcrypt($request->password),
                 'badan_usaha_id' => $request->badan_usaha_id,
-                'divisi_id' => $request->divisi_id,
+                'division_id' => $request->division_id,
                 'role_id' => $request->role_id,
                 'approval_id' => $request->approval_id,
                 'profile_picture' => $request->profile_picture == null ? $user->profile_picture : $profile_picture,
@@ -173,7 +173,7 @@ class UserController extends Controller
 
             return redirect('user')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
-             return redirect('user')->with(['error' => $e->getMessage()]);
+             throw new Exception($e->getMessage());
         }
     }
 

@@ -20,11 +20,11 @@
                     <div class="col-md-12">
                     <div class="panel">
 						<div class="panel-heading">
-                            <div class="col-md-2">
-                                <h3 class="panel-title">Data Pengajuan</h3>
+                            <div class="col-md-1">
+                                <h3 class="panel-title">Pengajuan</h3>
                                 <br>
                             </div>
-                            <div class="col-md-3 text-right">
+                            <div class="col-md-4 text-right">
                                 <form class="form-inline" id="my_form" action="/request">
                                     <div class="form-group">
                                     <input type="text" class="form-control" name="search" id="tanggal-request" placeholder="Enter your text">
@@ -32,24 +32,20 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="col-md-3 text-right">
+                            <div class="col-md-3 text-left">
                                 <form class="form-inline" id="code_form" action="/request">
                                     <div class="form-group">
-                                    <input type="text" class="form-control" name="code" placeholder="Enter code">
-                                    <a href="javascript:{}" onclick="document.getElementById('code_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                    <input type="text" class="form-control" name="code" placeholder="Cari nama ..">
+                                    <!-- <a href="javascript:{}" onclick="document.getElementById('code_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a> -->
                                     </div>
                                 </form>
                             </div>
                             <div class="col-md-4 text-right">
-                                @if (auth()->user()->role_id == 1)
-                                    <div class="btn-group pull-right">
-                                        <a href="#exportRequest" data-toggle="modal" class="btn btn-primary">EXPORT</a>
-                                    </div>
+                                @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
+                                    <a href="#exportRequest" data-toggle="modal" class="btn btn-primary">EXPORT</a>
                                 @endif
                                 @if (auth()->user()->role_id != 1)
-                                <div class="btn-group pull-right" id="add_reqbar_button">
                                     <a href="/request/create" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Tambah pengajuan">TAMBAH</a>
-                                </div>
                                 @endif
                             </div>
 						</div>
@@ -61,57 +57,139 @@
                                     <th>NO</th>
                                     <th>Kode</th>
                                     <th>Pemohon</th>
+                                    <th>Divisi</th>
                                     <th>Diajukan pada</th>
                                     <th>Tipe Pengajuan</th>
                                     <!-- <th>Barang</th> -->
                                     <th>Lampiran</th>
                                     <th>Status PO</th>
+                                    <th>Disetujui oleh</th>
+                                    <th>Disetujui pada</th>
                                     <th>Diproses oleh</th>
-                                    <th>Diproses pada</th>
+                                    <!-- <th>Diproses pada</th> -->
                                     <th>Status Akhir</th>
-                                    <!-- <th>Approved by</th>
-                                    <th>Approved at</th> -->
-                                    <th> @if (auth()->user()->role_id >= 3) Edit Status Akhir @endif</th>
-                                    <th> @if (auth()->user()->role_id == 1 || auth()->user()->role_id == 3) Aksi Proses @endif </th>
-                                    <th> @if (auth()->user()->role_id == 2) Aksi @endif </th>
-                                    <th></th>
+                                    <th>Aksi</th>
+                                    <th></th> 
                                 </tr>
 								</thead>
 								<tbody>
                                 @foreach ($requestBarangs as $reqbar)
                                 <tr>
+                                    <!-- NO -->
                                     <td>{{ $loop->iteration }}</td>
+                                    <!-- KODE -->
                                     <td>{{ $reqbar->request_code }}</td>
+                                    <!-- PEMOHON -->
                                     <td>{{ $reqbar->user->fullname }}</td>
+                                    <!-- DIVISI -->
+                                    <td>{{ $reqbar->user->division->division }}</td>
+                                    <!-- DIAJUKAN PADA -->
                                     <td>{{ Carbon\Carbon::parse($reqbar->date)->format('d M Y H:i') }}</td>
+                                    <!-- TIPE PENGAJUAN -->
                                     <td>{{ $reqbar->request_type->request_type }}</td>
                                     <!-- <td>{{ $reqbar->request_detail }}</td> -->
+                                    <!-- LAMPIRAN -->
                                     @if (Storage::exists('public/Request_File/' . $reqbar->request_file) && Storage::size('public/Request_File/' . $reqbar->request_file) > 0)
                                         <td><a href="{{ asset('storage/Request_File/' . $reqbar->request_file) }}">Lihat Dokumen</a></td>
                                     @else
                                         <td>Tidak ada file</td>
                                     @endif
-                                    <td class={{ $reqbar->status_po == 0 ? "text-danger" : "text-success" }}>{{ $reqbar->status_po == 0 ? '' : 'YA' }}</td>
-                                    <td>{{ $reqbar->closed_by == null ? '' : $reqbar->closedby->fullname }}</td>
-                                    <td>{{ $reqbar->closed_at == null ? '' : Carbon\Carbon::parse($reqbar->closed_at)->format('d M Y H:i') }}</td>
-                                    <td class={{ $reqbar->status_client == 0 ? "text-warning" : "text-success" }}> {{ $reqbar->status_client == 0 ? 'MENUNGGU' : 'DITERIMA' }}</td>
-                                    <!-- <td>{{ $reqbar->approved_by == null ? '' : $reqbar->approval->fullname }}</td>
-                                    <td>{{ $reqbar->approved_at == null ? '' : Carbon\Carbon::parse($reqbar->approved_at)->format('d M Y H:i') }}</td> -->
-                                    <td>
-                                        @if (auth()->user()->role_id >= 3 && ($reqbar->closed_by != null && $reqbar->status_client == 0))
-                                        <a href="/request/{{$reqbar->id}}/editStatusClient" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                    <!-- STATUS PO -->
+                                    @foreach($reqbar->request_approval as $approval)
+                                        @if ($approval->approval_type == 'ACCOUNTING' && $approval->approved_by == null)
+                                            <td class={{ $reqbar->status_po == 0 ? "text-danger" : "text-success" }}>{{ $reqbar->status_po == 0 ? '' : 'YA' }}</td>
+                                        @elseif ($approval->approval_type == 'ACCOUNTING' && $approval->approved_by != null)
+                                            <td class={{ $reqbar->status_po == 0 ? "text-danger" : "text-success" }}>{{ $reqbar->status_po == 0 ? 'TIDAK' : 'YA' }}</td>
                                         @endif
-                                    </td>
+                                    @endforeach
+                                    <!-- DISETUJUI OLEH -->
                                     <td>
-                                        @if ((auth()->user()->role_id == 1 || auth()->user()->role_id == 3) && ($reqbar->closed_by == null && $reqbar->status_client == 0 && $reqbar->status_po == 1))
-                                        <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
-                                        @endif
+                                    @if($reqbar->request_type->id == 2)
+                                        @foreach($reqbar->request_approval as $approval)
+                                            @if ($approval->approval_type == 'MANAGER')
+                                                {{$approval->approved_by != null ? $approval->user->fullname : "-" }}
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        -
+                                    @endif
                                     </td>
+                                    <!-- DISETUJUI PADA -->
                                     <td>
-                                        @if ((auth()->user()->role_id == 2 && $reqbar->request_type_id == 1) && ($reqbar->closed_by == null && $reqbar->status_po == 0))
-                                        <a href="/request/{{$reqbar->id}}/editStatusAcc" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
-                                        @endif
+                                    @if($reqbar->request_type->id == 2)
+                                        @foreach($reqbar->request_approval as $approval)
+                                            @if ($approval->approval_type == 'MANAGER')
+                                                {{$approval->approved_by != null ? Carbon\Carbon::parse($approval->approved_at)->format('d M Y H:i') : "-" }}
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        -
+                                    @endif
                                     </td>
+                                    <!-- DIPROSES OLEH -->
+                                    <td>
+                                        @foreach($reqbar->request_approval as $approval)
+                                            @if ($approval->approval_type == 'EXECUTOR')
+                                                {{$approval->approved_by != null ? $approval->user->fullname : "-" }}
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                    <!-- DIPROSES PADA -->
+                                    <!-- STATUS AKHIR -->
+                                    <td class="
+                                            @if ($reqbar->status_client == '0')
+                                                {{"text-warning"}}
+                                            @elseif ($reqbar->status_client == '1')
+                                                {{"text-success"}}
+                                            @else
+                                                {{"text-danger"}}
+                                            @endif
+                                       ">
+                                            @if ($reqbar->status_client == '0')
+                                                {{"MENUNGGU"}}
+                                            @elseif ($reqbar->status_client == '1')
+                                                {{"DITERIMA"}}
+                                            @else
+                                                {{"DIBATALKAN"}}
+                                            @endif
+                                    </td>
+                                    <!-- AKSI -->
+                                    <td>
+                                        @switch(auth()->user()->role_id)
+                                            @case(1)
+                                            @case(3)
+                                                @if (auth()->user()->division_id == 9 && $reqbar->request_type_id == 2)
+                                                    @foreach($reqbar->request_approval as $approval)
+                                                        @if ($approval->approval_type == 'MANAGER' && $approval->approved_by == null)
+                                                            <a href="/request/{{$reqbar->id}}" class="btn btn-warning" type="button">Check</a>
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                        @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 2)
+                                                            <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                                        @elseif ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ACCOUNTING')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 1)
+                                                            <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                                        @endif
+                                                @endif
+                                                @break
+                                        
+                                            @case(2)
+                                                @foreach($reqbar->request_approval as $approval)
+                                                    @if ($approval->approval_type == 'ACCOUNTING' && $approval->approved_by == null && $reqbar->status_client != 2)
+                                                        <a href="/request/{{$reqbar->id}}/editStatusAcc" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                                    @endif
+                                                @endforeach
+                                                @break
+
+                                            @default
+                                                @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ENDUSER')->whereNull('approved_by')->isNotEmpty() && $reqbar->status_client != 2)
+                                                <a href="/request/{{$reqbar->id}}/editStatusClient" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                                @endif
+                                                @if ($reqbar->request_approval->where('approval_type', 'MANAGER')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->status_client != 2)
+                                                <a href="/request/{{$reqbar->id}}/cancelRequest" class="btn btn-danger" data-toggle="modal" type="button" onclick="return confirm('Yakin akan membatalkan pengajuan ?')">Batal</a>
+                                                @endif
+                                        @endswitch
+                                    </td>  
                                     <td>
                                         <a href="/request/{{$reqbar->id}}" class="btn btn-default" type="button">Lihat</a>
                                     </td>
@@ -269,13 +347,33 @@
                         <h3 class="modal-title" id="exportRequesttLabel">Export Laporan Pengajuan</h3>
                     </div>
                     <div class="modal-body">
-                        <label for="date" class="form-label">Tanggal</label>
-                            <div class="form-group">
+                        <div class="form-group">
+                            <label for="inputRequestType" class="form-label">Tipe Pengajuan</label>
+                                <select class="form-control" id="request_type_id" name="request_type_id">
+                                   <option selected disabled>-- Pilih Tipe Pengajuan --</option>
+                                    @foreach ($request_types as $reqtype)
+                                        <option value="{{ $reqtype->id }}">
+                                            {{ $reqtype->request_type }}</option>
+                                    @endforeach
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputArea" class="form-label">Area</label>
+                                <select class="form-control" id="area_id" name="area_id">
+                                   <option selected disabled>-- Pilih Area --</option>
+                                    @foreach ($areas as $area)
+                                        <option value="{{ $area->id }}">
+                                            {{ $area->area }}</option>
+                                    @endforeach
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="date" class="form-label">Tanggal</label>
                                 <form action="request">
                                     <input type="text" class="form-control float-right" value="" name="exportRequest"
                                         id="tanggal-export-request" required>
                                 </form>
-                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

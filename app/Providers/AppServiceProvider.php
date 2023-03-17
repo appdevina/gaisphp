@@ -33,26 +33,73 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $userDivisi = Auth::user()->division_id ?? '';
             
-            // BADGE REQUEST
-            $notifRequestAcc = RequestBarang::where('status_po', 0)->where('request_type_id', 1)->count();
+            ##BADGE REQUEST
+            ##BADGE ACCOUNTING
+            $notifRequestAcc = RequestBarang::with('user', 'request_approval')
+            ->whereHas('request_approval', function ($query) {
+                $query->where('approval_type', 'ACCOUNTING')
+                ->where('approved_by', null);
+            })
+            ->where('status_client', '!=', 2)
+            ->where('request_type_id', 1)
+            ->count();
+
             if($notifRequestAcc == '0') {
                 $notifRequestAcc = '';
             }
 
-            $notifRequestAdmin = RequestBarang::where('closed_by', null)->count();
+            ##BADGE ADMIN
+            $notifRequestAdmin = RequestBarang::with('user', 'request_approval')
+            ->whereHas('request_approval', function ($query) {
+                $query->where('approval_type', 'EXECUTOR')
+                ->where('approved_by', null);
+            })
+            ->where('status_client', '!=', 2)
+            ->count();
+            
             if($notifRequestAdmin == '0') {
                 $notifRequestAdmin = '';
             }
 
-            $notifRequestApprov = RequestBarang::where('closed_by', null)
+            ##BADGE APPROVAL
+            $notifRequestApprov = RequestBarang::with('user', 'request_approval')
             ->whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi); })
+            ->whereHas('request_approval', function ($query) {
+                $query->where('approval_type', 'EXECUTOR')
+                ->where('approved_by', null);
+            })
+            ->where('status_client', '!=', 2)
             ->count();
+            
+            if ($userDivisi == 9) {
+                $notifRequestApprov = RequestBarang::with('user.division.area', 'request_approval')
+                ->whereHas('user.division.area', function ($query) {
+                    $query->whereIn('area_id', [4,5]);
+                })
+                ->whereHas('request_approval', function ($query) {
+                    $query->where('approval_type', 'MANAGER')
+                    ->where('approved_by', null);
+                })
+                ->where('status_client', '!=', 2)
+                ->where('request_type_id', 2)
+                ->count();
+            }
+
             if($notifRequestApprov == '0') {
                 $notifRequestApprov = '';
             }
 
+            ##BADGE ENDUSER
             if (Auth::check()){
-            $notifRequestUser = RequestBarang::where('user_id', Auth::id())->where('status_client', 0)->count();
+                $notifRequestUser = RequestBarang::with('user', 'request_approval')
+                ->where('user_id', Auth::id())
+                ->where('status_client', '!=', 2)
+                ->whereHas('request_approval', function ($query) {
+                    $query->where('approval_type', 'ENDUSER')
+                    ->where('approved_by', null);
+                })
+                ->count();
+
                 if($notifRequestUser == '0') {
                     $notifRequestUser = '';
                 }
@@ -60,15 +107,20 @@ class AppServiceProvider extends ServiceProvider
                 $notifRequestUser = '';
             }
 
-            // BADGE PROBLEM REPORT
-            //KALAU DIVISI HCM TAMPILIN NOTIF REPORT YANG GANGGUAN UMUM AJA
-            if ($userDivisi == 4) {
+            ## BADGE PROBLEM REPORT
+            ##KALAU DIVISI HCM TAMPILIN NOTIF REPORT YANG GANGGUAN UMUM AJA
+            if ($userDivisi == 6) {
                 $notifReportAdmin = ProblemReport::where('closed_by', null)
                 ->where('pr_category_id', 7)
                 ->count();
             } else {
                 $notifReportAdmin = ProblemReport::where('closed_by', null)
                 ->where('pr_category_id', '!=', 7)
+                ->count();
+            }
+
+            if (Auth::id() == 1) {
+                $notifReportAdmin = ProblemReport::where('closed_by', null)
                 ->count();
             }
 
@@ -85,6 +137,23 @@ class AppServiceProvider extends ServiceProvider
                 $notifReportUser = '';
             }
 
+            if(Auth::check() && Auth::user()->role_id > 3) {
+                $requestApprove = RequestBarang::with('user', 'request_approval.user')
+                ->whereHas('request_approval', function ($query) {
+                    $query->where('approval_type', 'EXECUTOR')
+                    ->where('approved_by', '!=', null);
+                })
+                ->whereHas('request_approval', function ($query) {
+                    $query->where('approval_type', 'ENDUSER')
+                    ->where('approved_by', null);
+                })
+                ->get();
+
+            } else {
+                $requestApprove = [];
+            }
+
+
             return $view->with([
                 'notifRequestAcc' => $notifRequestAcc,
                 'notifRequestAdmin' => $notifRequestAdmin,
@@ -92,6 +161,7 @@ class AppServiceProvider extends ServiceProvider
                 'notifRequestUser' => $notifRequestUser,
                 'notifReportAdmin' => $notifReportAdmin,
                 'notifReportUser' => $notifReportUser,
+                'requestApprove' => $requestApprove,
             ]);
         });
     }

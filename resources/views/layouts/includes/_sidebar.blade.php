@@ -8,13 +8,13 @@
 				<span>PENGAJUAN 
 					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ auth()->user()->role_id == 2 ? $notifRequestAcc : ( auth()->user()->role_id == 3 ? $notifRequestApprov : (auth()->user()->role_id >= 4 ? $notifRequestUser : $notifRequestAdmin )) }}</span>
 				</span></a></li>
-				@if (auth()->user()->role_id == 1 || auth()->user()->role_id >= 3 )
+				@if (auth()->user()->role_id == 1 || auth()->user()->role_id > 3 || (auth()->user()->role_id == 3 && auth()->user()->division_id != 9))
 				<li id="problemReport"><a href="/problemReport" class="{{ Request::is('problemReport') ? 'active' : '' }}"><i class="lnr lnr-bubble"></i> 
 				<span>LAPOR GANGGUAN
 					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ auth()->user()->role_id == 1 ? $notifReportAdmin : (auth()->user()->role_id == 3 ? $notifReportAdmin : $notifReportUser) }}</span>
 				</span></a></li>
 				@endif
-                @if (auth()->user()->role_id == 1)
+                @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
 				<li>
 					<a href="#subPagesMaster" data-toggle="collapse" class="collapsed"><i class="lnr lnr-list"></i> <span>DATA</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
 					<div id="subPagesMaster" class="collapse ">

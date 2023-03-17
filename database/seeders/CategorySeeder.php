@@ -16,7 +16,7 @@ class CategorySeeder extends Seeder
     {
         DB::table('categories')->insert([
             [
-                'category' => 'ASSET/NON ASSET',   
+                'category' => 'ASSET/NONASSET',   
             ],
             [
                 'category' => 'ATK',   
