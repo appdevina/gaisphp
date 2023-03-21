@@ -16,7 +16,7 @@ class UnitTypeSeeder extends Seeder
     {
         DB::table('unit_types')->insert([
             [
-                'unit_type' => 'BUAH',   
+                'unit_type' => 'UNIT',   
             ],
             [
                 'unit_type' => 'PACK',   

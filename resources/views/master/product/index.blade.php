@@ -27,15 +27,15 @@
                                 <form class="form-inline" id="my_form" action="/product">
                                     <div class="form-group">
                                       <input type="text" class="form-control" name="search" placeholder="Enter your text">
-                                      <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" >Cari</a>
+                                      <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
                                     </div>
                                   </form>
                             </div>
                             <div class="col-md-6 text-right">
-                                <a class="btn btn-info" data-toggle="modal" data-target="#productModal">TAMBAH</a>
-                                <a href="/product/export" class="btn btn-primary">EXPORT</a>
-                                <a class="btn btn-success" data-toggle="modal" data-target=".importModal">IMPORT</a>
-                                <a href="/product/export/template" class="btn btn-default">TEMPLATE</a>
+                                <a class="btn btn-info" data-toggle="modal" data-target="#productModal" data-toggle="tooltip" data-placement="top" title="Tambah Barang"><span class="lnr lnr-plus-circle"></span></a>
+                                <a href="/product/export" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Export barang"><span class="lnr lnr-download"></span></a>
+                                <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import barang"><span class="lnr lnr-upload"></span></a>
+                                <a href="/product/export/template" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
                             </div>                            
 						</div>
                         <br><br>
@@ -68,7 +68,7 @@
                                     <!-- <td><img src="{{ $product->getProductImage() }}" class="img" width="100px" alt="Barang"></td> -->
                                     <td>{{ $product->updated_at->formatLocalized('%A, %d %b %Y') }}</td>
                                     <td>
-                                        <a href="/product/{{$product->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="/product/{{$product->id}}/edit" class="btn btn-warning btn-sm"><span class="lnr lnr-pencil"></span></a>
                                         <!-- <a href="/product/{{$product->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
                                     </td>
                                 </tr>

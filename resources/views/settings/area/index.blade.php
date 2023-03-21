@@ -21,7 +21,7 @@
                     <div class="panel">
 						<div class="panel-heading">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-info" data-toggle="modal" data-target="#areaModal">TAMBAH</a>
+                                <a class="btn btn-info" data-toggle="modal" data-target="#areaModal"data-toggle="tooltip" data-placement="top" title="Tambah Area"><span class="lnr lnr-plus-circle"></span></a>
                             </div>
                             <h3 class="panel-title">Data Area</h3>
 						</div>
@@ -40,7 +40,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $area->area }}</td>
                                     <td>
-                                        <a href="/area/{{$area->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="/area/{{$area->id}}/edit" class="btn btn-warning btn-sm"><span class="lnr lnr-pencil"></span></a>
                                         <!-- BUTTON DELETE -->
                                         <!-- <a href="/area/{{$area->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
                                     </td>

@@ -21,7 +21,7 @@
                     <div class="panel">
 						<div class="panel-heading">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-info" data-toggle="modal" data-target="#roleModal">TAMBAH</a>
+                                <a class="btn btn-info" data-toggle="modal" data-target="#roleModal" data-toggle="tooltip" data-placement="top" title="Tambah Role"><span class="lnr lnr-plus-circle"></span></a>
                             </div>
                             <h3 class="panel-title">Data Role</h3>
 						</div>
@@ -40,7 +40,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $role->role }}</td>
                                     <td>
-                                        <a href="/role/{{$role->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="/role/{{$role->id}}/edit" class="btn btn-warning btn-sm"><span class="lnr lnr-pencil"></span></a>
                                         <!-- BUTTON DELETE -->
                                         <!-- <a href="/role/{{$role->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
                                     </td>

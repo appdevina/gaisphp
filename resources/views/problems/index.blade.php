@@ -32,7 +32,20 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-3 text-left">
+                                <div class="col-md-3 text-right">
+                                <form class="form-inline" id="inputStatusAkhir" action="/problemReport">
+                                    <div class="form-group">
+                                    <select class="form-control" name="selectStatusAkhir">
+                                        <option selected value="">-- Status Akhir --</option>
+                                        <option value="0">MENUNGGU</option>
+                                        <option value="1">DITERIMA</option>
+                                        <option value="2">DIBATALKAN</option>
+                                    </select>
+                                    <a href="javascript:{}" onclick="document.getElementById('inputStatusAkhir').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                    </div>
+                                </form>
+                            </div>
+                                <div class="col-md-2 text-left">
                                     <form class="form-inline" id="code_form" action="/problemReport">
                                         <div class="form-group">
                                         <input type="text" class="form-control" name="code" placeholder="Cari nama ..">
@@ -40,16 +53,12 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-4 text-right">
-                                    @if (auth()->user()->role_id == 1)
-                                    <div class="btn-group pull-right">
-                                        <a href="#exportProblemReport" data-toggle="modal" class="btn btn-primary">EXPORT</a>
-                                    </div>
-                                    @endif
+                                <div class="col-md-2 text-right">
                                     @if (auth()->user()->role_id != 1)
-                                    <div class="btn-group pull-right">
-                                        <a href="/problemReport/create" class="btn btn-info">TAMBAH</a>
-                                    </div>
+                                        <a href="/problemReport/create" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Tambah laporan"><span class="lnr lnr-plus-circle"></span></a>
+                                    @endif
+                                    @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
+                                        <a href="#exportProblemReport" data-toggle="modal" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Export laporan"><span class="lnr lnr-download"></span></a>
                                     @endif
                                 </div>
                             </div>
@@ -94,12 +103,12 @@
                                         <td class={{ $problem->status_client == 0 ? "text-warning" : "text-success" }}> {{ $problem->status_client == 0 ? 'MENUNGGU' : 'SELESAI' }}</td>
                                         <td>
                                             @if (auth()->user()->role_id == 4 && $problem->status == 'CLOSED' && $problem->status_client != 1)
-                                            <a href="/problemReport/{{$problem->id}}/editStatusClient" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                            <a href="/problemReport/{{$problem->id}}/editStatusClient" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                             @endif
                                         </td>
                                         <td>
                                             @if (auth()->user()->role_id != 4 && (($problem->status != 'CLOSED' && $problem->status != 'CANCELLED') || $problem->status_client != 1))
-                                            <a href="/problemReport/{{$problem->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                            <a href="/problemReport/{{$problem->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                             @endif
                                         </td>
                                     </tr>

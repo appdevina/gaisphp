@@ -22,19 +22,26 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
 						<i class="lnr lnr-alarm"></i>
-						<span class="badge bg-danger">{{ $requestApprove->where('status_client', '!=', 2)->count() }}</span>
+						<span class="badge bg-danger">{{ $totalNotif }}</span>
 					</a>
 					<ul class="dropdown-menu notifications">
-						@if ($requestApprove->where('status_client', '==', 1)->count() > 0)
+						@if ($requestApprove->where('status_client', '==', 0)->count() > 0)
 							@foreach ($requestApprove as $ra) 
 								@foreach ($ra->request_approval as $ral)
 									@if ($ral->approval_type == 'EXECUTOR' && $ral->approved_by != null)
-										<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Pengajuan {{$ra->request_code}} telah diproses oleh {{$ral->user->fullname}}</a></li>
+										<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Pengajuan {{Carbon\Carbon::parse($ra->date)->format('d M Y')}} telah diproses oleh {{$ral->user->fullname}}</a></li>
 									@endif
 								@endforeach
 							@endforeach
 						@else
 							<li><a href="#" class="notification-item"><span class="dot bg-danger"></span>Belum ada pengajuan yang diproses</a></li>
+						@endif
+						@if ($problemApprove->where('closed_by', '!=', null)->count() > 0)
+							@foreach ($problemApprove as $pa) 
+								<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Laporan {{Carbon\Carbon::parse($pa->date)->format('d M Y')}} telah diproses oleh {{$pa->closedby->fullname}}</a></li>
+							@endforeach
+						@else
+							<li><a href="#" class="notification-item"><span class="dot bg-danger"></span>Belum ada laporan yang diproses</a></li>
 						@endif
 					</ul>
 				</li>

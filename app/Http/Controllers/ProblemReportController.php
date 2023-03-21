@@ -42,6 +42,11 @@ class ProblemReportController extends Controller
                     })
                     ->orderBy('date','DESC')
                     ->paginate(30);
+                } else if ($request->selectStatusAkhir != null) {
+                    $problems = ProblemReport::with('prcategory','user','closedby')
+                    ->where('status_client', $request->selectStatusAkhir)
+                    ->orderBy('date', 'desc')
+                    ->paginate(30);
                 } else {
                     $problems = ProblemReport::with('prcategory','user','closedby')
                     ->orderBy('date', 'desc')
@@ -70,6 +75,12 @@ class ProblemReportController extends Controller
                         ->where('pr_category_id', 7)
                         ->orderBy('date','DESC')
                         ->paginate(30); 
+                    } else if ($request->selectStatusAkhir != null) {
+                        $problems = ProblemReport::with('prcategory','user','closedby')
+                        ->where('status_client', $request->selectStatusAkhir)
+                        ->where('pr_category_id', 7)
+                        ->orderBy('date', 'desc')
+                        ->paginate(30);
                     } else {
                         $problems = ProblemReport::with('prcategory','user','closedby')
                         ->where('pr_category_id', 7)
@@ -96,6 +107,12 @@ class ProblemReportController extends Controller
                         ->where('pr_category_id', '!=', 7)
                         ->orderBy('date','DESC')
                         ->paginate(30); 
+                    } else if ($request->selectStatusAkhir != null) {
+                        $problems = ProblemReport::with('prcategory','user','closedby')
+                        ->where('status_client', $request->selectStatusAkhir)
+                        ->where('pr_category_id', '!=', 7)
+                        ->orderBy('date', 'desc')
+                        ->paginate(30);
                     } else {
                         $problems = ProblemReport::with('prcategory','user','closedby')
                         ->where('pr_category_id', '!=', 7)
@@ -124,6 +141,11 @@ class ProblemReportController extends Controller
                     ->where('user_id', $user)
                     ->orderBy('date','DESC')
                     ->paginate(30); 
+                } else if ($request->selectStatusAkhir != null) {
+                    $problems = ProblemReport::with('prcategory','user','closedby')
+                    ->where('status_client', $request->selectStatusAkhir)
+                    ->orderBy('date', 'desc')
+                    ->paginate(30);
                 } else {
                     $problems = ProblemReport::with('prcategory','user','closedby')
                     ->where('user_id', $user)

@@ -64,7 +64,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group" id="inputRequestFile">
-                                        <label for="inputRequestFile" class="form-label">Upload bukti foto bahwa pengajuan telah disetujui:</label>
+                                        <label for="inputRequestFile" class="form-label">Upload bukti foto bahwa pengajuan telah disetujui (jpg,jpeg,png) </label>
                                         <input type="file" name="request_file" class="form-control">
                                     </div>
                                 </div>

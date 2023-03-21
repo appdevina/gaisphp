@@ -27,15 +27,15 @@
                                 <form class="form-inline" id="my_form" action="/user">
                                     <div class="form-group">
                                       <input type="text" class="form-control" name="search" placeholder="Enter your text">
-                                      <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" >Cari</a>
+                                      <a href="javascript:{}" onclick="document.getElementById('my_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
                                     </div>
                                   </form>
                             </div>
                             <div class="col-md-6 text-right">
-                                <a class="btn btn-info" data-toggle="modal" data-target="#userModal">TAMBAH</a>
-                                <a href="/user/export" class="btn btn-primary">EXPORT</a>
-                                <a class="btn btn-success" data-toggle="modal" data-target=".importModal">IMPORT</a>
-                                <a href="/user/export/template" class="btn btn-default">TEMPLATE</a>
+                                <a class="btn btn-info" data-toggle="modal" data-target="#userModal"data-toggle="tooltip" data-placement="top" title="Tambah User"><span class="lnr lnr-plus-circle"></span></a>
+                                <a href="/user/export" class="btn btn-primary"data-toggle="tooltip" data-placement="top" title="Export User"><span class="lnr lnr-download"></span></a>
+                                <a class="btn btn-success" data-toggle="modal" data-target=".importModal"data-toggle="tooltip" data-placement="top" title="Import User"><span class="lnr lnr-upload"></span></a>
+                                <a href="/user/export/template" class="btn btn-default"data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
                             </div>
 						</div>
                         <br><br>
@@ -67,13 +67,13 @@
                                     <td>{{ $user->role->role }}</td>
                                     <td>{{ $user->approval->fullname }}</td>
                                     <td class="text-center">
-                                        <a href="/user/{{$user->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="/user/{{$user->id}}/edit" class="btn btn-warning btn-sm"><span class="lnr lnr-pencil"></span></a>
                                         @if ($user->deleted_at)
-                                            <a href="/user/{{ $user->id }}/active" class="btn btn-danger btn-sm" style="width: 100px"
-                                                onclick="return confirm('Mengaktifkan kembali user {{ $user->fullname }}?')">NONAKTIF</a>
+                                            <a href="/user/{{ $user->id }}/active" class="btn btn-danger btn-sm" style="width: 50px"
+                                                onclick="return confirm('Mengaktifkan kembali user {{ $user->fullname }}?')"><span class="lnr lnr-cross-circle"></span></a>
                                         @else
-                                            <a href="/user/{{$user->id}}/delete" class="btn btn-success btn-sm" style="width: 100px"
-                                                onclick="return confirm('Apalah anda yakin menonaktifkan user {{ $user->fullname }}?')">AKTIF</a>
+                                            <a href="/user/{{$user->id}}/delete" class="btn btn-success btn-sm" style="width: 50px"
+                                                onclick="return confirm('Apalah anda yakin menonaktifkan user {{ $user->fullname }}?')"><span class="lnr lnr-checkmark-circle"></span></a>
                                         @endif
                                     </td>
                                 </tr>

@@ -49,6 +49,13 @@ class RequestController extends Controller
                     })
                     ->orderBy('date','DESC')
                     ->paginate(30);
+                } else if ($request->selectStatusAkhir != null) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('status_client', $request->selectStatusAkhir);
+                    })
+                    ->orderBy('date','DESC')
+                    ->paginate(30);
                 } else {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type', 'request_approval')
                     ->orderBy('date', 'desc')
@@ -71,6 +78,14 @@ class RequestController extends Controller
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
                     ->whereHas('user', function ($query) use ($request) {
                         $query->where('fullname', 'like', '%'.$request->code.'%');
+                    })
+                    ->where('request_type_id',1)
+                    ->orderBy('date','DESC')
+                    ->paginate(30);
+                } else if ($request->selectStatusAkhir != null) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('status_client', $request->selectStatusAkhir);
                     })
                     ->where('request_type_id',1)
                     ->orderBy('date','DESC')
@@ -99,6 +114,27 @@ class RequestController extends Controller
                     ->whereHas('user', function ($query) use ($request) {
                         $query->where('fullname', 'like', '%'.$request->code.'%');
                     })
+                    ->orderBy('date','DESC')
+                    ->paginate(30);
+                } else if ($request->selectStatusAkhir != null && $userDivisi != 9 && $userDivisi != 11) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi); })
+                    ->where('status_client', $request->selectStatusAkhir)
+                    ->orderBy('date','DESC')
+                    ->paginate(30);
+                } else if ($request->selectStatusAkhir != null && $userDivisi == 9) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->whereHas('user.division.area', function ($query) {
+                        $query->whereIn('area_id', [4,5]);
+                    })
+                    ->where('status_client', $request->selectStatusAkhir)
+                    ->where('request_type_id', 2)
+                    ->orderBy('date','DESC')
+                    ->paginate(30);
+                } else if ($request->selectStatusAkhir != null && $userDivisi == 11) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->where('user_id', $user)
+                    ->where('status_client', $request->selectStatusAkhir)
                     ->orderBy('date','DESC')
                     ->paginate(30);
                 ##DIVISI WHM
@@ -142,6 +178,14 @@ class RequestController extends Controller
                         $query->where('fullname', 'like', '%'.$request->code.'%');
                     })
                     ->where('user_id', $user)
+                    ->orderBy('date','DESC')
+                    ->paginate(30);
+                } else if ($request->selectStatusAkhir != null) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->whereHas('user', function ($query) use ($request) {
+                        $query->where('status_client', $request->selectStatusAkhir);
+                    })
+                    ->where('user_id', $user)                    
                     ->orderBy('date','DESC')
                     ->paginate(30);
                 } else {

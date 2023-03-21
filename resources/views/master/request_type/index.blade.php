@@ -21,7 +21,7 @@
                     <div class="panel">
 						<div class="panel-heading">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-info" data-toggle="modal" data-target="#requestTypeModal">TAMBAH</a>
+                                <a class="btn btn-info" data-toggle="modal" data-target="#requestTypeModal"data-toggle="tooltip" data-placement="top" title="Tambah Tipe Pengajuan"><span class="lnr lnr-plus-circle"></span></a>
                             </div>
 							<h3 class="panel-title">Data Tipe Pengajuan</h3>
 						</div>
@@ -42,7 +42,7 @@
                                     <td>{{ $request_type->request_type }}</td>
                                     <td>{{ $request_type->division->division }}</td>
                                     <td>
-                                        <a href="/requesttype/{{$request_type->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="/requesttype/{{$request_type->id}}/edit" class="btn btn-warning btn-sm"><span class="lnr lnr-pencil"></span></a>
                                         <!-- BUTTON DELETE -->
                                         <!-- <a href="/requesttype/{{$request_type->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
                                     </td>

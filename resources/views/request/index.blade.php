@@ -32,7 +32,20 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="col-md-3 text-left">
+                            <div class="col-md-3 text-right">
+                                <form class="form-inline" id="inputStatusAkhir" action="/request">
+                                    <div class="form-group">
+                                    <select class="form-control" name="selectStatusAkhir">
+                                        <option selected value="">-- Status Akhir --</option>
+                                        <option value="0">MENUNGGU</option>
+                                        <option value="1">DITERIMA</option>
+                                        <option value="2">DIBATALKAN</option>
+                                    </select>
+                                    <a href="javascript:{}" onclick="document.getElementById('inputStatusAkhir').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-2 text-left">
                                 <form class="form-inline" id="code_form" action="/request">
                                     <div class="form-group">
                                     <input type="text" class="form-control" name="code" placeholder="Cari nama ..">
@@ -40,16 +53,16 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="col-md-4 text-right">
-                                @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
-                                    <a href="#exportRequest" data-toggle="modal" class="btn btn-primary">EXPORT</a>
-                                @endif
+                            <div class="col-md-2 text-right">
                                 @if (auth()->user()->role_id != 1)
-                                    <a href="/request/create" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Tambah pengajuan">TAMBAH</a>
+                                    <a href="/request/create" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Tambah pengajuan"><span class="lnr lnr-plus-circle"></span></a>
+                                @endif
+                                @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
+                                    <a href="#exportRequest" data-toggle="modal" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Export pengajuan"><span class="lnr lnr-download"></span></a>
                                 @endif
                             </div>
 						</div>
-                        <br><br>
+                        <br><br><br>
 						<div class="panel-body table-responsive">
 							<table class="table table-hover" id="reqbar_table">
 								<thead>
@@ -166,9 +179,9 @@
                                                     @endforeach
                                                 @else
                                                         @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 2)
-                                                            <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                                            <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                                         @elseif ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ACCOUNTING')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 1)
-                                                            <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                                            <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                                         @endif
                                                 @endif
                                                 @break
@@ -176,14 +189,14 @@
                                             @case(2)
                                                 @foreach($reqbar->request_approval as $approval)
                                                     @if ($approval->approval_type == 'ACCOUNTING' && $approval->approved_by == null && $reqbar->status_client != 2)
-                                                        <a href="/request/{{$reqbar->id}}/editStatusAcc" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                                        <a href="/request/{{$reqbar->id}}/editStatusAcc" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                                     @endif
                                                 @endforeach
                                                 @break
 
                                             @default
                                                 @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ENDUSER')->whereNull('approved_by')->isNotEmpty() && $reqbar->status_client != 2)
-                                                <a href="/request/{{$reqbar->id}}/editStatusClient" class="btn btn-warning" data-toggle="modal" type="button">Edit</a>
+                                                <a href="/request/{{$reqbar->id}}/editStatusClient" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                                 @endif
                                                 @if ($reqbar->request_approval->where('approval_type', 'MANAGER')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->status_client != 2)
                                                 <a href="/request/{{$reqbar->id}}/cancelRequest" class="btn btn-danger" data-toggle="modal" type="button" onclick="return confirm('Yakin akan membatalkan pengajuan ?')">Batal</a>
@@ -191,7 +204,7 @@
                                         @endswitch
                                     </td>  
                                     <td>
-                                        <a href="/request/{{$reqbar->id}}" class="btn btn-default" type="button">Lihat</a>
+                                        <a href="/request/{{$reqbar->id}}" class="btn btn-default" type="button"><span class="lnr lnr-eye"></span></a>
                                     </td>
                                 </tr>
                                 @endforeach

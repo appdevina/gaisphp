@@ -21,7 +21,7 @@
                     <div class="panel">
 						<div class="panel-heading">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-info" data-toggle="modal" data-target="#categoryModal">TAMBAH</a>
+                                <a class="btn btn-info" data-toggle="modal" data-target="#categoryModal"data-toggle="tooltip" data-placement="top" title="Tambah Kategori"><span class="lnr lnr-plus-circle"></span></a>
                             </div>
 							<h3 class="panel-title">Data Kategori</h3>
 						</div>
@@ -40,7 +40,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $category->category }}</td>
                                     <td>
-                                        <a href="/category/{{$category->id}}/edit" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="/category/{{$category->id}}/edit" class="btn btn-warning btn-sm"><span class="lnr lnr-pencil"></span></a>
                                         <!-- BUTTON DELETE -->
                                         <!-- <a href="/category/{{$category->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
                                     </td>

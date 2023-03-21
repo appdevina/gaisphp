@@ -147,10 +147,20 @@ class AppServiceProvider extends ServiceProvider
                     $query->where('approval_type', 'ENDUSER')
                     ->where('approved_by', null);
                 })
+                ->where('status_client', '!=', 2)
                 ->get();
+
+                $problemApprove = ProblemReport::where('user_id', Auth::id())
+                ->where('closed_by', '!=', null)
+                ->where('status_client', 0)
+                ->get();
+                
+                $totalNotif = $requestApprove->where('status_client', '!=', 2)->count() + $problemApprove->count();
 
             } else {
                 $requestApprove = [];
+                $problemApprove = [];
+                $totalNotif = 0;
             }
 
 
@@ -162,6 +172,8 @@ class AppServiceProvider extends ServiceProvider
                 'notifReportAdmin' => $notifReportAdmin,
                 'notifReportUser' => $notifReportUser,
                 'requestApprove' => $requestApprove,
+                'problemApprove' => $problemApprove,
+                'totalNotif' => $totalNotif,
             ]);
         });
     }
