@@ -209,8 +209,19 @@ class RequestController extends Controller
     {
         $requestBarang = RequestBarang::with('request_detail.product')->find($id);
 
+        $grandTotal = 0;
+
+        foreach ($requestBarang->request_detail as $detail) {
+            if ($detail->qty_approved == null) {
+               $grandTotal += $detail->product->price * $detail->qty_request; 
+            }
+
+            $grandTotal += $detail->product->price * $detail->qty_approved;
+        }
+
         return view('request.show', [
             'requestBarang' => $requestBarang,
+            'grandTotal' => $grandTotal,
         ]);
     }
 
@@ -261,6 +272,14 @@ class RequestController extends Controller
                 return redirect('request/create')->with('error', 'Harap upload file pengajuan !');
             }
 
+            if ($request->request_type_id == 2 && $request->products == null) {
+                return redirect('request/create')->with('error', 'Harap pilih barang yang akan diajukan !');
+            }
+
+            if ($request->request_type_id == null) {
+                return redirect('request/create')->with('error', 'Harap pilih tipe pengajuan !');
+            }
+
             if ($request->request_type_id == 1) {
                 $request_file = $this->storeImage($request);
 
@@ -296,7 +315,7 @@ class RequestController extends Controller
                     $temp['request_id'] = $requestBarang->id;
                     $temp['product_id'] = $request->get('products')[$i];
                     $temp['qty_request'] = $request->get('qty_requests')[$i];
-                    // $temp['qty_remaining'] = $request->get('qty_remainings')[$i];
+                    $temp['qty_remaining'] = $request->get('qty_remainings')[$i] ?? null;
                     $temp['description'] = $request->get('descriptions')[$i];
 
                     $insertDetail = RequestDetail::create($temp);
@@ -336,7 +355,7 @@ class RequestController extends Controller
                         $temp['request_id'] = $requestBarang->id;
                         $temp['product_id'] = $request->get('products')[$i];
                         $temp['qty_request'] = $request->get('qty_requests')[$i];
-                        // $temp['qty_remaining'] = $request->get('qty_remainings')[$i];
+                        $temp['qty_remaining'] = $request->get('qty_remainings')[$i] ?? null;
                         $temp['description'] = $request->get('descriptions')[$i];
 
                         $insertDetail = RequestDetail::create($temp);

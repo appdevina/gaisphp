@@ -147,6 +147,7 @@ class AppServiceProvider extends ServiceProvider
                     $query->where('approval_type', 'ENDUSER')
                     ->where('approved_by', null);
                 })
+                ->where('user_id', Auth::id())
                 ->where('status_client', '!=', 2)
                 ->get();
 

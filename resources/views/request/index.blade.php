@@ -54,7 +54,7 @@
                                 </form>
                             </div>
                             <div class="col-md-2 text-right">
-                                @if (auth()->user()->role_id != 1)
+                                @if (auth()->user()->role_id > 3)
                                     <a href="/request/create" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Tambah pengajuan"><span class="lnr lnr-plus-circle"></span></a>
                                 @endif
                                 @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))

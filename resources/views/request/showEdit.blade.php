@@ -28,20 +28,23 @@
                             <div class="col-md-6 text-right">
                             </div>
 						</div>
-                        <br><br>
 						<div class="panel-body table-responsive">
 							<form action="/request/{{$detail->id}}/updateRequest" method="POST">
                             {{csrf_field()}}
                             <div class="form-group">
-                                <input type="text" name="id" id="id" class="form-control" value="{{ $detail->id }}" readonly/>
+                                <input type="hidden" name="id" id="id" class="form-control" value="{{ $detail->id }}"/>
                             </div>
                             <div class="form-group">
-                                <label for="inputRequestId" class="form-label">ID REQUEST</label>
-                                <input type="text" name="request_id" id="request_id" class="form-control" value="{{ $detail->request_id }}" readonly/>
+                                <!-- <label for="inputRequestId" class="form-label">ID REQUEST</label> -->
+                                <input type="hidden" name="request_id" id="request_id" class="form-control" value="{{ $detail->request_id }}"/>
                             </div>
                             <div class="form-group">
                                 <label for="inputProduct" class="form-label">Nama Barang</label>
                                 <input type="text" name="product_id" id="product_id" class="form-control" value="{{ $detail->product->product }}" readonly/>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputProduct" class="form-label">Jumlah Sisa</label>
+                                <input type="text" name="qty_remaining" id="qty_remaining" class="form-control" value="{{ $detail->qty_remaining }}" readonly/>
                             </div>
                             <div class="form-group">
                                 <label for="inputProduct" class="form-label">Jumlah Request</label>

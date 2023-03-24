@@ -41,6 +41,9 @@
                                     <input name="user_id" type="hidden" class="form-control" id="inputUser" value="{{ auth()->user()->id }}">
                                 </div>
                                 <div class="form-group">
+                                    <input name="area_id" type="hidden" class="form-control" id="inputArea" value="{{ auth()->user()->division->area->id }}">
+                                </div>
+                                <div class="form-group">
                                     <input name="request_type_id" type="hidden" class="form-control" id="inputRequestTypeId" value="">
                                 </div>
                                 <div>
@@ -50,8 +53,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Nama Barang</th>
+                                                        @if (auth()->user()->division->area->id == 4 || auth()->user()->division->area->id == 5) <th style="width:15%;">Qty Sisa</th> @endif
                                                         <th style="width:15%;">Qty Req</th>
-                                                        <!-- <th style="width:15%;">Jml Sisa</th> -->
                                                         <th style="width:30%;">Alasan</th>
                                                         <th style="width:10%;">
                                                             <a href="#addproduct" class="badge bg-success" id="addProduct">Add <span class="lnr lnr-plus-circle"></span></a>

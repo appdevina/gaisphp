@@ -29,7 +29,7 @@
 							@foreach ($requestApprove as $ra) 
 								@foreach ($ra->request_approval as $ral)
 									@if ($ral->approval_type == 'EXECUTOR' && $ral->approved_by != null)
-										<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Pengajuan {{Carbon\Carbon::parse($ra->date)->format('d M Y')}} telah diproses oleh {{$ral->user->fullname}}</a></li>
+										<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Pengajuan {{ $ra->request_type->request_type }} telah diproses oleh {{$ral->user->fullname}}</a></li>
 									@endif
 								@endforeach
 							@endforeach
@@ -38,7 +38,7 @@
 						@endif
 						@if ($problemApprove->where('closed_by', '!=', null)->count() > 0)
 							@foreach ($problemApprove as $pa) 
-								<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Laporan {{Carbon\Carbon::parse($pa->date)->format('d M Y')}} telah diproses oleh {{$pa->closedby->fullname}}</a></li>
+								<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Laporan {{ $pa->prcategory->problem_report_category }} telah diproses oleh {{$pa->closedby->fullname}}</a></li>
 							@endforeach
 						@else
 							<li><a href="#" class="notification-item"><span class="dot bg-danger"></span>Belum ada laporan yang diproses</a></li>

@@ -38,7 +38,7 @@
                                 <a href="/user/export/template" class="btn btn-default"data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
                             </div>
 						</div>
-                        <br><br>
+                        <br><br><br>
 						<div class="panel-body table-responsive">
 							<table class="table table-hover">
 								<thead>

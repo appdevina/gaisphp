@@ -154,10 +154,14 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <img src="{{asset('admin/assets/img/INFOGRAF - PENGAJUAN.jpg')}}" class="img-fluid" alt="INFOGRAFIS LAPOR GANGGUAN" style="max-width: 100%; height: auto;">
+                                        <a href="#" data-toggle="modal" data-target="#modalImageRequest">
+                                            <img src="{{asset('admin/assets/img/INFOGRAF - PENGAJUAN.jpg')}}" class="img-fluid" alt="INFOGRAFIS LAPOR GANGGUAN" style="max-width: 100%; height: auto;">
+                                        </a>
                                     </div>
                                     <div class="col-md-6">
-                                        <img src="{{asset('admin/assets/img/INFOGRAF - GANGGUAN.jpg')}}" class="img-fluid" alt="INFOGRAFIS LAPOR GANGGUAN" style="max-width: 100%; height: auto;">
+                                        <a href="#" data-toggle="modal" data-target="#modalImageProblem">
+                                            <img src="{{asset('admin/assets/img/INFOGRAF - GANGGUAN.jpg')}}" class="img-fluid" alt="INFOGRAFIS LAPOR GANGGUAN" style="max-width: 100%; height: auto;">
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -167,5 +171,29 @@
                 @endif
             </div>
         </div>
+    </div>
+
+    <!-- Modal 1 -->
+    <div id="modalImageRequest" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+        <div class="modal-body">
+            <img src="{{asset('admin/assets/img/INFOGRAF - PENGAJUAN.jpg')}}" class="img-fluid" alt="INFOGRAFIS LAPOR GANGGUAN" style="max-width: 100%; height: auto;">
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal 2 -->
+    <div id="modalImageProblem" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+        <div class="modal-body">
+            <img src="{{asset('admin/assets/img/INFOGRAF - GANGGUAN.jpg')}}" class="img-fluid" alt="INFOGRAFIS LAPOR GANGGUAN" style="max-width: 100%; height: auto;">
+        </div>
+        </div>
+    </div>
     </div>
 @stop

@@ -33,18 +33,18 @@
                                     </form>
                                 </div>
                                 <div class="col-md-3 text-right">
-                                <form class="form-inline" id="inputStatusAkhir" action="/problemReport">
-                                    <div class="form-group">
-                                    <select class="form-control" name="selectStatusAkhir">
-                                        <option selected value="">-- Status Akhir --</option>
-                                        <option value="0">MENUNGGU</option>
-                                        <option value="1">DITERIMA</option>
-                                        <option value="2">DIBATALKAN</option>
-                                    </select>
-                                    <a href="javascript:{}" onclick="document.getElementById('inputStatusAkhir').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
-                                    </div>
-                                </form>
-                            </div>
+                                    <form class="form-inline" id="inputStatusAkhir" action="/problemReport">
+                                        <div class="form-group">
+                                        <select class="form-control" name="selectStatusAkhir">
+                                            <option selected value="">-- Status Akhir --</option>
+                                            <option value="0">MENUNGGU</option>
+                                            <option value="1">DITERIMA</option>
+                                            <option value="2">DIBATALKAN</option>
+                                        </select>
+                                        <a href="javascript:{}" onclick="document.getElementById('inputStatusAkhir').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                        </div>
+                                    </form>
+                                </div>
                                 <div class="col-md-2 text-left">
                                     <form class="form-inline" id="code_form" action="/problemReport">
                                         <div class="form-group">
@@ -54,7 +54,7 @@
                                     </form>
                                 </div>
                                 <div class="col-md-2 text-right">
-                                    @if (auth()->user()->role_id != 1)
+                                    @if (auth()->user()->role_id > 3)
                                         <a href="/problemReport/create" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Tambah laporan"><span class="lnr lnr-plus-circle"></span></a>
                                     @endif
                                     @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
@@ -62,7 +62,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <br><br>
+                            <br><br><br>
                             <div class="panel-body table-responsive">
                                 <table class="table table-hover">
                                     <thead>

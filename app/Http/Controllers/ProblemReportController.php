@@ -192,6 +192,10 @@ class ProblemReportController extends Controller
     public function store(Request $request)
     {
         try {
+            if ($request->pr_category_id == null) {
+                return redirect('problemReport/create')->with('error', 'Harap pilih jenis gangguan !');
+            }
+
             $request['date'] = Carbon::now()->format('Y-m-d H:i:s');
             $problem = ProblemReport::create($request->all());
             
