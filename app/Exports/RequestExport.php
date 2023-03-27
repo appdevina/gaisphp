@@ -70,7 +70,7 @@ class RequestExport implements FromArray, WithHeadings, WithMapping
                 //$request[] //collection 3 request
 
                 foreach ($requests as $request) {
-                    if($request->user->division->area->area_id == 4 || $request->user->division->area->area_id == 5) {
+                    if($request->user->division->area->id == 4 || $request->user->division->area->id == 5) {
                         foreach ($request->request_detail as $reqdetail) {
                             if ($reqdetail->product_id == $product->id) {
                                 $total += $reqdetail->qty_approved;

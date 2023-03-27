@@ -88,7 +88,7 @@ class DivisionSeeder extends Seeder
             [
                 ##15
                 'division' => 'DEPO-CRB-HO',
-                'area_id' => 2,
+                'area_id' => 4,
             ],
             [
                 ##16
