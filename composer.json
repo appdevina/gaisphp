@@ -14,7 +14,8 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "maatwebsite/excel": "^3.1",
-        "phpoffice/phpspreadsheet": "^1.21"
+        "phpoffice/phpspreadsheet": "^1.21",
+        "sentry/sentry-laravel": "^3.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
@@ -60,7 +61,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
