@@ -25,7 +25,7 @@ class RequestTypeSeeder extends Seeder
             ],
             [
                 'request_type' => 'NOTA',
-                'pic_division_id' => 12,
+                'pic_division_id' => 6,
             ],
         ],
     );

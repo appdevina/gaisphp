@@ -24,11 +24,12 @@ class CreateRequestsTable extends Migration
             $table->integer('status_client')->default(0);
             $table->integer('closed_by')->nullable();
             $table->dateTime('closed_at')->nullable();
-            $table->foreignId('approved_by')->nullable();
-            $table->timestamp('approved_at')->nullable();
+            // $table->foreignId('approved_by')->nullable();
+            // $table->timestamp('approved_at')->nullable();
             $table->foreignId('request_type_id');
             $table->string('request_file')->nullable();
             $table->string('approved_file')->nullable();
+            $table->string('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

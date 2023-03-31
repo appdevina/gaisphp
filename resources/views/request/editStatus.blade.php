@@ -36,6 +36,10 @@
                                         <option value="CANCELLED">DIBATALKAN</option>
                                     </select>
                             </div>
+                            <div class="form-group">
+                                <label for="inputNotes" class="form-label">Catatan</label>
+                                <input type="text" class="form-control float-right" value="" name="notes">
+                            </div>
                                 <button type="submit" class="btn btn-warning">UPDATE</button>
                             </form>
                             </div>

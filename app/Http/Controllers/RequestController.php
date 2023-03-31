@@ -116,7 +116,7 @@ class RequestController extends Controller
                     })
                     ->orderBy('date','DESC')
                     ->paginate(30);
-                } else if ($request->selectStatusAkhir != null && $userDivisi != 9 && $userDivisi != 11) {
+                } else if ($request->selectStatusAkhir != null && $userDivisi != 9 && $userDivisi != 11 && $userDivisi != 12) {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
                     ->whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi); })
                     ->where('status_client', $request->selectStatusAkhir)
@@ -137,6 +137,15 @@ class RequestController extends Controller
                     ->where('status_client', $request->selectStatusAkhir)
                     ->orderBy('date','DESC')
                     ->paginate(30);
+                } else if ($request->selectStatusAkhir != null && $userDivisi == 12) {
+                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                    ->whereHas('user.division.area', function ($query) {
+                        $query->whereIn('area_id', [3,4,5]);
+                    })
+                    ->where('status_client', $request->selectStatusAkhir)
+                    ->where('request_type_id', 3)
+                    ->orderBy('date','DESC')
+                    ->paginate(30);
                 ##DIVISI WHM
                 } else if ($userDivisi == 9) {
                     $requestBarangs = RequestBarang::with('user.division.area','closedby','request_detail','request_type','request_approval')
@@ -150,6 +159,15 @@ class RequestController extends Controller
                 } else if ($userDivisi == 11) {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type','request_approval')
                     ->where('user_id', $user)
+                    ->orderBy('date', 'desc')
+                    ->paginate(30);
+                ##DIVISI AUDIT
+                } else if ($userDivisi == 12) {
+                    $requestBarangs = RequestBarang::with('user.division.area','closedby','request_detail','request_type','request_approval')
+                    ->whereHas('user.division.area', function ($query) {
+                        $query->whereIn('area_id', [3,4,5]);
+                    })
+                    ->where('request_type_id', 3)
                     ->orderBy('date', 'desc')
                     ->paginate(30);
                 } else {
@@ -236,24 +254,30 @@ class RequestController extends Controller
             $user = Auth::user()->id;
             
             //SEMUA TIPE PENGAJUAN KALAU USER BELUM CLOSE GABISA NAMBAH
+            $pengajuanAsset = RequestBarang::with('user')
+            ->where('user_id', $user)
+            ->where('request_type_id', '1')
+            ->where('status_client', '0')
+            ->count();
+            
             $pengajuanATK = RequestBarang::with('user')
             ->where('user_id', $user)
             ->where('request_type_id', '2')
             ->where('status_client', '0')
             ->count();
 
-            $pengajuanAsset = RequestBarang::with('user')
+            $pengajuanNota = RequestBarang::with('user')
             ->where('user_id', $user)
-            ->where('request_type_id', '1')
+            ->where('request_type_id', '3')
             ->where('status_client', '0')
             ->count();
 
-            if ($pengajuanAsset >= 1 && $pengajuanATK >=1) {
+            if ($pengajuanAsset >= 1 && $pengajuanATK >=1 && $pengajuanNota >=1) {
                 return redirect('request')->with(['error' => 'Harap menunggu hingga pengajuan diproses dan status akhir diselesaikan !']);
             }
 
             return view('request.addRequest', [
-                'request_types' => $pengajuanAsset == 1 ? RequestType::where('id', '!=', 1)->get() : ($pengajuanATK == 1 ? RequestType::where('id', '!=', 2)->get() : RequestType::all()),
+                'request_types' => $pengajuanAsset >= 1 ? RequestType::where('id', '!=', 1)->get() : ($pengajuanNota >= 1 ? RequestType::where('id', '!=', 3)->get() : ($pengajuanATK >= 1 ? RequestType::where('id', '!=', 2)->get() : RequestType::all())),
                 'products' => Product::all(),
                 'pengajuanAsset' => $pengajuanAsset,
             ]);
@@ -268,7 +292,7 @@ class RequestController extends Controller
          try {
             $date = Carbon::now()->format('Y-m-d H:i:s');
 
-            if ($request->request_type_id == 1 && $request->request_file == null) {
+            if (($request->request_type_id == 1 || $request->request_type_id == 3) && $request->request_file == null) {
                 return redirect('request/create')->with('error', 'Harap upload file pengajuan !');
             }
 
@@ -280,7 +304,7 @@ class RequestController extends Controller
                 return redirect('request/create')->with('error', 'Harap pilih tipe pengajuan !');
             }
 
-            if ($request->request_type_id == 1) {
+            if ($request->request_type_id == 1 || $request->request_type_id == 3) {
                 $request_file = $this->storeImage($request);
 
                 $requestBarang = RequestBarang::create([
@@ -323,7 +347,7 @@ class RequestController extends Controller
 
                 return redirect('request')->with('success', 'Pengajuan Barang Baru berhasil diinput !');
             }
-                ##REQUEST_TYPE_ID SELAIN 1
+                ##REQUEST_TYPE_ID SELAIN 1 DAN 3
                 $requestBarang = RequestBarang::create([
                     'user_id' => $request->user_id,
                     'date' => $date,
@@ -476,6 +500,9 @@ class RequestController extends Controller
                 $getData->approved_by = Auth::user()->id;
                 $getData->approved_at = Carbon::now()->format('Y-m-d H:i:s');
                 $getData->save();
+
+                $requestBarang->notes = $request->notes;
+                $requestBarang->save();
             }
             
             if($request->status == 'CANCELLED'){
@@ -483,6 +510,7 @@ class RequestController extends Controller
                 $getData->approved_at = Carbon::now()->format('Y-m-d H:i:s');
                 $getData->save();
                 
+                $requestBarang->notes = $request->notes;
                 $requestBarang->status_client = 2;
                 $requestBarang->save();
             }

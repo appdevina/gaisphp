@@ -25,7 +25,7 @@
                         <div class="panel-body" >
                             <div class="form-group">
                                 <label for="request_type_id" class="form-label">Tipe Pengajuan</label>
-                                <select class="form-control" id="request_type_id" name="request_type_id" required>
+                                <select class="form-control" id="request_type_id" name="request_type_id" required onchange="toggleQtySisa()">
                                     <option selected disabled>-- Pilih Tipe Pengajuan --</option>
                                     @foreach ($request_types as $reqtype)
                                         <option value="{{ $reqtype->id }}">
@@ -53,9 +53,10 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Nama Barang</th>
-                                                        @if (auth()->user()->division->area->id == 4 || auth()->user()->division->area->id == 5) <th style="width:15%;">Qty Sisa</th> @endif
+                                                        <th style="width:15%;" id="th-qty-sisa">Qty Sisa</th>
                                                         <th style="width:15%;">Qty Req</th>
-                                                        <th style="width:30%;">Alasan</th>
+                                                        <th style="width:30%;" id="th-alasan">Alasan</th>
+                                                        <th style="width:30%;" id="th-no-nota">Ket / No nota yg akan dikirim</th>
                                                         <th style="width:10%;">
                                                             <a href="#addproduct" class="badge bg-success" id="addProduct">Add <span class="lnr lnr-plus-circle"></span></a>
                                                         </th>
@@ -67,7 +68,8 @@
                                         </div>
                                     </div>
                                     <div class="form-group" id="inputRequestFile">
-                                        <label for="inputRequestFile" class="form-label">Upload bukti foto bahwa pengajuan telah disetujui (jpg,jpeg,png) </label>
+                                        <label for="inputRequestFile" class="form-label" id="label-approved-file">Upload bukti foto bahwa pengajuan telah disetujui (jpg,jpeg,png) </label>
+                                        <label for="inputRequestFile" class="form-label" id="label-nota-file">Upload bukti foto nota lama dengan nomor nota yang terlihat jelas (jpg,jpeg,png) </label>
                                         <input type="file" name="request_file" class="form-control">
                                     </div>
                                 </div>
@@ -122,4 +124,19 @@
             </div>
     </div>
 </div>
+<script>
+function toggleQtySisa() {
+    var requestTypeId = $('#request_type_id').val();
+    var areaId = {{ auth()->user()->division->area->id }};
+
+    if (requestTypeId == 3) {
+        $('#th-qty-sisa').show();
+        $('#th-no-nota').show();
+        $('#th-alasan').hide();
+    } else {
+        $('#th-qty-sisa').hide();
+        $('#th-no-nota').hide();
+    }
+}
+</script>
 @stop

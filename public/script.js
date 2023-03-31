@@ -3,6 +3,7 @@ $(document).ready(function () {
     var selectedproduct = ["1"];
 
     var select = this.value;
+    $("#label-nota-file").hide();
 
     $("#addProduct").on("click", function () {
         var request_type_id = $("#request_type_id").val();
@@ -25,7 +26,9 @@ $(document).ready(function () {
                         '"><td><select class="form-control" id="selectproduct' +
                         productindex +
                         '" name="products[]" required></select></td>' +
-                        (area_id == 4 || area_id == 5
+                        (area_id == 4 ||
+                        area_id == 5 ||
+                        (area_id == 3 && request_type_id == 3)
                             ? '<td><input type="number" placeholder="Sisa" class="form-control col-lg-3" name="qty_remainings[]"></td>'
                             : "") +
                         '<td><input type="number" placeholder="request" class="form-control col-lg-3" name="qty_requests[]" min="1"></td><td><input type="text" placeholder="..." class="form-control col-lg-3" name="descriptions[]"></td><td><a href="#formreplaceproduct" class="badge bg-danger btn_remove" id="product' +
@@ -65,17 +68,28 @@ $(document).ready(function () {
     $("#request_type_id").on("change", function () {
         $("#inputRequestTypeId").val($(this).val());
 
+        console.log($("#inputRequestTypeId").val($(this).val()));
+
         $("#tableproduct").empty();
 
         if ($(this).val() == "1") {
             $("#inputRequestFile").show();
             $("#formaddmanyproduct").show();
             $("#formaddproduct").show();
+            $("#label-approved-file").show();
+            $("#label-nota-file").hide();
         }
         if ($(this).val() == "2") {
             $("#inputRequestFile").hide();
             $("#formaddproduct").show();
             $("#formaddmanyproduct").show();
+        }
+        if ($(this).val() == "3") {
+            $("#inputRequestFile").show();
+            $("#formaddproduct").show();
+            $("#formaddmanyproduct").show();
+            $("#label-approved-file").hide();
+            $("#label-nota-file").show();
         }
     });
 

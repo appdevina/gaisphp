@@ -117,7 +117,7 @@
                                     @endforeach
                                     <!-- DISETUJUI OLEH -->
                                     <td>
-                                    @if($reqbar->request_type->id == 2)
+                                    @if($reqbar->request_type->id == 2 || $reqbar->request_type->id == 3)
                                         @foreach($reqbar->request_approval as $approval)
                                             @if ($approval->approval_type == 'MANAGER')
                                                 {{$approval->approved_by != null ? $approval->user->fullname : "-" }}
@@ -129,7 +129,7 @@
                                     </td>
                                     <!-- DISETUJUI PADA -->
                                     <td>
-                                    @if($reqbar->request_type->id == 2)
+                                    @if($reqbar->request_type->id == 2 || $reqbar->request_type->id == 3)
                                         @foreach($reqbar->request_approval as $approval)
                                             @if ($approval->approval_type == 'MANAGER')
                                                 {{$approval->approved_by != null ? Carbon\Carbon::parse($approval->approved_at)->format('d M Y H:i') : "-" }}
@@ -171,14 +171,14 @@
                                         @switch(auth()->user()->role_id)
                                             @case(1)
                                             @case(3)
-                                                @if (auth()->user()->division_id == 9 && $reqbar->request_type_id == 2)
+                                                @if ((auth()->user()->division_id == 9 && $reqbar->request_type_id == 2) || (auth()->user()->division_id == 12 && $reqbar->request_type_id == 3))
                                                     @foreach($reqbar->request_approval as $approval)
                                                         @if ($approval->approval_type == 'MANAGER' && $approval->approved_by == null)
                                                             <a href="/request/{{$reqbar->id}}" class="btn btn-warning" type="button">Check</a>
                                                         @endif
                                                     @endforeach
                                                 @else
-                                                        @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 2)
+                                                        @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_type_id >= 2)
                                                             <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                                         @elseif ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ACCOUNTING')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 1)
                                                             <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>

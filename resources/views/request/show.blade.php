@@ -33,10 +33,10 @@
                                     <th>Barang</th>
                                     <th>Harga</th>
                                     <th>Keterangan</th>
-                                    <th>@if ( auth()->user()->role_id < 4 || in_array(auth()->user()->division->area_id, [4, 5])) Sisa @endif</th>
+                                    <th>@if ( auth()->user()->role_id < 4 || in_array(auth()->user()->division->area_id, [3, 4, 5])) Sisa @endif</th>
                                     <th>Request</th>
-                                    <th>@if ((auth()->user()->role_id < 4) || in_array(auth()->user()->division->area_id, [4, 5])) Jml disetujui @endif</th>
-                                    <th>@if ((auth()->user()->role_id < 4) || in_array(auth()->user()->division->area_id, [4, 5])) Total @endif</th>
+                                    <th>@if ((auth()->user()->role_id < 4) || in_array(auth()->user()->division->area_id, [3, 4, 5])) Jml disetujui @endif</th>
+                                    <th>@if ((auth()->user()->role_id < 4) || in_array(auth()->user()->division->area_id, [3, 4, 5])) Total @endif</th>
                                     <th>@if (auth()->user()->role_id == 3 && auth()->user()->division_id == 9) Revisi @endif</th>
                                 </tr>
 								</thead>
@@ -47,12 +47,12 @@
                                         <td>{{ $detail->product->product }}</td>
                                         <td>Rp {{ number_format($detail->product->price, 0, ',', '.') }}</td>
                                         <td>{{ $detail->description }}</td>
-                                        <td>@if ((auth()->user()->role_id < 4) || in_array(auth()->user()->division->area_id, [4, 5])){{ $detail->qty_remaining }} @endif</td>
+                                        <td>@if ((auth()->user()->role_id < 4) || in_array(auth()->user()->division->area_id, [3, 4, 5])){{ $detail->qty_remaining }} @endif</td>
                                         <td>{{ $detail->qty_request }}</td>
-                                        <td>@if ((auth()->user()->role_id < 4) || in_array(auth()->user()->division->area_id, [4, 5])) {{ $detail->qty_approved }} @endif</td>
-                                        <td>@if ((auth()->user()->role_id < 4) || in_array(auth()->user()->division->area_id, [4, 5])) Rp {{ $detail->qty_approved == null ? number_format($detail->qty_request * $detail->product->price, 0, ',', '.')  : number_format($detail->qty_approved * $detail->product->price, 0, ',', '.') }} @endif</td>
+                                        <td>@if ((auth()->user()->role_id < 4) || in_array(auth()->user()->division->area_id, [3, 4, 5])) {{ $detail->qty_approved }} @endif</td>
+                                        <td>@if ((auth()->user()->role_id < 4) || in_array(auth()->user()->division->area_id, [3, 4, 5])) Rp {{ $detail->qty_approved == null ? number_format($detail->qty_request * $detail->product->price, 0, ',', '.')  : number_format($detail->qty_approved * $detail->product->price, 0, ',', '.') }} @endif</td>
                                         <td>
-                                        @if (auth()->user()->role_id == 3 && auth()->user()->division_id == 9)
+                                        @if (auth()->user()->role_id == 3 && (auth()->user()->division_id == 9 || auth()->user()->division_id == 12))
                                         <a href="/editRequest/{{$detail->id}}" class="btn btn-warning" type="button"><span class="lnr lnr-pencil"></span></a>
                                         @endif   
                                         </td> 
@@ -60,7 +60,10 @@
                                     @endforeach
 								</tbody>
 							</table>
-                            <br><br>
+                            <br><br><br>
+                            <div class="col-md-12 text-left">
+                                <h4>Catatan : {{ $requestBarang->notes }}</h4>
+                            </div>
                             <div class="col-md-11 text-right">
                                 <h4>Total Biaya : Rp {{ number_format($grandTotal, 0, ',', '.') }}</h4>
                             </div>
@@ -68,7 +71,7 @@
                             <div class="text-right">
                                 <form action="/fixRequest/{{$requestBarang->id}}" method="POST">
                                     {{csrf_field()}}
-                                    @if (auth()->user()->role_id == 3 && auth()->user()->division_id == 9)
+                                    @if (auth()->user()->role_id == 3 && (auth()->user()->division_id == 9 || auth()->user()->division_id == 12))
                                     <button type="submit" class="btn btn-info" onclick="return confirm('Pengajuan ini tanpa revisi, apakah semua sudah disetujui ?')">SELESAI</button>
                                     @endif
                                 </form>

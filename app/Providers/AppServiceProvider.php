@@ -71,6 +71,7 @@ class AppServiceProvider extends ServiceProvider
             ->where('status_client', '!=', 2)
             ->count();
             
+            //BADGE DI WHM EXECUTOR
             if ($userDivisi == 9) {
                 $notifRequestApprov = RequestBarang::with('user.division.area', 'request_approval')
                 ->whereHas('user.division.area', function ($query) {
@@ -82,6 +83,21 @@ class AppServiceProvider extends ServiceProvider
                 })
                 ->where('status_client', '!=', 2)
                 ->where('request_type_id', 2)
+                ->count();
+            }
+
+            //BADGE DI AUDIT EXECUTOR
+            if ($userDivisi == 12) {
+                $notifRequestApprov = RequestBarang::with('user.division.area', 'request_approval')
+                ->whereHas('user.division.area', function ($query) {
+                    $query->whereIn('area_id', [3,4,5]);
+                })
+                ->whereHas('request_approval', function ($query) {
+                    $query->where('approval_type', 'MANAGER')
+                    ->where('approved_by', null);
+                })
+                ->where('status_client', '!=', 2)
+                ->where('request_type_id', 3)
                 ->count();
             }
 
