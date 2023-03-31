@@ -51,13 +51,13 @@ class ProblemReportExport implements FromCollection, WithHeadings, WithMapping
     public function map($row): array
     {
         return [
-            $row->user->fullname ?? 'Nonactive users',
+            $row->user->fullname ?? '',
             $row->date,
             $row->prcategory->problem_report_category,
             $row->description,
             $row->status,
             $row->scheduled_at,
-            $row->closedby->fullname ?? 'Nonactive users',
+            $row->closedby->fullname ?? '',
             $row->closed_at,
             $row->result_desc,
             $row->status_client == 0 ? 'MENUNGGU' : 'SELESAI',

@@ -21,6 +21,9 @@ class CategorySeeder extends Seeder
             [
                 'category' => 'ATK',   
             ],
+            [
+                'category' => 'NOTA',   
+            ],
         ],
     );
     }

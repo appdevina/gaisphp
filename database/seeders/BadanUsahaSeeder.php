@@ -26,6 +26,18 @@ class BadanUsahaSeeder extends Seeder
             ],
             [
                 'badan_usaha' => 'PT.MKLI',
+            ],
+            [
+                'badan_usaha' => 'COMPLETEME',
+            ],
+            [
+                'badan_usaha' => 'AMAZY',
+            ],
+            [
+                'badan_usaha' => 'TKANAN',
+            ],
+            [
+                'badan_usaha' => 'CMULIA',
             ]
         ],
     );

@@ -23,6 +23,10 @@ class RequestTypeSeeder extends Seeder
                 'request_type' => 'ATK',
                 'pic_division_id' => 6,
             ],
+            [
+                'request_type' => 'NOTA',
+                'pic_division_id' => 12,
+            ],
         ],
     );
     }

@@ -325,6 +325,26 @@ class DivisionSeeder extends Seeder
                 'division' => '4S-TELAGASARI',
                 'area_id' => 6,
             ],
+            [
+                ##63
+                'division' => 'COMPLETEME',
+                'area_id' => 7,
+            ],
+            [
+                ##64
+                'division' => 'AMAZY',
+                'area_id' => 8,
+            ],
+            [
+                ##65
+                'division' => 'TKANAN',
+                'area_id' => 9,
+            ],
+            [
+                ##62
+                'division' => 'CMULIA',
+                'area_id' => 10,
+            ],
         ],
     );
     }

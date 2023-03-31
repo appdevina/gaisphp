@@ -7,10 +7,11 @@ $(document).ready(function () {
     $("#addProduct").on("click", function () {
         var request_type_id = $("#request_type_id").val();
         var area_id = $("#inputArea").val();
+        var baseUrl = window.location.protocol + "//" + window.location.host;
 
         $.ajax({
             type: "get",
-            url: `http://sumo.completeselular.com:3990/product/get?req_type_id=${request_type_id}`,
+            url: `${baseUrl}/product/get?req_type_id=${request_type_id}`,
             success: function (data) {
                 console.log(data);
 

@@ -33,6 +33,18 @@ class AreaSeeder extends Seeder
             [
                 'area' => 'MKLI-4S',
             ],
+            [
+                'area' => 'COMPLETEME',
+            ],
+            [
+                'area' => 'AMAZY',
+            ],
+            [
+                'area' => 'TKANAN',
+            ],
+            [
+                'area' => 'CMULIA',
+            ],
         ],
     );
     }

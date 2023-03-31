@@ -68,7 +68,7 @@
 								<thead>
                                 <tr>
                                     <th>NO</th>
-                                    <th>Kode</th>
+                                    <!-- <th>Kode</th> -->
                                     <th>Pemohon</th>
                                     <th>Divisi</th>
                                     <th>Diajukan pada</th>
@@ -91,7 +91,7 @@
                                     <!-- NO -->
                                     <td>{{ $loop->iteration }}</td>
                                     <!-- KODE -->
-                                    <td>{{ $reqbar->request_code }}</td>
+                                    <!-- <td>{{ $reqbar->request_code }}</td> -->
                                     <!-- PEMOHON -->
                                     <td>{{ $reqbar->user->fullname }}</td>
                                     <!-- DIVISI -->
