@@ -15,7 +15,7 @@ class AreaController extends Controller
     public function index()
     {
         return view('settings.area.index', [
-            'areas' => Area::all(),
+            'areas' => Area::orderBy('area')->get(),
         ]);
     }
 

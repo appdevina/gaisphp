@@ -16,7 +16,7 @@ class DivisionController extends Controller
     public function index()
     {
         return view('settings.division.index', [
-            'divisions' =>  Divisi::with('area')->get(),
+            'divisions' =>  Divisi::with('area')->orderBy('division')->get(),
             'areas' => Area::all(),
         ]);
     }

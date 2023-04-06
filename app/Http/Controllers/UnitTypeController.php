@@ -15,7 +15,7 @@ class UnitTypeController extends Controller
     public function index()
     {
         return view('master.unit_type.index', [
-            'unit_types' => UnitType::all(),
+            'unit_types' => UnitType::orderBy('unit_type')->get(),
         ]);
     }
 

@@ -15,7 +15,7 @@ class BadanUsahaController extends Controller
     public function index()
     {
         return view('settings.bu.index', [
-            'badan_usahas' => BadanUsaha::all(),
+            'badan_usahas' => BadanUsaha::orderBy('badan_usaha')->get(),
         ]);
     }
 

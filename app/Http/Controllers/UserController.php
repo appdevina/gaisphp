@@ -45,11 +45,11 @@ class UserController extends Controller
 
         return view('master.user.index')->with([
             'users' => $users,
-            'division' => Divisi::all(),
+            'division' => Divisi::orderBy('division')->get(),
             'roles' => Role::all(),
             'badan_usahas' => BadanUsaha::all(),
             'areas' => Area::all(),
-            'approvals' => User::all(),
+            'approvals' => User::orderBy('fullname')->get(),
         ]);
     }
 

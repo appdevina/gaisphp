@@ -48,7 +48,7 @@
                                 </div>
                                 <div>
                                     <div class="form-group" >
-                                        <div class="card-body table-responsive p-0" style="height: 300px;">
+                                        <div class="card-body table-responsive p-0" style="min-height: 300px;">
                                             <table class="table table-head-fixed text-nowrap">
                                                 <thead>
                                                     <tr>
@@ -129,13 +129,18 @@ function toggleQtySisa() {
     var requestTypeId = $('#request_type_id').val();
     var areaId = {{ auth()->user()->division->area->id }};
 
-    if (requestTypeId == 3) {
+    if (requestTypeId == 3 && (areaId == 3 || areaId == 4 || areaId == 5)) {
         $('#th-qty-sisa').show();
         $('#th-no-nota').show();
         $('#th-alasan').hide();
+    } else if (requestTypeId == 2 && (areaId == 3 || areaId == 4 || areaId == 5)){
+        $('#th-qty-sisa').show();
+        $('#th-no-nota').hide();
+        $('#th-alasan').show();
     } else {
         $('#th-qty-sisa').hide();
         $('#th-no-nota').hide();
+        $('#th-alasan').show();
     }
 }
 </script>
