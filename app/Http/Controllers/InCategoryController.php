@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Area;
+use App\Models\InsuranceCategory;
 use Illuminate\Http\Request;
 use Exception;
 
-class AreaController extends Controller
+class InCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class AreaController extends Controller
      */
     public function index()
     {
-        return view('settings.area.index', [
-            'areas' => Area::orderBy('area')->get(),
+        return view('insurances.incategory.index', [
+            'incategories' => InsuranceCategory::paginate(30),
         ]);
     }
 
@@ -25,15 +25,9 @@ class AreaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        try {
-            Area::create($request->all());
-
-            return redirect('area')->with('success', 'Data berhasil diinput !');
-        } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
-        }
+        //
     }
 
     /**
@@ -44,7 +38,13 @@ class AreaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            InsuranceCategory::create($request->all());
+
+            return redirect('incategory')->with('success', 'Data berhasil diinput !');
+        } catch (Exception $e) {
+            return redirect('incategory')->with(['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -64,10 +64,10 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Area $area)
+    public function edit(InsuranceCategory $incategory)
     {
-        return view('settings.area.edit', [
-            'area' => $area,
+        return view('insurances.incategory.edit', [
+            'incategory' => $incategory,
         ]);
     }
 
@@ -78,14 +78,14 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Area $area)
+    public function update(Request $request, InsuranceCategory $incategory)
     {
         try {
-            $area->update($request->all());
+            $incategory->update($request->all());
 
-            return redirect('area')->with('success', 'Data berhasil diupdate !');
+            return redirect('incategory')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
+            return redirect('incategory')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -95,14 +95,14 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Area $area)
+    public function destroy(InsuranceCategory $incategory)
     {
         try {
-            $area->delete($area);
+            $incategory->delete($incategory);
 
-            return redirect('area')->with('success', 'Data berhasil dihapus !');
+            return redirect('incategory')->with('success', 'Data berhasil dihapus !');
         } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
+            return redirect('incategory')->with(['error' => $e->getMessage()]);
         }
     }
 }

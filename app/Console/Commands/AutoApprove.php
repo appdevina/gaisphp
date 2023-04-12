@@ -43,9 +43,13 @@ class AutoApprove extends Command
     public function handle()
     {
         ##AUTO APPROVE PROBLEM REPORT
+        $date24HoursAgo = Carbon::now()->subHours(24)->toDateTimeString();
+
         $problems = DB::table('problem_report')
         ->where('closed_by','!=', null)
-        ->where('status_client', 0)->get();
+        ->where('status_client', 0)
+        ->whereDate('closed_at', '<', $date24HoursAgo)
+        ->get();
         
         foreach ($problems as $problem) {
             DB::table('problem_report')
@@ -53,32 +57,32 @@ class AutoApprove extends Command
         }
 
         ##AUTO APPROVE REQUEST
-        $requestBarangs = RequestBarang::with('request_approval')
-        ->where('status_client', 0)
-        ->whereHas('request_approval', function ($q) {
-            $q->where('approval_type', 'EXECUTOR')
-            ->where('approved_by', '!=', null);
-        })
-        ->whereHas('request_approval', function ($q) {
-            $q->where('approval_type', 'ENDUSER')
-            ->where('approved_by', null);
-        })
-        ->get();
+        // $requestBarangs = RequestBarang::with('request_approval')
+        // ->where('status_client', 0)
+        // ->whereHas('request_approval', function ($q) {
+        //     $q->where('approval_type', 'EXECUTOR')
+        //     ->where('approved_by', '!=', null);
+        // })
+        // ->whereHas('request_approval', function ($q) {
+        //     $q->where('approval_type', 'ENDUSER')
+        //     ->where('approved_by', null);
+        // })
+        // ->get();
 
-        $requestApproval = RequestApproval::whereIn('request_id', $requestBarangs->pluck('id'))->get();
+        // $requestApproval = RequestApproval::whereIn('request_id', $requestBarangs->pluck('id'))->get();
 
-        foreach ($requestApproval as $ra) {
-            if ($ra->approval_type  == 'ENDUSER') {
-                $ra->approved_by = 1;
-                $ra->approved_at = Carbon::now();
-                $ra->save();
-            }
-        }
+        // foreach ($requestApproval as $ra) {
+        //     if ($ra->approval_type  == 'ENDUSER') {
+        //         $ra->approved_by = 1;
+        //         $ra->approved_at = Carbon::now();
+        //         $ra->save();
+        //     }
+        // }
 
-        foreach ($requestBarangs as $rb) {
-            $rb->status_client = 1;
-            $rb->save();
-        }
+        // foreach ($requestBarangs as $rb) {
+        //     $rb->status_client = 1;
+        //     $rb->save();
+        // }
 
         return $this->info('Successfully approved !');
     }

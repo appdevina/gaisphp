@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Area;
+use App\Models\InsuranceScope;
 use Illuminate\Http\Request;
 use Exception;
 
-class AreaController extends Controller
+class InScopeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class AreaController extends Controller
      */
     public function index()
     {
-        return view('settings.area.index', [
-            'areas' => Area::orderBy('area')->get(),
+        return view('insurances.inscope.index', [
+            'inscopes' => InsuranceScope::orderBy('insurance_scope')->paginate(30),
         ]);
     }
 
@@ -25,15 +25,9 @@ class AreaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        try {
-            Area::create($request->all());
-
-            return redirect('area')->with('success', 'Data berhasil diinput !');
-        } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
-        }
+        //
     }
 
     /**
@@ -44,7 +38,13 @@ class AreaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            InsuranceScope::create($request->all());
+
+            return redirect('inscope')->with('success', 'Data berhasil diinput !');
+        } catch (Exception $e) {
+            return redirect('inscope')->with(['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -64,10 +64,10 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Area $area)
+    public function edit(InsuranceScope $inscope)
     {
-        return view('settings.area.edit', [
-            'area' => $area,
+        return view('insurances.inscope.edit', [
+            'inscope' => $inscope,
         ]);
     }
 
@@ -78,14 +78,14 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Area $area)
+    public function update(Request $request, InsuranceScope $inscope)
     {
         try {
-            $area->update($request->all());
+            $inscope->update($request->all());
 
-            return redirect('area')->with('success', 'Data berhasil diupdate !');
+            return redirect('inscope')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
+            return redirect('inscope')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -95,14 +95,14 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Area $area)
+    public function destroy(InsuranceScope $inscope)
     {
         try {
-            $area->delete($area);
+            $inscope->delete($inscope);
 
-            return redirect('area')->with('success', 'Data berhasil dihapus !');
+            return redirect('inscope')->with('success', 'Data berhasil dihapus !');
         } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
+            return redirect('inscope')->with(['error' => $e->getMessage()]);
         }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Area;
+use App\Models\InsuranceProvider;
 use Illuminate\Http\Request;
 use Exception;
 
-class AreaController extends Controller
+class InProvController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class AreaController extends Controller
      */
     public function index()
     {
-        return view('settings.area.index', [
-            'areas' => Area::orderBy('area')->get(),
+        return view('insurances.inprov.index', [
+            'inprovs' => InsuranceProvider::paginate(30),
         ]);
     }
 
@@ -25,15 +25,9 @@ class AreaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        try {
-            Area::create($request->all());
-
-            return redirect('area')->with('success', 'Data berhasil diinput !');
-        } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
-        }
+        //
     }
 
     /**
@@ -44,7 +38,13 @@ class AreaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            InsuranceProvider::create($request->all());
+
+            return redirect('inprov')->with('success', 'Data berhasil diinput !');
+        } catch (Exception $e) {
+            return redirect('inprov')->with(['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -64,10 +64,10 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Area $area)
+    public function edit(InsuranceProvider $inprov)
     {
-        return view('settings.area.edit', [
-            'area' => $area,
+        return view('insurances.inprov.edit', [
+            'inprov' => $inprov,
         ]);
     }
 
@@ -78,14 +78,14 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Area $area)
+    public function update(Request $request, InsuranceProvider $inprov)
     {
         try {
-            $area->update($request->all());
+            $inprov->update($request->all());
 
-            return redirect('area')->with('success', 'Data berhasil diupdate !');
+            return redirect('inprov')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
+            return redirect('inprov')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -95,14 +95,14 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Area $area)
+    public function destroy(InsuranceProvider $inprov)
     {
         try {
-            $area->delete($area);
+            $inprov->delete($inprov);
 
-            return redirect('area')->with('success', 'Data berhasil dihapus !');
+            return redirect('inprov')->with('success', 'Data berhasil dihapus !');
         } catch (Exception $e) {
-            return redirect('area')->with(['error' => $e->getMessage()]);
+            return redirect('inprov')->with(['error' => $e->getMessage()]);
         }
     }
 }

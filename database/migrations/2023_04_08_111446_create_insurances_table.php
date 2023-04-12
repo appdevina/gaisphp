@@ -20,8 +20,8 @@ class CreateInsurancesTable extends Migration
             $table->string('insured_name');
             $table->string('insured_detail')->nullable();
             $table->string('risk_address')->nullable();
-            $table->foreignId('stock_inprov_id')->nullable()->unsigned();
-            $table->foreignId('building_inprov_id')->nullable()->unsigned();
+            $table->foreignId('stock_inprov_id')->nullable()->unsigned()->references('id')->on('insurance_providers');
+            $table->foreignId('building_inprov_id')->nullable()->unsigned()->references('id')->on('insurance_providers');
             $table->bigInteger('stock_worth')->nullable();
             $table->bigInteger('building_worth')->nullable();
             $table->foreignId('insurance_category_id');

@@ -127,7 +127,7 @@
 <script>
 function toggleQtySisa() {
     var requestTypeId = $('#request_type_id').val();
-    var areaId = {{ auth()->user()->division->area->id }};
+    var areaId = "{{ auth()->user()->division->area->id }}";
 
     if (requestTypeId == 3 && (areaId == 3 || areaId == 4 || areaId == 5)) {
         $('#th-qty-sisa').show();

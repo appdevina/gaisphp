@@ -14,6 +14,19 @@
 					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ auth()->user()->role_id == 1 ? $notifReportAdmin : (auth()->user()->role_id == 3 ? $notifReportAdmin : $notifReportUser) }}</span>
 				</span></a></li>
 				@endif
+				@if (auth()->user()->role_id == 1)
+					<li>
+					<a href="#subPagesInsurance" data-toggle="collapse" class="collapsed"><i class="lnr lnr-heart-pulse"></i> <span>ASURANSI</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="subPagesInsurance" class="collapse ">
+						<ul class="nav">
+							<li><a href="/insurance" class="{{ Request::is('insurance') ? 'active' : '' }}"><i class="lnr lnr-heart-pulse"></i>DATA ASURANSI</a></li>
+							<li><a href="/inprov" class="{{ Request::is('inprov') ? 'active' : '' }}"><i class="lnr lnr-apartment"></i>DATA PROVIDER</a></li>
+							<li><a href="/inscope" class="{{ Request::is('inscope') ? 'active' : '' }}"><i class="lnr lnr-apartment"></i>CAKUPAN ASURANSI</a></li>
+							<li><a href="/incategory" class="{{ Request::is('incategory') ? 'active' : '' }}"><i class="lnr lnr-apartment"></i>KATEGORI ASURANSI</a></li>
+						</ul>
+					</div>
+				</li>
+				@endif
                 @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
 				<li>
 					<a href="#subPagesMaster" data-toggle="collapse" class="collapsed"><i class="lnr lnr-list"></i> <span>DATA</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>

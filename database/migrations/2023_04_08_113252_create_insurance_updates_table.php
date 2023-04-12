@@ -17,8 +17,8 @@ class CreateInsuranceUpdatesTable extends Migration
             $table->id();
             $table->foreignId('insurance_id');
             $table->string('policy_number');
-            $table->foreignId('stock_inprov_id')->nullable()->unsigned();
-            $table->foreignId('building_inprov_id')->nullable()->unsigned();
+            $table->foreignId('stock_inprov_id')->nullable()->unsigned()->references('id')->on('insurance_providers');
+            $table->foreignId('building_inprov_id')->nullable()->unsigned()->references('id')->on('insurance_providers');
             $table->bigInteger('stock_worth')->nullable();
             $table->bigInteger('building_worth')->nullable();
             $table->string('extension_of_policy')->nullable();

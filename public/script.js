@@ -121,4 +121,16 @@ $(document).ready(function () {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
+
+    $("#tanggalMulaiAsuransi").datepicker({
+        dateFormat: "yy-mm-dd",
+        format: "dd/mm/yyyy",
+        parentEl: "#addinsurancesModal .modal-body",
+    });
+
+    $("#tanggalAkhirAsuransi").datepicker({
+        dateFormat: "yy-mm-dd",
+        format: "dd/mm/yyyy",
+        parentEl: "#addinsurancesModal .modal-body",
+    });
 });

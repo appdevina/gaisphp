@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Http\UploadedFile;
+use Exception;
 
 class RequestController extends Controller
 {

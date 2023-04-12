@@ -6,6 +6,11 @@ use App\Http\Controllers\BadanUsahaController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\InCategoryController;
+use App\Http\Controllers\InProvController;
+use App\Http\Controllers\InScopeController;
+use App\Http\Controllers\InsuranceController;
+use App\Http\Controllers\InsuranceUpdateController;
 use App\Http\Controllers\ProblemReportController;
 use App\Http\Controllers\PRCategoryController;
 use App\Http\Controllers\ProductController;
@@ -14,6 +19,7 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\RequestTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UnitTypeController;
+use App\Models\Insurance;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -128,6 +134,42 @@ Route::group(['middleware' => ['auth', 'checkRole:1,3']], function(){
     Route::get('/area/{area}/edit', [AreaController::class, 'edit']);
     Route::post('/area/{area}/update', [AreaController::class, 'update']);
     Route::get('/area/{area}/delete', [AreaController::class, 'destroy']);
+
+    ##INSURANCE
+    #INSURANCE
+    Route::get('insurance', [InsuranceController::class, 'index']);
+    Route::post('/insurance/store', [InsuranceController::class, 'store']);
+    Route::get('/insurance/{insurance}/edit', [InsuranceController::class, 'edit']);
+    Route::post('/insurance/{insurance}/update', [InsuranceController::class, 'update']);
+    Route::get('/insurance/{insurance}/delete', [InsuranceController::class, 'destroy']);
+    Route::get('/insurance/{id}', [InsuranceController::class, 'show']);
+    Route::post('/insurance/storeUpdate', [InsuranceController::class, 'storeUpdate']);
+
+    #INSURANCE UPDATE
+    Route::get('/insurance/{id}/editUpdate', [InsuranceUpdateController::class, 'editUpdate']);
+    Route::post('/insurance/{insuranceUpdate}/updateInsuranceUpdate', [InsuranceUpdateController::class, 'updateInsuranceUpdate']);
+
+    #INSURANCE PROVIDERS
+    Route::get('inprov', [InProvController::class, 'index']);
+    Route::post('/inprov/store', [InProvController::class, 'store']);
+    Route::get('/inprov/{inprov}/edit', [InProvController::class, 'edit']);
+    Route::post('/inprov/{inprov}/update', [InProvController::class, 'update']);
+    Route::get('/inprov/{inprov}/delete', [InProvController::class, 'destroy']);
+
+    #INSURANCE SCOPES
+    Route::get('inscope', [InScopeController::class, 'index']);
+    Route::post('/inscope/store', [InScopeController::class, 'store']);
+    Route::get('/inscope/{inscope}/edit', [InScopeController::class, 'edit']);
+    Route::post('/inscope/{inscope}/update', [InScopeController::class, 'update']);
+    Route::get('/inscope/{inscope}/delete', [InScopeController::class, 'destroy']);
+
+    #INSURANCE CATEGORY
+    Route::get('incategory', [InCategoryController::class, 'index']);
+    Route::post('/incategory/store', [InCategoryController::class, 'store']);
+    Route::get('/incategory/{incategory}/edit', [InCategoryController::class, 'edit']);
+    Route::post('/incategory/{incategory}/update', [InCategoryController::class, 'update']);
+    Route::get('/incategory/{incategory}/delete', [InCategoryController::class, 'destroy']);
+
 });
 
 Route::group(['middleware' => ['auth', 'checkRole:1,2,3,4']], function(){
