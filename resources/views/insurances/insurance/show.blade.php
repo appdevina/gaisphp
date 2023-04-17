@@ -27,16 +27,25 @@
                         <hr>
 						<div class="panel-body table-responsive">
                             <div class="col-md-12">
-                                <div class="col-md-10 text-left mb-100">
+                                <div class="col-md-5 text-left mb-100">
                                     <h5><strong>Detail Asuransi : </strong>{{ $detailInsurance->insured_detail }}</h5>
                                     <h5><strong>Nama Tertanggung : </strong>{{ $detailInsurance->insured_name }}</h5>
                                     <h5><strong>Alamat Tertanggung : </strong>{{ $detailInsurance->insured_address }}</h5>
                                     <h5><strong>Alamat yang diasuransikan : </strong>{{ $detailInsurance->risk_address }}</h5>
-                                    <hr>
+                                    <h5><strong>Tanggal Mulai : </strong>{{ Carbon\Carbon::parse($detailInsurance->join_date)->format('d M Y') }}</h5>
+                                </div>
+                                <div class="col-md-5 text-left mb-100">
+                                    <h5><strong>Asuransi Stok : </strong>{{ $detailInsurance->stock_insurance_provider->insurance_provider }}</h5>
+                                    <h5><strong>Nilai Stok : </strong>Rp {{ number_format($detailInsurance->stock_worth, 0, ',', '.') }}</h5>
+                                    <h5><strong>Asuransi Bangunan : </strong>{{ $detailInsurance->building_insurance_provider->insurance_provider }}</h5>
+                                    <h5><strong>Nilai Bangunan : </strong>Rp {{ number_format($detailInsurance->building_worth, 0, ',', '.') }}</h5>
                                 </div>
                                 <div class="col-md-2 text-right">
                                     <a href="/insurance/createUpdate" class="btn btn-success" data-toggle="modal" data-target="#addinsuranceUpdateModal" data-toggle="tooltip" data-placement="top" title="Update Asuransi"><span class="lnr lnr-plus-circle"></span> Update</a>
                                 </div>
+                            </div>
+                            <div class="col-md-12">
+                                <hr><br>
                             </div>
                             <br><br>
 							<table class="table table-hover">
@@ -63,7 +72,7 @@
                                             <td colspan="9">No updates found.</td>
                                         </tr>
                                     @else
-                                        @foreach ($detailInsurance->insurance_update as $detail)
+                                        @foreach ($detailInsurance->insurance_update->sortByDesc('expired_date') as $detail)
                                         @php
                                             $expiredDate = Carbon\Carbon::parse($detail->expired_date);
                                             $diffInDays = Carbon\Carbon::now()->diffInDays($expiredDate, false);
@@ -88,6 +97,8 @@
                                             <!-- <td>{{ $diffInDays }}</td> -->
                                             <td>
                                             <a href="/insurance/{{$detail->id}}/editUpdate" class="btn btn-warning" type="button"><span class="lnr lnr-pencil"></span></a>
+                                            <!-- BUTTON DELETE -->
+                                            <!-- <a href="/insurance/{{$detail->id}}/deleteUpdate/{{$detailInsurance->id}}" class="btn btn-danger" onclick="return confirm('Yakin akan menghapus data ?')"><span class="lnr lnr-trash"></span></a> -->
                                             </td> 
                                         </tr>
                                         @endforeach

@@ -62,7 +62,8 @@
 							</table>
                             <br><br><br>
                             <div class="col-md-12 text-left">
-                                <h4>Catatan : {{ $requestBarang->notes }}</h4>
+                                <h4>Catatan GA : {{ $requestBarang->notes }}</h4>
+                                <h4>Catatan User : {{ $requestBarang->user_notes }}</h4>
                             </div>
                             <div class="col-md-11 text-right">
                                 <h4>Total Biaya : Rp {{ number_format($grandTotal, 0, ',', '.') }}</h4>

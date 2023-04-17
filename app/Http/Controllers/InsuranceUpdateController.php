@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Insurance;
 use App\Models\InsuranceUpdate;
 use App\Models\InsuranceProvider;
 use Illuminate\Http\Request;
@@ -34,6 +35,17 @@ class InsuranceUpdateController extends Controller
             return redirect('insurance/'.$request->insurance_id)->with('success', 'Asuransi berhasil diupdate !');  
         } catch (Exception $e) {
             return redirect('insurance/'.$request->insurance_id)->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function deleteUpdate(InsuranceUpdate $insuranceUpdate, Insurance $insurance)
+    {
+        try {
+            $insuranceUpdate->delete($insuranceUpdate);
+
+            return redirect('insurance/'.$insurance->id)->with('success', 'Data berhasil dihapus !');
+        } catch (Exception $e) {
+            return redirect('insurance/'.$insurance->id)->with(['error' => $e->getMessage()]);
         }
     }
 }

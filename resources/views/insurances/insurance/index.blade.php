@@ -20,12 +20,22 @@
                     <div class="col-md-12">
                         <div class="panel">
                             <div class="panel-heading">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <h3 class="panel-title">Data Asuransi</h3>
                                     <br>
                                 </div>
-                                <div class="col-md-6 text-right">
+                                <div class="col-md-4 text-center">
+                                <form class="form-inline" id="search_form" action="/insurance">
+                                    <div class="form-group">
+                                    <input type="text" class="form-control" name="search" placeholder="Cari ...">
+                                    <a href="javascript:{}" onclick="document.getElementById('search_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                    </div>
+                                </form>
+                            </div>
+                                <div class="col-md-4 text-right">
                                     <a href="/insurance/create" class="btn btn-info" data-toggle="modal" data-target="#addinsurancesModal" data-toggle="tooltip" data-placement="top" title="Tambah data baru"><span class="lnr lnr-plus-circle"></span></a>
+                                    <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import Asuransi"><span class="lnr lnr-upload"></span></a>
+                                    <a href="/insurance/export/template" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
                                 </div>
                             </div>
                             <br><br><br>
@@ -39,38 +49,63 @@
                                         <th>Nama Tertanggung</th>
                                         <th>Detail Asuransi</th>
                                         <th>Alamat yg diasuransikan</th>
-                                        <th>Asuransi Stok</th>
+                                        <!-- <th>Asuransi Stok</th>
                                         <th>Nilai Stok</th>
                                         <th>Asuransi Bangunan</th>
-                                        <th>Nilai Bangunan</th>
+                                        <th>Nilai Bangunan</th> -->
                                         <th>Kategori</th>
                                         <th>Cakupan</th>
-                                        <th>Tanggal Mulai</th>
+                                        <!-- <th>Tanggal Mulai</th> -->
                                         <th>Tanggal Berakhir</th>
                                         <th>Aksi</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach ($insurances as $insurance)
-                                    <tr>
+                                    @php
+                                        $sortedInsurances = $insurances->sortBy(function ($insurance) {
+                                            $expired_date = $insurance->insurance_update->isNotEmpty() ? $insurance->insurance_update->first()->expired_date : $insurance->expired_date;
+                                            return Carbon\Carbon::parse($expired_date);
+                                        });
+                                    @endphp
+
+                                    @foreach ($sortedInsurances as $insurance)
+                                    @php
+                                        $expiredDate = Carbon\Carbon::parse($insurance->expired_date);
+                                        $diffInDays = Carbon\Carbon::now()->diffInDays($expiredDate, false);
+
+                                        if ($diffInDays <= 30 && $diffInDays > 14) {
+                                            $rowStyle = 'background-color: #fcf8e3; color: #8a6d3b;';
+                                        } elseif ($diffInDays <= 14) {
+                                            $rowStyle = 'background-color: #f2dede; color: #b96564;';
+                                        } else {
+                                            $rowStyle = 'background-color: white;';
+                                        }
+                                    @endphp
+                                    <tr style="{{$rowStyle}}">
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $insurance->policy_number }}</td>
-                                        <td>{{ $insurance->insured_address }}</td>
-                                        <td>{{ $insurance->insured_name }}</td>
-                                        <td>{{ $insurance->insured_detail }}</td>
-                                        <td>{{ $insurance->risk_address }}</td>
-                                        <td>{{ $insurance->stock_insurance_provider->insurance_provider }}</td>
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_address }}">{!! Str::limit($insurance->insured_address, 30, '...') !!}</td>
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_name }}">{{ $insurance->insured_name }}</td>
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_detail }}">{!! Str::limit($insurance->insured_detail, 15, '...') !!}</td>
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->risk_address }}">{!! Str::limit($insurance->risk_address, 30, '...') !!}</td>
+                                        <!-- <td>{{ $insurance->stock_insurance_provider->insurance_provider }}</td>
                                         <td>Rp {{ number_format($insurance->stock_worth, 0, ',', '.') }}</td>
                                         <td>{{ $insurance->building_insurance_provider->insurance_provider }}</td>
-                                        <td>Rp {{ number_format($insurance->building_worth, 0, ',', '.') }}</td>
+                                        <td>Rp {{ number_format($insurance->building_worth, 0, ',', '.') }}</td> -->
                                         <td>{{ $insurance->insurance_category->insurance_category }}</td>
                                         <th>{{ $insurance->insurance_scope->insurance_scope }}</th>
-                                        <td><strong>{{ Carbon\Carbon::parse($insurance->join_date)->format('d M Y') }}</strong></td>
-                                        <td><strong>{{ Carbon\Carbon::parse($insurance->expired_date)->format('d M Y') }}</strong></td>
+                                        <!-- <td><strong>{{ Carbon\Carbon::parse($insurance->join_date)->format('d M Y') }}</strong></td> -->
+                                        <td><strong>
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                {{ Carbon\Carbon::parse($insurance->insurance_update->first()->expired_date)->format('d M Y') }}
+                                            @else
+                                                {{ Carbon\Carbon::parse($insurance->expired_date)->format('d M Y') }}
+                                            @endif
+                                            </strong></td>
                                         <td>
                                             <a href="/insurance/{{$insurance->id}}/edit" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                             <!-- BUTTON DELETE -->
-                                            <!-- <a href="/insurance/{{$insurance->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
+                                            <!-- <a href="/insurance/{{$insurance->id}}/delete" class="btn btn-danger" onclick="return confirm('Yakin akan menghapus data ?')"><span class="lnr lnr-trash"></span></a> -->
                                             <a href="/insurance/{{$insurance->id}}" class="btn btn-default" type="button"><span class="lnr lnr-eye"></span></a>
                                         </td>
                                     </tr>
@@ -185,4 +220,29 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <form action="/insurance/import" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="modal fade importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="lnr lnr-cross"></i></button>
+                    <h1 class="modal-title" id="importModalLabel">Import Data Asuransi Awal</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="">Pilih File</label>
+                        <input type="file" class="form-control" name="fileImport">
+                        <h5>*Pastikan data yang diinput adalah data asuransi yang pertama kali didaftarkan</h5>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">BATAL</button>
+                    <button type="submit" class="btn btn-primary">IMPORT</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @stop
