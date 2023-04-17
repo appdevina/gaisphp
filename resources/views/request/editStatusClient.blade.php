@@ -35,6 +35,10 @@
                                         <option value="1">DITERIMA</option>
                                     </select>
                             </div>
+                            <div class="form-group">
+                                <label for="inputUserNotes" class="form-label">Catatan/Masukan</label>
+                                <input type="text" class="form-control float-right" value="" name="user_notes">
+                            </div>
                                 <button type="submit" class="btn btn-warning">UPDATE</button>
                             </form>
                             </div>

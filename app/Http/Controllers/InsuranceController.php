@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\InsuranceTemplateExport;
+use App\Imports\InsuranceImport;
 use App\Models\Insurance;
 use App\Models\InsuranceCategory;
 use App\Models\InsuranceProvider;
@@ -9,7 +11,9 @@ use App\Models\InsuranceScope;
 use App\Models\InsuranceUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Exception;
 
 class InsuranceController extends Controller
@@ -19,10 +23,35 @@ class InsuranceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->search) {
+            $insurances = Insurance::with([
+                'stock_insurance_provider',
+                'building_insurance_provider',
+                'insurance_category',
+                'insurance_scope',
+                'insurance_update',
+            ])
+            ->where('policy_number','LIKE','%'.$request->search.'%')
+            ->orWhere('insured_address','LIKE','%'.$request->search.'%')
+            ->orWhere('insured_name','LIKE','%'.$request->search.'%')
+            ->orWhere('insured_detail','LIKE','%'.$request->search.'%')
+            ->orWhere('risk_address','LIKE','%'.$request->search.'%')
+            ->paginate(30);
+        } else {
+            $insurances = Insurance::with([
+                'stock_insurance_provider',
+                'building_insurance_provider',
+                'insurance_category',
+                'insurance_scope',
+                'insurance_update' => function($query) {$query->latest('expired_date')->get();
+            }])
+            ->paginate(30);
+        }
+
        return view('insurances.insurance.index', [
-            'insurances' => Insurance::with('stock_insurance_provider','building_insurance_provider','insurance_category','insurance_scope')->paginate(30),
+            'insurances' => $insurances,
             'inprovs' => InsuranceProvider::orderBy('insurance_provider')->get(),
             'incategories' => InsuranceCategory::orderBy('insurance_category')->get(),
             'inscopes' => InsuranceScope::orderBy('insurance_scope')->get(),
@@ -69,7 +98,8 @@ class InsuranceController extends Controller
      */
     public function show($id)
     {
-        $detailInsurance = Insurance::with('insurance_update')->find($id);
+        $detailInsurance = Insurance::with('insurance_update')
+        ->find($id);
 
         return view('insurances.insurance.show', [
             'detailInsurance' => $detailInsurance,
@@ -148,5 +178,27 @@ class InsuranceController extends Controller
         } catch (Exception $e) {
             return redirect('insurance/'.$request->insurance_id)->with(['error' => $e->getMessage()]);
         }
+    }
+
+    public function import(Request $request, $disk = 'public')
+    {
+        $file = $request->file('fileImport');
+        $namaFile = $file->getClientOriginalName();
+
+        $path = 'import';
+        if (! Storage::disk($disk)->exists($path)) {
+            Storage::disk($disk)->makeDirectory($path);
+        }
+        $file->storeAs($path, $namaFile, $disk);
+
+        
+        $file->move(storage_path('import/'), $namaFile);
+        Excel::import(new InsuranceImport, storage_path('import/' . $namaFile));
+        return redirect('insurance')->with(['success' => 'Berhasil import data asuransi !']);
+    }
+
+    public function template()
+    {
+        return Excel::download(new InsuranceTemplateExport, 'asuransi_template.xlsx');
     }
 }

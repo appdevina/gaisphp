@@ -462,6 +462,9 @@ class RequestController extends Controller
             $getData->approved_at = Carbon::now()->format('Y-m-d H:i:s');
             $getData->save();
 
+            $requestBarang->user_notes = $request->user_notes;
+            $requestBarang->save();
+
             return redirect('request')->with('success', 'Data berhasil diupdate !');
         } catch (Exception $e) {
             return redirect('request')->with(['error' => $e->getMessage()]);
