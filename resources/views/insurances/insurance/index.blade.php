@@ -70,7 +70,12 @@
 
                                     @foreach ($sortedInsurances as $insurance)
                                     @php
-                                        $expiredDate = Carbon\Carbon::parse($insurance->expired_date);
+                                        if ($insurance->insurance_update->isNotEmpty()) {
+                                            $expiredDate = Carbon\Carbon::parse($insurance->insurance_update->first()->expired_date);
+                                        } else {
+                                            $expiredDate = Carbon\Carbon::parse($insurance->expired_date);
+                                        }
+
                                         $diffInDays = Carbon\Carbon::now()->diffInDays($expiredDate, false);
 
                                         if ($diffInDays <= 30 && $diffInDays > 14) {

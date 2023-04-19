@@ -34,14 +34,21 @@
                                     <h5><strong>Alamat yang diasuransikan : </strong>{{ $detailInsurance->risk_address }}</h5>
                                     <h5><strong>Tanggal Mulai : </strong>{{ Carbon\Carbon::parse($detailInsurance->join_date)->format('d M Y') }}</h5>
                                 </div>
-                                <div class="col-md-5 text-left mb-100">
+                                <div class="col-md-4 text-left mb-100">
                                     <h5><strong>Asuransi Stok : </strong>{{ $detailInsurance->stock_insurance_provider->insurance_provider }}</h5>
                                     <h5><strong>Nilai Stok : </strong>Rp {{ number_format($detailInsurance->stock_worth, 0, ',', '.') }}</h5>
                                     <h5><strong>Asuransi Bangunan : </strong>{{ $detailInsurance->building_insurance_provider->insurance_provider }}</h5>
                                     <h5><strong>Nilai Bangunan : </strong>Rp {{ number_format($detailInsurance->building_worth, 0, ',', '.') }}</h5>
                                 </div>
-                                <div class="col-md-2 text-right">
-                                    <a href="/insurance/createUpdate" class="btn btn-success" data-toggle="modal" data-target="#addinsuranceUpdateModal" data-toggle="tooltip" data-placement="top" title="Update Asuransi"><span class="lnr lnr-plus-circle"></span> Update</a>
+                                <div class="col-md-3 text-right">
+                                    <div class="row">
+                                        <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import Asuransi"><span class="lnr lnr-upload"></span></a>
+                                        <a href="/insurance/export/templateUpdate" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <a href="/insurance/createUpdate" class="btn btn-success" data-toggle="modal" data-target="#addinsuranceUpdateModal" data-toggle="tooltip" data-placement="top" title="Update Asuransi"><span class="lnr lnr-plus-circle"></span> Update</a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -176,4 +183,29 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <form action="/insurance/importUpdate" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="modal fade importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="lnr lnr-cross"></i></button>
+                    <h1 class="modal-title" id="importModalLabel">Import Data Asuransi Update</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="">Pilih File</label>
+                        <input type="file" class="form-control" name="fileImport">
+                        <h5>*Pastikan data yang diinput adalah data asuransi perpanjangan</h5>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">BATAL</button>
+                    <button type="submit" class="btn btn-primary">IMPORT</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @stop

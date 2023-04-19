@@ -75,6 +75,7 @@
                                     <th>Tipe Pengajuan</th>
                                     <!-- <th>Barang</th> -->
                                     <th>Lampiran</th>
+                                    <th>Lampiran 2</th>
                                     <th>Status PO</th>
                                     <th>Disetujui oleh</th>
                                     <th>Disetujui pada</th>
@@ -104,6 +105,12 @@
                                     <!-- LAMPIRAN -->
                                     @if (Storage::exists('public/Request_File/' . $reqbar->request_file) && Storage::size('public/Request_File/' . $reqbar->request_file) > 0)
                                         <td><a href="{{ asset('storage/Request_File/' . $reqbar->request_file) }}">Lihat Dokumen</a></td>
+                                    @else
+                                        <td>Tidak ada file</td>
+                                    @endif
+                                    <!-- LAMPIRAN 2 -->
+                                    @if (Storage::exists('public/Request_File/' . $reqbar->request_file_2) && Storage::size('public/Request_File/' . $reqbar->request_file_2) > 0)
+                                        <td><a href="{{ asset('storage/Request_File/' . $reqbar->request_file_2) }}">Lihat Dokumen</a></td>
                                     @else
                                         <td>Tidak ada file</td>
                                     @endif
@@ -178,11 +185,14 @@
                                                         @endif
                                                     @endforeach
                                                 @else
+                                                    <!-- Sementara IT gabisa liat button edit -->
+                                                    @if (auth()->user()->division_id != 11)
                                                         @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_type_id >= 2)
                                                             <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                                         @elseif ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ACCOUNTING')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 1)
                                                             <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                                         @endif
+                                                    @endif
                                                 @endif
                                                 @break
                                         

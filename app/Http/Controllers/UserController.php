@@ -218,7 +218,7 @@ class UserController extends Controller
         }
         $file->storeAs($path, $namaFile, $disk);
 
-        $file->move(storage_path('import/'), $namaFile);
+        //$file->move(storage_path('import/'), $namaFile);
         Excel::import(new UserImport, storage_path('import/' . $namaFile));
         return redirect('user')->with(['success' => 'Berhasil import user']);
     }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Exports\InsuranceTemplateExport;
+use App\Exports\InsuranceUpdateTemplateExport;
 use App\Imports\InsuranceImport;
+use App\Imports\InsuranceUpdateImport;
 use App\Models\Insurance;
 use App\Models\InsuranceCategory;
 use App\Models\InsuranceProvider;
@@ -191,14 +193,33 @@ class InsuranceController extends Controller
         }
         $file->storeAs($path, $namaFile, $disk);
 
-        
-        $file->move(storage_path('import/'), $namaFile);
+        //$file->move(storage_path('import/'), $namaFile); not necessary
         Excel::import(new InsuranceImport, storage_path('import/' . $namaFile));
+        return redirect('insurance')->with(['success' => 'Berhasil import data asuransi !']);
+    }
+
+    public function importUpdate(Request $request, $disk = 'public')
+    {
+        $file = $request->file('fileImport');
+        $namaFile = $file->getClientOriginalName();
+
+        $path = 'import';
+        if (! Storage::disk($disk)->exists($path)) {
+            Storage::disk($disk)->makeDirectory($path);
+        }
+        $file->storeAs($path, $namaFile, $disk);
+
+        Excel::import(new InsuranceUpdateImport, storage_path('app/public/import/' . $namaFile));
         return redirect('insurance')->with(['success' => 'Berhasil import data asuransi !']);
     }
 
     public function template()
     {
         return Excel::download(new InsuranceTemplateExport, 'asuransi_template.xlsx');
+    }
+
+    public function templateUpdate()
+    {
+        return Excel::download(new InsuranceUpdateTemplateExport, 'asuransi_update_template.xlsx');
     }
 }

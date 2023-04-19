@@ -30,7 +30,7 @@ class UserImport implements ToModel, WithHeadingRow
             $badanusaha_id = BadanUsaha::where('badan_usaha', preg_replace('/\s+/', '', $row['badan_usaha']))->first()->id;
             $divisi_id = Divisi::where('division', preg_replace('/\s+/', '', $row['divisi']))->first()->id;
             $user->update([
-                'nama_lengkap' => strtoupper($row['nama_lengkap']),
+                'fullname' => strtoupper($row['fullname']),
                 'username' => strtolower($row['username']),
                 'badan_usaha_id' => $badanusaha_id,
                 'division_id' => $divisi_id,

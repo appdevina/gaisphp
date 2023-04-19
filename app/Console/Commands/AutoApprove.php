@@ -53,6 +53,7 @@ class AutoApprove extends Command
         
         foreach ($problems as $problem) {
             DB::table('problem_report')
+            ->where('id', $problem->id)
             ->update(['status_client' => 1]);
         }
 
