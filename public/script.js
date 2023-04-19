@@ -67,27 +67,33 @@ $(document).ready(function () {
     $("#request_type_id").on("change", function () {
         $("#inputRequestTypeId").val($(this).val());
 
-        console.log($("#inputRequestTypeId").val($(this).val()));
+        console.log($("#inputRequestTypeId").val());
+        console.log("cek");
 
         $("#tableproduct").empty();
 
         if ($(this).val() == "1") {
             $("#inputRequestFile").show();
+            $("#inputRequestFile2").show();
             $("#formaddmanyproduct").show();
             $("#formaddproduct").show();
+            $("#label-approved-file-2").show();
             $("#label-approved-file").show();
             $("#label-nota-file").hide();
         }
         if ($(this).val() == "2") {
             $("#inputRequestFile").hide();
+            $("#inputRequestFile2").hide();
             $("#formaddproduct").show();
             $("#formaddmanyproduct").show();
         }
         if ($(this).val() == "3") {
             $("#inputRequestFile").show();
+            $("#inputRequestFile2").hide();
             $("#formaddproduct").show();
             $("#formaddmanyproduct").show();
             $("#label-approved-file").hide();
+            $("#label-approved-file-2").hide();
             $("#label-nota-file").show();
         }
     });

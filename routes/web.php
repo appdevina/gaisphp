@@ -62,6 +62,7 @@ Route::get('unit_type/get', [UnitTypeController::class, 'get']);
 
     ##INSURANCE
     Route::get('/insurance/export/template',[InsuranceController::class,'template']);
+    Route::get('/insurance/export/templateUpdate',[InsuranceController::class,'templateUpdate']);
 
 #IMPORT
     ##USER
@@ -71,6 +72,7 @@ Route::get('unit_type/get', [UnitTypeController::class, 'get']);
     Route::post('/product/import',[ProductController::class,'import']);
 
     ##INSURANCE
+    Route::post('/insurance/importUpdate',[InsuranceController::class,'importUpdate']);
     Route::post('/insurance/import',[InsuranceController::class,'import']);
 
 Route::group(['middleware' => ['auth', 'checkRole:1,3']], function(){

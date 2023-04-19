@@ -159,7 +159,7 @@ class RequestController extends Controller
                 ##DIVISI IT
                 } else if ($userDivisi == 11) {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type','request_approval')
-                    ->where('user_id', $user)
+                    // ->where('user_id', $user)
                     ->orderBy('date', 'desc')
                     ->paginate(30);
                 ##DIVISI AUDIT
@@ -294,7 +294,7 @@ class RequestController extends Controller
             $date = Carbon::now()->format('Y-m-d H:i:s');
 
             if (($request->request_type_id == 1 || $request->request_type_id == 3) && $request->request_file == null) {
-                return redirect('request/create')->with('error', 'Harap upload file pengajuan !');
+                return redirect('request/create')->with('error', 'Harap upload file pengajuan persetujuan Atasan !');
             }
 
             if ($request->request_type_id == 2 && $request->products == null) {
@@ -306,7 +306,8 @@ class RequestController extends Controller
             }
 
             if ($request->request_type_id == 1 || $request->request_type_id == 3) {
-                $request_file = $this->storeImage($request);
+                $request_file = $this->storeImage($request, 'request_file');
+                $request_file_2 = $request->request_file_2 == null ? null : $this->storeImage($request, 'request_file_2');
 
                 $requestBarang = RequestBarang::create([
                     'user_id' => $request->user_id,
@@ -315,7 +316,8 @@ class RequestController extends Controller
                     'status_po' => 0,
                     'request_type_id' => $request->request_type_id,
                 ]);
-                $requestBarang->request_file = $request_file;
+               $requestBarang->request_file = $request_file;
+                $requestBarang->request_file_2 = $request_file_2;
                 $requestBarang->request_code = "REQ".$requestBarang->id;
                 $requestBarang->save();
 
@@ -392,23 +394,38 @@ class RequestController extends Controller
         }
     }
 
-    public function storeImage(Request $request, $disk = 'public')
+    public function storeImage(Request $request, $fieldName, $disk = 'public')
     {
         try {
             $this->validate($request, [
                 'request_file' => 'required|file|image|mimes:jpeg,png,jpg,pdf',
+                'request_file_2' => 'file|image|mimes:jpeg,png,jpg,pdf',
             ]);
-    
-            $file = $request->file('request_file');
-            $date = Carbon::now()->format('Y-m-d');
-            $request_id = $request->request_id;
-            $extension = $file->getClientOriginalExtension();
-            $path = 'Request_File';
-            if (! Storage::disk($disk)->exists($path)) {
-                Storage::disk($disk)->makeDirectory($path);
+            
+            if ($fieldName == 'request_file') {
+                $file = $request->file('request_file');
+                $date = Carbon::now()->format('Y-m-d');
+                $request_id = $request->request_id;
+                $extension = $file->getClientOriginalExtension();
+                $path = 'Request_File';
+                if (! Storage::disk($disk)->exists($path)) {
+                    Storage::disk($disk)->makeDirectory($path);
+                }
+                
+                $filename = "Req-".$request_id."_".$date."_". time() .".".$extension;
+            } else {
+                $file = $request->file('request_file_2');
+
+                $date = Carbon::now()->format('Y-m-d');
+                $request_id = $request->request_id;
+                $extension = $file->getClientOriginalExtension();
+                $path = 'Request_File';
+                if (! Storage::disk($disk)->exists($path)) {
+                    Storage::disk($disk)->makeDirectory($path);
+                }
+                
+                $filename = "Req2-".$request_id."_".$date."_". time() .".".$extension;
             }
-    
-            $filename = "Req-".$request_id."_".$date."_". time() .".".$extension;
 
             // Use Intervention Image to convert the image
             if (in_array($extension, ['jpeg', 'png', 'jpg']) && $file->getSize() > 2048 * 1024) {
