@@ -51,12 +51,46 @@ class RequestController extends Controller
                     ->orderBy('date','DESC')
                     ->paginate(30);
                 } else if ($request->selectStatusAkhir != null) {
-                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-                    ->whereHas('user', function ($query) use ($request) {
-                        $query->where('status_client', $request->selectStatusAkhir);
-                    })
-                    ->orderBy('date','DESC')
-                    ->paginate(30);
+                    if ($request->selectStatusAkhir == 'undone'){
+                        $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type', 'request_approval')
+                        ->where(function ($query) {
+                            $query->where(function ($query) {
+                                $query->where('request_type_id', 1)
+                                    ->whereHas('request_approval', function ($query) {
+                                        $query->where('approval_type', 'ACCOUNTING')
+                                            ->whereNotNull('approved_by')
+                                            ->where('approval_type', 'EXECUTOR')
+                                            ->whereNull('approved_by');
+                                    });
+                                })
+                                ->orWhere(function ($query) {
+                                    $query->where('request_type_id', 3)
+                                        ->whereHas('request_approval', function ($query) {
+                                            $query->where('approval_type', 'MANAGER')
+                                                ->whereNotNull('approved_by')
+                                                ->where('approval_type', 'EXECUTOR')
+                                                ->whereNull('approved_by');
+                                        });
+                                })
+                                ->orWhere(function ($query) {
+                                    $query->where('request_type_id', 2)
+                                        ->whereHas('request_approval', function ($query) {
+                                            $query->where('approval_type', 'EXECUTOR')
+                                                ->whereNull('approved_by');
+                                        })
+                                        ->where('status_client', 0);
+                                });
+                        })
+                        ->orderBy('date', 'DESC')
+                        ->paginate(30);
+                    } else {
+                        $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                        ->whereHas('user', function ($query) use ($request) {
+                            $query->where('status_client', $request->selectStatusAkhir);
+                        })
+                        ->orderBy('date','DESC')
+                        ->paginate(30);
+                    }
                 } else {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type', 'request_approval')
                     ->orderBy('date', 'desc')
@@ -84,13 +118,30 @@ class RequestController extends Controller
                     ->orderBy('date','DESC')
                     ->paginate(30);
                 } else if ($request->selectStatusAkhir != null) {
-                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-                    ->whereHas('user', function ($query) use ($request) {
-                        $query->where('status_client', $request->selectStatusAkhir);
-                    })
-                    ->where('request_type_id',1)
-                    ->orderBy('date','DESC')
-                    ->paginate(30);
+                    if ($request->selectStatusAkhir == 'undone'){
+                        $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type', 'request_approval')
+                        ->where(function ($query) {
+                            $query->where(function ($query) {
+                                $query->where('request_type_id', 1)
+                                        ->whereHas('request_approval', function ($query) {
+                                            $query->where('approval_type', 'ACCOUNTING')
+                                                ->whereNull('approved_by');
+                                        });
+                                });
+                        })
+                        ->where('status_client', 0)
+                        ->where('request_type_id',1)
+                        ->orderBy('date', 'DESC')
+                        ->paginate(30);
+                    } else {
+                        $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                        ->whereHas('user', function ($query) use ($request) {
+                            $query->where('status_client', $request->selectStatusAkhir);
+                        })
+                        ->where('request_type_id',1)
+                        ->orderBy('date','DESC')
+                        ->paginate(30);
+                    }
                 } else {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
                     ->where('request_type_id',1)
@@ -118,11 +169,38 @@ class RequestController extends Controller
                     ->orderBy('date','DESC')
                     ->paginate(30);
                 } else if ($request->selectStatusAkhir != null && $userDivisi != 9 && $userDivisi != 11 && $userDivisi != 12) {
-                    $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-                    ->whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi); })
-                    ->where('status_client', $request->selectStatusAkhir)
-                    ->orderBy('date','DESC')
-                    ->paginate(30);
+                    if ($request->selectStatusAkhir == 'undone'){
+                        $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type', 'request_approval')
+                        ->where(function ($query) {
+                            $query->where(function ($query) {
+                                $query->where('request_type_id', 1)
+                                        ->whereHas('request_approval', function ($query) {
+                                            $query->where('approval_type', 'ACCOUNTING')
+                                                ->whereNotNull('approved_by');
+                                        });
+                                })
+                                ->orWhere(function ($query) {
+                                    $query->where('request_type_id', 3)
+                                            ->whereHas('request_approval', function ($query) {
+                                                $query->where('approval_type', 'MANAGER')
+                                                    ->whereNotNull('approved_by');
+                                            });
+                                })
+                                ->orWhere(function ($query) {
+                                    $query->where('request_type_id', 2)
+                                            ->where('status_client', 0);
+                                });
+                        })
+                        ->whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi); })
+                        ->orderBy('date', 'DESC')
+                        ->paginate(30);
+                    } else {
+                        $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
+                        ->whereHas('request_type', function($q) use($userDivisi) { $q->where('pic_division_id', $userDivisi); })
+                        ->where('status_client', $request->selectStatusAkhir)
+                        ->orderBy('date','DESC')
+                        ->paginate(30);
+                    }
                 } else if ($request->selectStatusAkhir != null && $userDivisi == 9) {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
                     ->whereHas('user.division.area', function ($query) {
@@ -231,11 +309,14 @@ class RequestController extends Controller
         $grandTotal = 0;
 
         foreach ($requestBarang->request_detail as $detail) {
-            if ($detail->qty_approved == null) {
+            if ($detail->qty_approved === null) {
                $grandTotal += $detail->product->price * $detail->qty_request; 
+            } else if ($detail->qty_approved === 0) {
+                $grandTotal += $detail->product->price * $detail->qty_approved;
+            } else {
+                $grandTotal += $detail->product->price * $detail->qty_approved;
             }
 
-            $grandTotal += $detail->product->price * $detail->qty_approved;
         }
 
         return view('request.show', [
@@ -275,6 +356,16 @@ class RequestController extends Controller
 
             if ($pengajuanAsset >= 1 && $pengajuanATK >=1 && $pengajuanNota >=1) {
                 return redirect('request')->with(['error' => 'Harap menunggu hingga pengajuan diproses dan status akhir diselesaikan !']);
+            }
+            
+            $startDate = '2023-05-03';
+            $endDate = '2023-05-31';
+            
+            //TAMPILKAN OPSI PENGAJUAN ATK BERDASARKAN TANGGAL YANG DITENTUKAN
+            if (now() > Carbon::createFromFormat('Y-m-d', $startDate) && now() < Carbon::createFromFormat('Y-m-d', $endDate)) {
+                $request_types = $pengajuanAsset >= 1 ? RequestType::where('id', '!=', 1)->get() : ($pengajuanNota >= 1 ? RequestType::where('id', '!=', 3)->get() : ($pengajuanATK >= 1 ? RequestType::where('id', '!=', 2)->get() : RequestType::all()));
+            } else {
+                $request_types = $pengajuanAsset >= 1 ? RequestType::whereNotIn('id', [1,2]) : ($pengajuanNota >= 1 ? RequestType::whereNotIn('id', [3,2]) ->get() : ($pengajuanATK >= 1 ? RequestType::where('id', '!=', 2)->get() : RequestType::whereNotIn('id', [2])->get()));
             }
 
             return view('request.addRequest', [
@@ -468,6 +559,9 @@ class RequestController extends Controller
     public function updateStatusClient(Request $request, RequestBarang $requestBarang)
     {
         try {
+            if ($request->status_client == 0 && $request->user_notes == null) {
+                return redirect('request')->with('success', 'Status masih menunggu !');
+            }
             $requestBarang->status_client = $request->status_client;
             $requestBarang->save();
 

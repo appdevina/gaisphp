@@ -28,22 +28,28 @@
 						<div class="panel-body table-responsive">
                             <div class="col-md-12">
                                 <div class="col-md-5 text-left mb-100">
+                                    <h5><strong>Polis Kontrak Awal : </strong>{{ $detailInsurance->policy_number }}</h5>
                                     <h5><strong>Detail Asuransi : </strong>{{ $detailInsurance->insured_detail }}</h5>
+                                    <h5><strong>Alamat yang diasuransikan : </strong>{{ $detailInsurance->risk_address }}</h5>
                                     <h5><strong>Nama Tertanggung : </strong>{{ $detailInsurance->insured_name }}</h5>
                                     <h5><strong>Alamat Tertanggung : </strong>{{ $detailInsurance->insured_address }}</h5>
-                                    <h5><strong>Alamat yang diasuransikan : </strong>{{ $detailInsurance->risk_address }}</h5>
                                     <h5><strong>Tanggal Mulai : </strong>{{ Carbon\Carbon::parse($detailInsurance->join_date)->format('d M Y') }}</h5>
+                                    <h5><strong>Tanggal Akhir : </strong>{{ Carbon\Carbon::parse($detailInsurance->expired_date)->format('d M Y') }}</h5>
                                 </div>
                                 <div class="col-md-4 text-left mb-100">
-                                    <h5><strong>Asuransi Stok : </strong>{{ $detailInsurance->stock_insurance_provider->insurance_provider }}</h5>
+                                    <h5><strong>Asuransi Stok : </strong>{{ $detailInsurance->stock_insurance_provider->insurance_provider ?? '' }}</h5>
                                     <h5><strong>Nilai Stok : </strong>Rp {{ number_format($detailInsurance->stock_worth, 0, ',', '.') }}</h5>
-                                    <h5><strong>Asuransi Bangunan : </strong>{{ $detailInsurance->building_insurance_provider->insurance_provider }}</h5>
+                                    <h5><strong>Premi Stok : </strong>Rp {{ number_format($detailInsurance->stock_premium, 0, ',', '.') }}</h5>
+                                    <h5><strong>Asuransi Bangunan : </strong>{{ $detailInsurance->building_insurance_provider->insurance_provider ?? '' }}</h5>
                                     <h5><strong>Nilai Bangunan : </strong>Rp {{ number_format($detailInsurance->building_worth, 0, ',', '.') }}</h5>
+                                    <h5><strong>Premi Bangunan : </strong>Rp {{ number_format($detailInsurance->building_premium, 0, ',', '.') }}</h5>
+                                    <h5><strong>Catatan : </strong>{{ $detailInsurance->notes }}</h5>
                                 </div>
                                 <div class="col-md-3 text-right">
                                     <div class="row">
-                                        <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import Asuransi"><span class="lnr lnr-upload"></span></a>
-                                        <a href="/insurance/export/templateUpdate" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
+                                        <a href="/insurance/{{$detailInsurance->id}}/exportUpdate" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Export Asuransi"><span class="lnr lnr-download"></span></a>
+                                        <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="bottom" title="Import Asuransi"><span class="lnr lnr-upload"></span></a>
+                                        <a href="/insurance/export/templateUpdate" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
                                     </div>
                                     <br>
                                     <div class="row">
@@ -62,10 +68,15 @@
                                     <th>No Polis</th>
                                     <th>Asuransi Stok</th>
                                     <th>Nilai Stok</th>
+                                    <th>Premi Stok</th>
+                                    <th>Aktual Stok</th>
+                                    <th>Selisih</th>
                                     <th>Asuransi Bangunan</th>
                                     <th>Nilai Bangunan</th>
+                                    <th>Premi Bangunan</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Berakhir</th>
+                                    <th>Catatan</th>
                                     <th>Aksi</th>
                                 </tr>
 								</thead>
@@ -97,11 +108,16 @@
                                             <td>{{ $detail->policy_number }}</td>
                                             <td>{{ $detail->stock_insurance_provider->insurance_provider }}</td>
                                             <td>Rp {{ number_format($detail->stock_worth, 0, ',', '.') }}</td>
-                                            <td>{{ $detail->building_insurance_provider->insurance_provider }}</td>
+                                            <td>Rp {{ number_format($detail->stock_premium, 0, ',', '.') }}</td>
+                                            <td>Rp {{ number_format($detail->actual_stock_worth, 0, ',', '.') }}</td>
+                                            <td><strong style="color: #b96564;"> Rp {{ number_format(($detail->stock_worth - $detail->actual_stock_worth), 0, ',', '.') }} </strong></td>
+                                            <td>{{ $detail->building_insurance_provider->insurance_provider ?? '' }}</td>
                                             <td>Rp {{ number_format($detail->building_worth, 0, ',', '.') }}</td>
+                                            <td>Rp {{ number_format($detail->building_premium, 0, ',', '.') }}</td>
                                             <td><strong>{{ Carbon\Carbon::parse($detail->join_date)->format('d M Y') }}</strong></td>
                                             <td><strong>{{ Carbon\Carbon::parse($detail->expired_date)->format('d M Y') }}</strong></td>
                                             <!-- <td>{{ $diffInDays }}</td> -->
+                                            <td>{{ $detail->notes }}</td>
                                             <td>
                                             <a href="/insurance/{{$detail->id}}/editUpdate" class="btn btn-warning" type="button"><span class="lnr lnr-pencil"></span></a>
                                             <!-- BUTTON DELETE -->
@@ -131,7 +147,7 @@
                     <form action="/insurance/storeUpdate" method="POST">
                     {{csrf_field()}}
                     <div class="form-group">
-                        <input name="insurance_id" type="text" class="form-control" value="{{ $detailInsurance->id }}">
+                        <input name="insurance_id" type="hidden" class="form-control" value="{{ $detailInsurance->id }}">
                     </div>
                     <div class="form-group">
                         <label for="inputPolicyNumber" class="form-label">No Polis</label>
@@ -152,6 +168,14 @@
                         <input name="stock_worth" type="number" class="form-control" id="inputStockWorth" placeholder="Nilai Stok.." required>
                     </div>
                     <div class="form-group">
+                        <label for="inputActualStockWorth" class="form-label">Nilai Aktual Stok</label>
+                        <input name="actual_stock_worth" type="number" class="form-control" id="inputActualStockWorth" placeholder="Nilai Aktual Stok.." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputStockPremium" class="form-label">Premi Stok</label>
+                        <input name="stock_premium" type="number" class="form-control" id="inputStockPremium" placeholder="Premi Stok.." required>
+                    </div>
+                    <div class="form-group">
                         <label for="inputBulldingInprov" class="form-label">Asuransi Bangunan</label>
                         <select class="form-control" name="building_inprov_id" required>
                             <option selected disabled>-- Pilih Provider Asuransi --</option>
@@ -166,12 +190,20 @@
                         <input name="building_worth" type="number" class="form-control" id="inputBuildingWorth" placeholder="Nilai Bangunan.." required>
                     </div>
                     <div class="form-group">
+                        <label for="inputBuildingPremium" class="form-label">Premi Bangunan</label>
+                        <input name="building_premium" type="number" class="form-control" id="inputBuildingPremium" placeholder="Premi Bangunan.." required>
+                    </div>
+                    <div class="form-group">
                         <label for="inputJoinDate" class="form-label">Tanggal Mulai</label>
                         <input type="text" class="form-control float-right" value="" name="join_date" id="tanggalMulaiAsuransi" required>
                     </div>
                     <div class="form-group">
                         <label for="inputExpiredDate" class="form-label">Tanggal Berakhir</label>
                         <input type="text" class="form-control float-right" value="" name="expired_date" id="tanggalAkhirAsuransi" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputNotes" class="form-label">Catatan</label>
+                        <input name="notes" type="text" class="form-control" id="inputNotes" placeholder="Catatan.." required>
                     </div>
                 </div>
                     <div class="modal-footer">
@@ -192,6 +224,9 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="lnr lnr-cross"></i></button>
                     <h1 class="modal-title" id="importModalLabel">Import Data Asuransi Update</h1>
+                </div>
+                <div class="form-group">
+                    <input name="insurance_id" type="hidden" class="form-control" value="{{ $detailInsurance->id }}">
                 </div>
                 <div class="modal-body">
                     <div class="form-group mb-3">

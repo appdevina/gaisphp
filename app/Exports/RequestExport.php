@@ -9,7 +9,7 @@ use App\Models\Product;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class RequestExport implements FromArray, WithHeadings, WithMapping
 {
@@ -70,7 +70,7 @@ class RequestExport implements FromArray, WithHeadings, WithMapping
                 //$request[] //collection 3 request
 
                 foreach ($requests as $request) {
-                    if($request->user->division->area->id == 3 || $request->user->division->area->id == 4 || $request->user->division->area->id == 5) {
+                    if($request->user->division->area->id == 4 || $request->user->division->area->id == 5) {
                         foreach ($request->request_detail as $reqdetail) {
                             if ($reqdetail->product_id == $product->id) {
                                 $total += $reqdetail->qty_approved;

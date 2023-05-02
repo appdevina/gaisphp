@@ -61,7 +61,11 @@ Route::get('unit_type/get', [UnitTypeController::class, 'get']);
     Route::post('/request/export',[RequestController::class,'export']);
 
     ##INSURANCE
+    Route::get('/insurance/export',[InsuranceController::class,'export']);
     Route::get('/insurance/export/template',[InsuranceController::class,'template']);
+
+    ##INSURANCE UPDATE
+    Route::get('/insurance/{id}/exportUpdate',[InsuranceController::class,'exportUpdate']);
     Route::get('/insurance/export/templateUpdate',[InsuranceController::class,'templateUpdate']);
 
 #IMPORT

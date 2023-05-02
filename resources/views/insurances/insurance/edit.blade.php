@@ -38,6 +38,10 @@
                                     <input name="insured_name" type="text" class="form-control" value="{{$insurance->insured_name}}" required>
                                 </div>
                                 <div class="form-group">
+                                    <label for="inputWarehouseCode" class="form-label">Kode Gudang</label>
+                                    <input name="warehouse_code" type="text" class="form-control" id="inputWarehouseCode" value="{{$insurance->warehouse_code}}" required>
+                                </div>
+                                <div class="form-group">
                                     <label for="inputInsuredDetail" class="form-label">Detail Nama Tertanggung</label>
                                     <input name="insured_detail" type="text" class="form-control" value="{{$insurance->insured_detail}}" required>
                                 </div>
@@ -61,6 +65,14 @@
                                     <input name="stock_worth" type="number" class="form-control" value="{{$insurance->stock_worth}}" required>
                                 </div>
                                 <div class="form-group">
+                                    <label for="inputActualStockWorth" class="form-label">Nilai Aktual Stok</label>
+                                    <input name="actual_stock_worth" type="number" class="form-control" id="inputActualStockWorth" value="{{$insurance->actual_stock_worth}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputStockPremium" class="form-label">Premi Stok</label>
+                                    <input name="stock_premium" type="number" class="form-control" id="inputStockPremium" value="{{$insurance->stock_premium}}" required>
+                                </div>
+                                <div class="form-group">
                                     <label for="inputBulldingInprov" class="form-label">Asuransi Bangunan</label>
                                     <select class="form-control" name="building_inprov_id" required>
                                         <option selected disabled>-- Pilih Provider Asuransi --</option>
@@ -74,6 +86,10 @@
                                 <div class="form-group">
                                     <label for="inputBuildingWorth" class="form-label">Nilai Bangunan</label>
                                     <input name="building_worth" type="number" class="form-control" value="{{$insurance->building_worth}}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputBuildingPremium" class="form-label">Premi Bangunan</label>
+                                    <input name="building_premium" type="number" class="form-control" id="inputBuildingPremium" value="{{$insurance->building_premium}}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputInsuranceCategory" class="form-label">Kategori Asuransi</label>
@@ -104,6 +120,10 @@
                                 <div class="form-group">
                                     <label for="inputExpiredDate" class="form-label">Tanggal Berakhir</label>
                                     <input data-format="dd/mm/yyyy" type="text" class="form-control float-right" value="{{ Carbon\Carbon::parse($insurance->expired_date)->format('d/m/Y') }}" name="expired_date" id="tanggalAkhirAsuransi" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputNotes" class="form-label">Catatan</label>
+                                    <input name="notes" type="text" class="form-control" id="inputNotes" value="{{$insurance->notes}}" required>
                                 </div>
                                 <br>
                                 <button type="submit" class="btn btn-warning">UPDATE</button>

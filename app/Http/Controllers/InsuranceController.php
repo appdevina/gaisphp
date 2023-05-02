@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\InsuranceExport;
 use App\Exports\InsuranceTemplateExport;
+use App\Exports\InsuranceUpdateExport;
 use App\Exports\InsuranceUpdateTemplateExport;
 use App\Imports\InsuranceImport;
 use App\Imports\InsuranceUpdateImport;
@@ -17,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class InsuranceController extends Controller
 {
@@ -40,16 +43,18 @@ class InsuranceController extends Controller
             ->orWhere('insured_name','LIKE','%'.$request->search.'%')
             ->orWhere('insured_detail','LIKE','%'.$request->search.'%')
             ->orWhere('risk_address','LIKE','%'.$request->search.'%')
-            ->paginate(30);
+            ->paginate(50);
         } else {
             $insurances = Insurance::with([
                 'stock_insurance_provider',
                 'building_insurance_provider',
                 'insurance_category',
                 'insurance_scope',
-                'insurance_update' => function($query) {$query->latest('expired_date')->get();
+                'insurance_update' => function($query) {$query->latest('expired_date');
             }])
-            ->paginate(30);
+            ->select(['insurances.*', DB::raw('(SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id) as latest_expired_date')])
+            ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id), insurances.expired_date) ASC")
+            ->paginate(50);
         }
 
        return view('insurances.insurance.index', [
@@ -79,6 +84,7 @@ class InsuranceController extends Controller
     public function store(Request $request)
     {
         try {
+            // dd($request->all());
             $user = Auth::user()->id;
 
             $request['user_id'] = $user;
@@ -194,7 +200,7 @@ class InsuranceController extends Controller
         $file->storeAs($path, $namaFile, $disk);
 
         //$file->move(storage_path('import/'), $namaFile); not necessary
-        Excel::import(new InsuranceImport, storage_path('import/' . $namaFile));
+        Excel::import(new InsuranceImport, storage_path('app/public/import/' . $namaFile));
         return redirect('insurance')->with(['success' => 'Berhasil import data asuransi !']);
     }
 
@@ -210,7 +216,7 @@ class InsuranceController extends Controller
         $file->storeAs($path, $namaFile, $disk);
 
         Excel::import(new InsuranceUpdateImport, storage_path('app/public/import/' . $namaFile));
-        return redirect('insurance')->with(['success' => 'Berhasil import data asuransi !']);
+        return redirect('insurance/'.$request->insurance_id)->with(['success' => 'Berhasil import data asuransi !']);
     }
 
     public function template()
@@ -221,5 +227,17 @@ class InsuranceController extends Controller
     public function templateUpdate()
     {
         return Excel::download(new InsuranceUpdateTemplateExport, 'asuransi_update_template.xlsx');
+    }
+
+    public function export()
+    {
+        return Excel::download(new InsuranceExport, 'asuransi.xlsx');
+    }
+
+    public function exportUpdate($id)
+    {
+        $polis = Insurance::find($id);
+
+        return Excel::download(new InsuranceUpdateExport($polis->id, $polis->policy_number), 'asuransi_update_nopol-'.$polis->policy_number.'_.xlsx');
     }
 }

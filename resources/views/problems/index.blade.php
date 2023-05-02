@@ -57,7 +57,7 @@
                                     @if (auth()->user()->role_id > 3)
                                         <a href="/problemReport/create" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Tambah laporan"><span class="lnr lnr-plus-circle"></span></a>
                                     @endif
-                                    @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
+                                    @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6) || (auth()->user()->role_id == 3 && auth()->user()->division_id == 11))
                                         <a href="#exportProblemReport" data-toggle="modal" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Export laporan"><span class="lnr lnr-download"></span></a>
                                     @endif
                                 </div>
