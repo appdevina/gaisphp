@@ -34,6 +34,7 @@
                             </div>
                                 <div class="col-md-4 text-right">
                                     <a href="/insurance/create" class="btn btn-info" data-toggle="modal" data-target="#addinsurancesModal" data-toggle="tooltip" data-placement="top" title="Tambah data baru"><span class="lnr lnr-plus-circle"></span></a>
+                                    <a href="/insurance/export" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Export Asuransi"><span class="lnr lnr-download"></span></a>
                                     <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import Asuransi"><span class="lnr lnr-upload"></span></a>
                                     <a href="/insurance/export/template" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
                                 </div>
@@ -45,14 +46,17 @@
                                     <tr>
                                         <th>NO</th>
                                         <th>No Polis</th>
-                                        <th>Alamat Tertanggung</th>
-                                        <th>Nama Tertanggung</th>
+                                        <!-- <th>Alamat Tertanggung</th>
+                                        <th>Nama Tertanggung</th> -->
+                                        <th>Kode</th>
                                         <th>Detail Asuransi</th>
                                         <th>Alamat yg diasuransikan</th>
-                                        <!-- <th>Asuransi Stok</th>
+                                        <th>Asuransi Stok</th>
                                         <th>Nilai Stok</th>
+                                        <th>Aktual Stok</th>
+                                        <th>Selisih</th>
                                         <th>Asuransi Bangunan</th>
-                                        <th>Nilai Bangunan</th> -->
+                                        <th>Nilai Bangunan</th>
                                         <th>Kategori</th>
                                         <th>Cakupan</th>
                                         <!-- <th>Tanggal Mulai</th> -->
@@ -88,15 +92,54 @@
                                     @endphp
                                     <tr style="{{$rowStyle}}">
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $insurance->policy_number }}</td>
-                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_address }}">{!! Str::limit($insurance->insured_address, 30, '...') !!}</td>
-                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_name }}">{{ $insurance->insured_name }}</td>
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->policy_number }}">{!! Str::limit($insurance->policy_number, 12, '...') !!}</td>
+                                        <!-- <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_address }}">{!! Str::limit($insurance->insured_address, 30, '...') !!}</td>
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_name }}">{{ $insurance->insured_name }}</td> -->
+                                        <td>{{ $insurance->warehouse_code }}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_detail }}">{!! Str::limit($insurance->insured_detail, 15, '...') !!}</td>
-                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->risk_address }}">{!! Str::limit($insurance->risk_address, 30, '...') !!}</td>
-                                        <!-- <td>{{ $insurance->stock_insurance_provider->insurance_provider }}</td>
-                                        <td>Rp {{ number_format($insurance->stock_worth, 0, ',', '.') }}</td>
-                                        <td>{{ $insurance->building_insurance_provider->insurance_provider }}</td>
-                                        <td>Rp {{ number_format($insurance->building_worth, 0, ',', '.') }}</td> -->
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->risk_address }}">{!! Str::limit($insurance->risk_address, 24, '...') !!}</td>
+                                        <td>
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                {{ $insurance->insurance_update->first()->stock_insurance_provider->insurance_provider ?? '' }}
+                                            @else
+                                                {{ $insurance->stock_insurance_provider->insurance_provider ?? ''}}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                Rp {{ number_format($insurance->insurance_update->first()->stock_worth, 0, ',', '.') }}
+                                            @else
+                                                Rp {{ number_format($insurance->stock_worth, 0, ',', '.') }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                Rp {{ number_format($insurance->insurance_update->first()->actual_stock_worth, 0, ',', '.') }}
+                                            @else
+                                                Rp {{ number_format($insurance->actual_stock_worth, 0, ',', '.') }}
+                                            @endif
+                                        </td>
+                                        <td><strong style="color: #b96564;">
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                Rp {{ number_format(($insurance->insurance_update->first()->stock_worth - $insurance->insurance_update->first()->actual_stock_worth), 0, ',', '.') }}
+                                            @else
+                                                Rp {{ number_format(($insurance->stock_worth - $insurance->actual_stock_worth), 0, ',', '.') }}
+                                            @endif
+                                        </strong></td>
+                                        <td>
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                {{ $insurance->insurance_update->first()->building_insurance_provider->insurance_provider ?? '' }}
+                                            @else
+                                                {{ $insurance->building_insurance_provider->insurance_provider ?? ''}}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                Rp {{ number_format($insurance->insurance_update->first()->building_worth, 0, ',', '.') }}
+                                            @else
+                                                Rp {{ number_format($insurance->building_worth, 0, ',', '.') }}
+                                            @endif
+                                        </td>
                                         <td>{{ $insurance->insurance_category->insurance_category }}</td>
                                         <th>{{ $insurance->insurance_scope->insurance_scope }}</th>
                                         <!-- <td><strong>{{ Carbon\Carbon::parse($insurance->join_date)->format('d M Y') }}</strong></td> -->
@@ -152,6 +195,10 @@
                         <input name="insured_name" type="text" class="form-control" id="inputInsuredName" placeholder="Nama Tertanggung.." required>
                     </div>
                     <div class="form-group">
+                        <label for="inputWarehouseCode" class="form-label">Kode Gudang</label>
+                        <input name="warehouse_code" type="text" class="form-control" id="inputWarehouseCode" placeholder="Kode Gudang.." required>
+                    </div>
+                    <div class="form-group">
                         <label for="inputInsuredDetail" class="form-label">Detail Nama Tertanggung</label>
                         <input name="insured_detail" type="text" class="form-control" id="inputInsuredDetail" placeholder="Detail Nama Tertanggung.." required>
                     </div>
@@ -174,6 +221,14 @@
                         <input name="stock_worth" type="number" class="form-control" id="inputStockWorth" placeholder="Nilai Stok.." required>
                     </div>
                     <div class="form-group">
+                        <label for="inputActualStockWorth" class="form-label">Nilai Aktual Stok</label>
+                        <input name="actual_stock_worth" type="number" class="form-control" id="inputActualStockWorth" placeholder="Nilai Aktual Stok.." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputStockPremium" class="form-label">Premi Stok</label>
+                        <input name="stock_premium" type="number" class="form-control" id="inputStockPremium" placeholder="Premi Stok.." required>
+                    </div>
+                    <div class="form-group">
                         <label for="inputBulldingInprov" class="form-label">Asuransi Bangunan</label>
                         <select class="form-control" name="building_inprov_id" required>
                             <option selected disabled>-- Pilih Provider Asuransi --</option>
@@ -186,6 +241,10 @@
                     <div class="form-group">
                         <label for="inputBuildingWorth" class="form-label">Nilai Bangunan</label>
                         <input name="building_worth" type="number" class="form-control" id="inputBuildingWorth" placeholder="Nilai Bangunan.." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputBuildingPremium" class="form-label">Premi Bangunan</label>
+                        <input name="building_premium" type="number" class="form-control" id="inputBuildingPremium" placeholder="Premi Bangunan.." required>
                     </div>
                     <div class="form-group">
                         <label for="inputInsuranceCategory" class="form-label">Kategori Asuransi</label>
@@ -214,6 +273,10 @@
                     <div class="form-group">
                         <label for="inputExpiredDate" class="form-label">Tanggal Berakhir</label>
                         <input data-format="dd/mm/yyyy" type="text" class="form-control float-right" value="" name="expired_date" id="tanggalAkhirAsuransi" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputNotes" class="form-label">Catatan</label>
+                        <input name="notes" type="text" class="form-control" id="inputNotes" placeholder="Catatan.." required>
                     </div>
                 </div>
                     <div class="modal-footer">

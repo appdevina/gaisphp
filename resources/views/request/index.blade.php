@@ -37,6 +37,7 @@
                                     <div class="form-group">
                                     <select class="form-control" name="selectStatusAkhir">
                                         <option selected value="">-- Status Akhir --</option>
+                                        <option value="undone">BELUM PROSES</option>
                                         <option value="0">MENUNGGU</option>
                                         <option value="1">DITERIMA</option>
                                         <option value="2">DIBATALKAN</option>
@@ -57,7 +58,7 @@
                                 @if (auth()->user()->role_id > 3)
                                     <a href="/request/create" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Tambah pengajuan"><span class="lnr lnr-plus-circle"></span></a>
                                 @endif
-                                @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
+                                @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6) || (auth()->user()->role_id == 3 && auth()->user()->division_id == 11))
                                     <a href="#exportRequest" data-toggle="modal" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Export pengajuan"><span class="lnr lnr-download"></span></a>
                                 @endif
                             </div>
