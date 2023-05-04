@@ -398,6 +398,17 @@
                                         id="tanggal-export-request" required>
                                 </form>
                         </div>
+                        <div class="form-group">
+                            <label for="date" class="form-label">Filter</label>
+                                <select class="form-control" name="selectFilterRequest">
+                                    <option selected value="">-- Filter --</option>
+                                    <option value="0">BELUM PROSES</option>
+                                    <option value="1">SUDAH PROSES</option>
+                                    <option value="4">DIBATALKAN</option>
+                                    <option value="3">TANPA YG DIBATALKAN</option>
+                                    <option value="2">SEMUA</option>
+                                </select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

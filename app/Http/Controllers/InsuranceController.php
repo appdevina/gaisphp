@@ -36,13 +36,33 @@ class InsuranceController extends Controller
                 'building_insurance_provider',
                 'insurance_category',
                 'insurance_scope',
-                'insurance_update',
-            ])
+                'insurance_update'=> function($query) {$query->latest('expired_date');
+            }])
             ->where('policy_number','LIKE','%'.$request->search.'%')
             ->orWhere('insured_address','LIKE','%'.$request->search.'%')
             ->orWhere('insured_name','LIKE','%'.$request->search.'%')
             ->orWhere('insured_detail','LIKE','%'.$request->search.'%')
             ->orWhere('risk_address','LIKE','%'.$request->search.'%')
+            ->paginate(50);
+        } else if ($request->selectStatus) {
+            $insurances = Insurance::with([
+                'stock_insurance_provider',
+                'building_insurance_provider',
+                'insurance_category',
+                'insurance_scope',
+                'insurance_update' => function($query) use($request) {
+                    $query->latest('expired_date');
+            }])
+            ->select(['insurances.*', DB::raw('(SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id) as latest_expired_date')])
+            ->where(function($query) use($request) {
+                $query->where('insurances.status', 'LIKE', '%'.$request->selectStatus.'%')
+                    ->orWhereHas('insurance_update', function($query) use($request) {
+                        $query->where('status', 'LIKE', '%'.$request->selectStatus.'%')
+                        ->latest('expired_date');
+                        //latestnya gabisa
+                    });
+            })
+            ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id), insurances.expired_date) ASC")
             ->paginate(50);
         } else {
             $insurances = Insurance::with([
@@ -50,10 +70,15 @@ class InsuranceController extends Controller
                 'building_insurance_provider',
                 'insurance_category',
                 'insurance_scope',
-                'insurance_update' => function($query) {$query->latest('expired_date');
+                'insurance_update' => function($query) {
+                    $query->latest('expired_date')
+                    ->where('status', '!=', 'TUTUP')
+                    ->where('status', '!=', 'REFUND');
             }])
             ->select(['insurances.*', DB::raw('(SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id) as latest_expired_date')])
             ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id), insurances.expired_date) ASC")
+            ->where('insurances.status', '!=', 'TUTUP')
+            ->where('insurances.status', '!=', 'REFUND')
             ->paginate(50);
         }
 

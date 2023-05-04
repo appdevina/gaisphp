@@ -725,8 +725,9 @@ class RequestController extends Controller
             $area_id = $request->area_id;
             $request_type_id = $request->request_type_id;
             $request_type = RequestType::where('id', $request_type_id)->value('request_type');
+            $filter_request = $request->selectFilterRequest;
         }
 
-        return Excel::download(new RequestExport($date1, $date2, $area_id, $request_type_id), 'pengajuan_'. str_replace(['/', '\\'], '_', $request_type) . '_'. $date1 . '_to_' . $date2 . '.xlsx');
+        return Excel::download(new RequestExport($date1, $date2, $area_id, $request_type_id, $filter_request), 'pengajuan_'. str_replace(['/', '\\'], '_', $request_type) . '_'. $date1 . '_to_' . $date2 . '.xlsx');
     }
 }
