@@ -22,6 +22,8 @@ class InsuranceUpdateImport implements ToModel, WithHeadingRow
         $user_id = Auth::user()->id;
         $insurance = Insurance::where('policy_number', strtolower($row['no_polis_induk']))->first();
 
+        // $insurance_id = InsuranceUpdate::where('policy_number', $row['no_polis_induk'])->first()->insurance_id;
+
         if ($insurance) {
             $insuranceUpdate = InsuranceUpdate::where('policy_number', $row['no_polis'])
                 ->where('insurance_id', $insurance->id)

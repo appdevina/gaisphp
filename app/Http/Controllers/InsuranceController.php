@@ -66,20 +66,19 @@ class InsuranceController extends Controller
             ->paginate(50);
         } else {
             $insurances = Insurance::with([
-                'stock_insurance_provider',
-                'building_insurance_provider',
                 'insurance_category',
                 'insurance_scope',
-                'insurance_update' => function($query) {
-                    $query->latest('expired_date')
-                    ->where('status', '!=', 'TUTUP')
-                    ->where('status', '!=', 'REFUND');
-            }])
-            ->select(['insurances.*', DB::raw('(SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id) as latest_expired_date')])
-            ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id), insurances.expired_date) ASC")
-            ->where('insurances.status', '!=', 'TUTUP')
-            ->where('insurances.status', '!=', 'REFUND')
+                'insurance_update',
+                'insurance_update.stock_insurance_provider',
+                'insurance_update.building_insurance_provider',
+            ])
+            ->selectRaw('insurances.*, (SELECT status FROM insurance_updates WHERE insurance_id = insurances.id ORDER BY expired_date DESC LIMIT 1) AS latest_status')
+            ->orderBy('latest_status', 'asc')
+            ->selectRaw('insurances.*, (SELECT expired_date FROM insurance_updates WHERE insurance_id = insurances.id ORDER BY expired_date DESC LIMIT 1) AS latest_date')
+            ->orderBy('latest_date', 'asc')
             ->paginate(50);
+            
+            // dd($insurances[25]);
         }
 
        return view('insurances.insurance.index', [
@@ -112,10 +111,36 @@ class InsuranceController extends Controller
             // dd($request->all());
             $user = Auth::user()->id;
 
-            $request['user_id'] = $user;
-            $request['join_date'] = Carbon::createFromFormat('d/m/Y', $request['join_date'])->format('Y-m-d');
-            $request['expired_date'] = Carbon::createFromFormat('d/m/Y', $request['expired_date'])->format('Y-m-d');
-            Insurance::create($request->all());
+            $insurance = Insurance::create([
+                'insured_address' => $request->insured_address,
+                'insured_name' => $request->insured_name,
+                'warehouse_code' => $request->warehouse_code,
+                'insured_detail' => $request->insured_detail,
+                'risk_address' => $request->risk_address,
+                'insurance_category_id' => $request->insurance_category_id,
+                'insurance_scope_id' => $request->insurance_scope_id,
+            ]);
+
+            InsuranceUpdate::create([
+                'insurance_id' => $insurance->id,
+                'policy_number' => $request->policy_number, 
+                'stock_inprov_id' => $request->stock_inprov_id,
+                'building_inprov_id' => $request->building_inprov_id,
+                'stock_worth' => $request->stock_worth,
+                'actual_stock_worth' => $request->actual_stock_worth,
+                'stock_premium' => $request->stock_premium,
+                'building_worth' => $request->building_worth,
+                'building_premium' => $request->building_premium,
+                'join_date' => Carbon::createFromFormat('d/m/Y', $request->join_date)->format('Y-m-d'),
+                'expired_date' => Carbon::createFromFormat('d/m/Y', $request->expired_date)->format('Y-m-d'),
+                'user_id' => $user,
+                'notes' => $request->notes,
+            ]);
+
+            // $request['user_id'] = $user;
+            // $request['join_date'] = Carbon::createFromFormat('d/m/Y', $request['join_date'])->format('Y-m-d');
+            // $request['expired_date'] = Carbon::createFromFormat('d/m/Y', $request['expired_date'])->format('Y-m-d');
+            // Insurance::create($request->all());
 
             return redirect('insurance')->with('success', 'Asuransi berhasil diinput !');  
         } catch (Exception $e) {

@@ -83,116 +83,68 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @php
-                                        $sortedInsurances = $insurances->sortBy(function ($insurance) {
-                                            $expired_date = $insurance->insurance_update->isNotEmpty() ? $insurance->insurance_update->first()->expired_date : $insurance->expired_date;
-                                            return Carbon\Carbon::parse($expired_date);
-                                        });
-                                    @endphp
+                                    @foreach ($insurances as $insurance)
+                                        @php
+                                            $expiredDate = Carbon\Carbon::parse($insurance->insurance_update->last()->expired_date);
 
-                                    @foreach ($sortedInsurances as $insurance)
-                                    @php
-                                        if ($insurance->insurance_update->isNotEmpty()) {
-                                            $expiredDate = Carbon\Carbon::parse($insurance->insurance_update->first()->expired_date);
-                                        } else {
-                                            $expiredDate = Carbon\Carbon::parse($insurance->expired_date);
-                                        }
+                                            $diffInDays = Carbon\Carbon::now()->diffInDays($expiredDate, false);
+                                            $rowStyle = ''; // initialize the variable
 
-                                        $diffInDays = Carbon\Carbon::now()->diffInDays($expiredDate, false);
-
-                                        $rowStyle = ''; // initialize the variable
-
-                                        if ($diffInDays <= 30 && $diffInDays > 14) {
-                                            $rowStyle = 'background-color: #fcf8e3; color: #8a6d3b;';
-                                        } elseif ($diffInDays <= 14) {
-                                            if ($insurance->insurance_update->isNotEmpty()) {
-                                                $status = $insurance->insurance_update->first()->status;
-                                                
-                                                if ($status === 'BERJALAN' || $status === 'PEMBAHARUAN') {
-                                                    $rowStyle = 'background-color: #f2dede; color: #b96564;';
-                                                } else {
-                                                    $rowStyle = 'background-color: #EAECEA; color: #000000;';
-                                                }
+                                            if ($diffInDays <= 30 && $diffInDays > 14) {
+                                                $rowStyle = 'background-color: #fcf8e3; color: #8a6d3b;';
+                                            } elseif ($diffInDays <= 14) {
+                                                    $status = $insurance->insurance_update->last()->status;
+                                                    
+                                                    if ($status === 'BERJALAN' || $status === 'PEMBAHARUAN') {
+                                                        $rowStyle = 'background-color: #f2dede; color: #b96564;';
+                                                    } else {
+                                                        $rowStyle = 'background-color: #EAECEA; color: #000000;';
+                                                    }
                                             } else {
-                                                $status = $insurance->status;
-
-                                                if ($status === 'BERJALAN' || $status === 'PEMBAHARUAN') {
-                                                    $rowStyle = 'background-color: #f2dede; color: #b96564;';
-                                                } else {
-                                                    $rowStyle = 'background-color: #EAECEA; color: #000000;';
-                                                }
+                                                $rowStyle = 'background-color: white;';
                                             }
-                                        } else {
-                                            $rowStyle = 'background-color: white;';
-                                        }
-                                    @endphp
+                                        @endphp
                                     <tr style="{{$rowStyle}}">
                                         <td>{{ $loop->iteration }}</td>
-                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->policy_number }}">{!! Str::limit($insurance->policy_number, 12, '...') !!}</td>
+                                        <!-- NO POLIS -->
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insurance_update->last()->policy_number }}">{!! Str::limit($insurance->insurance_update->last()->policy_number, 12, '...') !!}</td>
                                         <!-- <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_address }}">{!! Str::limit($insurance->insured_address, 30, '...') !!}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_name }}">{{ $insurance->insured_name }}</td> -->
+                                        <!-- KODE -->
                                         <td>{{ $insurance->warehouse_code }}</td>
+                                        <!-- DETAIL ASURANSI -->
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_detail }}">{!! Str::limit($insurance->insured_detail, 15, '...') !!}</td>
+                                        <!-- ALAMAT YANG DIASURANSIKAN -->
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->risk_address }}">{!! Str::limit($insurance->risk_address, 24, '...') !!}</td>
+                                        <!-- ASURANSI STOK (child latest) -->
                                         <td>
-                                            @if ($insurance->insurance_update->isNotEmpty())
-                                                {{ $insurance->insurance_update->first()->stock_insurance_provider->insurance_provider ?? '' }}
-                                            @else
-                                                {{ $insurance->stock_insurance_provider->insurance_provider ?? ''}}
-                                            @endif
+                                                {{ $insurance->insurance_update->last()->stock_insurance_provider->insurance_provider ?? '' }}
+                                        </td>
+                                        <!-- NILAI STOK -->
+                                        <td>
+                                                Rp {{ number_format($insurance->insurance_update->last()->stock_worth, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            @if ($insurance->insurance_update->isNotEmpty())
-                                                Rp {{ number_format($insurance->insurance_update->first()->stock_worth, 0, ',', '.') }}
-                                            @else
-                                                Rp {{ number_format($insurance->stock_worth, 0, ',', '.') }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($insurance->insurance_update->isNotEmpty())
-                                                Rp {{ number_format($insurance->insurance_update->first()->actual_stock_worth, 0, ',', '.') }}
-                                            @else
-                                                Rp {{ number_format($insurance->actual_stock_worth, 0, ',', '.') }}
-                                            @endif
+                                                Rp {{ number_format($insurance->insurance_update->last()->actual_stock_worth, 0, ',', '.') }}
                                         </td>
                                         <td><strong style="color: #b96564;">
-                                            @if ($insurance->insurance_update->isNotEmpty())
-                                                Rp {{ number_format(($insurance->insurance_update->first()->stock_worth - $insurance->insurance_update->first()->actual_stock_worth), 0, ',', '.') }}
-                                            @else
-                                                Rp {{ number_format(($insurance->stock_worth - $insurance->actual_stock_worth), 0, ',', '.') }}
-                                            @endif
+                                                Rp {{ number_format(($insurance->insurance_update->last()->stock_worth - $insurance->insurance_update->last()->actual_stock_worth), 0, ',', '.') }}
                                         </strong></td>
                                         <td>
-                                            @if ($insurance->insurance_update->isNotEmpty())
-                                                {{ $insurance->insurance_update->first()->building_insurance_provider->insurance_provider ?? '' }}
-                                            @else
-                                                {{ $insurance->building_insurance_provider->insurance_provider ?? ''}}
-                                            @endif
+                                                {{ $insurance->insurance_update->last()->building_insurance_provider->insurance_provider ?? '' }}
                                         </td>
                                         <td>
-                                            @if ($insurance->insurance_update->isNotEmpty())
-                                                Rp {{ number_format($insurance->insurance_update->first()->building_worth, 0, ',', '.') }}
-                                            @else
-                                                Rp {{ number_format($insurance->building_worth, 0, ',', '.') }}
-                                            @endif
+                                                Rp {{ number_format($insurance->insurance_update->last()->building_worth, 0, ',', '.') }}
                                         </td>
                                         <td>{{ $insurance->insurance_category->insurance_category }}</td>
                                         <th>{{ $insurance->insurance_scope->insurance_scope }}</th>
                                         <!-- <td><strong>{{ Carbon\Carbon::parse($insurance->join_date)->format('d M Y') }}</strong></td> -->
                                         <td><strong>
-                                            @if ($insurance->insurance_update->isNotEmpty())
-                                                {{ Carbon\Carbon::parse($insurance->insurance_update->first()->expired_date)->format('d M Y') }}
-                                            @else
-                                                {{ Carbon\Carbon::parse($insurance->expired_date)->format('d M Y') }}
-                                            @endif
+                                                {{ Carbon\Carbon::parse($insurance->insurance_update->last()->expired_date)->format('d M Y') }}
                                             </strong>
                                         </td>
                                         <td>
-                                            @if ($insurance->insurance_update->isNotEmpty())
-                                                {{ $insurance->insurance_update->first()->status }}
-                                            @else
-                                                {{ $insurance->status }}
-                                            @endif
+                                                {{ $insurance->insurance_update->last()->status }}
                                         </td>
                                         <td>
                                             <a href="/insurance/{{$insurance->id}}/edit" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>

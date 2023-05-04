@@ -21,22 +21,8 @@ class Insurance extends Model
         'warehouse_code',
         'insured_detail',
         'risk_address',
-        'stock_inprov_id',
-        'building_inprov_id',
-        'stock_worth',
-        'building_worth',
-        'actual_stock_worth',
-        'stock_premium',
-        'building_premium',
         'insurance_category_id',
-        'extension_of_policy',
-        'join_date',
-        'expired_date',
         'insurance_scope_id',
-        'user_id',
-        'payment_evidence',
-        'status',
-        'notes',
     ];
 
     protected $hidden = [
