@@ -20,23 +20,40 @@
                     <div class="col-md-12">
                         <div class="panel">
                             <div class="panel-heading">
-                                <div class="col-md-4">
-                                    <h3 class="panel-title">Data Asuransi</h3>
-                                    <br>
-                                </div>
-                                <div class="col-md-4 text-center">
-                                <form class="form-inline" id="search_form" action="/insurance">
-                                    <div class="form-group">
-                                    <input type="text" class="form-control" name="search" placeholder="Cari ...">
-                                    <a href="javascript:{}" onclick="document.getElementById('search_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                <div class="col-md-12">
+                                    <div class="col-md-2">
+                                        <h3 class="panel-title">Data Asuransi</h3>
+                                        <br>
                                     </div>
-                                </form>
-                            </div>
-                                <div class="col-md-4 text-right">
-                                    <a href="/insurance/create" class="btn btn-info" data-toggle="modal" data-target="#addinsurancesModal" data-toggle="tooltip" data-placement="top" title="Tambah data baru"><span class="lnr lnr-plus-circle"></span></a>
-                                    <a href="/insurance/export" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Export Asuransi"><span class="lnr lnr-download"></span></a>
-                                    <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import Asuransi"><span class="lnr lnr-upload"></span></a>
-                                    <a href="/insurance/export/template" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
+                                    <div class="col-md-3 text-center">
+                                    <form class="form-inline" id="search_form" action="/insurance">
+                                        <div class="form-group">
+                                        <input type="text" class="form-control" name="search" placeholder="Cari ..." style="width: 140px;">
+                                        <a href="javascript:{}" onclick="document.getElementById('search_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                        </div>
+                                    </form>
+                                    </div>
+                                    <div class="col-md-3 text-right">
+                                        <form class="form-inline" id="inputStatus" action="/insurance">
+                                            <div class="form-group">
+                                            <select class="form-control" name="selectStatus">
+                                                <option selected value="">-- Status --</option>
+                                                <option value="BERJALAN">BERJALAN</option>
+                                                <option value="PEMBAHARUAN">PEMBAHARUAN</option>
+                                                <option value="TUTUP">TUTUP</option>
+                                                <option value="REFUND">REFUND</option>
+                                            </select>
+                                            <a href="javascript:{}" onclick="document.getElementById('inputStatus').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-4 text-right">
+                                        <a href="/insurance/create" class="btn btn-info" data-toggle="modal" data-target="#addinsurancesModal" data-toggle="tooltip" data-placement="top" title="Tambah data baru"><span class="lnr lnr-plus-circle"></span></a>
+                                        <a href="/insurance/export" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Export Asuransi"><span class="lnr lnr-download"></span></a>
+                                        <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import Asuransi"><span class="lnr lnr-upload"></span></a>
+                                        <a href="/insurance/export/template" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
+                                    </div>
+                                    <br>
                                 </div>
                             </div>
                             <br><br><br>
@@ -61,6 +78,7 @@
                                         <th>Cakupan</th>
                                         <!-- <th>Tanggal Mulai</th> -->
                                         <th>Tanggal Berakhir</th>
+                                        <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
                                     </thead>
@@ -82,10 +100,28 @@
 
                                         $diffInDays = Carbon\Carbon::now()->diffInDays($expiredDate, false);
 
+                                        $rowStyle = ''; // initialize the variable
+
                                         if ($diffInDays <= 30 && $diffInDays > 14) {
                                             $rowStyle = 'background-color: #fcf8e3; color: #8a6d3b;';
                                         } elseif ($diffInDays <= 14) {
-                                            $rowStyle = 'background-color: #f2dede; color: #b96564;';
+                                            if ($insurance->insurance_update->isNotEmpty()) {
+                                                $status = $insurance->insurance_update->first()->status;
+                                                
+                                                if ($status === 'BERJALAN' || $status === 'PEMBAHARUAN') {
+                                                    $rowStyle = 'background-color: #f2dede; color: #b96564;';
+                                                } else {
+                                                    $rowStyle = 'background-color: #EAECEA; color: #000000;';
+                                                }
+                                            } else {
+                                                $status = $insurance->status;
+
+                                                if ($status === 'BERJALAN' || $status === 'PEMBAHARUAN') {
+                                                    $rowStyle = 'background-color: #f2dede; color: #b96564;';
+                                                } else {
+                                                    $rowStyle = 'background-color: #EAECEA; color: #000000;';
+                                                }
+                                            }
                                         } else {
                                             $rowStyle = 'background-color: white;';
                                         }
@@ -149,7 +185,15 @@
                                             @else
                                                 {{ Carbon\Carbon::parse($insurance->expired_date)->format('d M Y') }}
                                             @endif
-                                            </strong></td>
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                {{ $insurance->insurance_update->first()->status }}
+                                            @else
+                                                {{ $insurance->status }}
+                                            @endif
+                                        </td>
                                         <td>
                                             <a href="/insurance/{{$insurance->id}}/edit" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                             <!-- BUTTON DELETE -->

@@ -76,6 +76,7 @@
                                     <th>Premi Bangunan</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Berakhir</th>
+                                    <th>Status</th>
                                     <th>Catatan</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -106,7 +107,7 @@
                                         <tr style="{{$rowStyle}}">
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $detail->policy_number }}</td>
-                                            <td>{{ $detail->stock_insurance_provider->insurance_provider }}</td>
+                                            <td>{{ $detail->stock_insurance_provider->insurance_provider ?? ''}}</td>
                                             <td>Rp {{ number_format($detail->stock_worth, 0, ',', '.') }}</td>
                                             <td>Rp {{ number_format($detail->stock_premium, 0, ',', '.') }}</td>
                                             <td>Rp {{ number_format($detail->actual_stock_worth, 0, ',', '.') }}</td>
@@ -117,6 +118,7 @@
                                             <td><strong>{{ Carbon\Carbon::parse($detail->join_date)->format('d M Y') }}</strong></td>
                                             <td><strong>{{ Carbon\Carbon::parse($detail->expired_date)->format('d M Y') }}</strong></td>
                                             <!-- <td>{{ $diffInDays }}</td> -->
+                                            <td>{{ $detail->status }}</td>
                                             <td>{{ $detail->notes }}</td>
                                             <td>
                                             <a href="/insurance/{{$detail->id}}/editUpdate" class="btn btn-warning" type="button"><span class="lnr lnr-pencil"></span></a>
