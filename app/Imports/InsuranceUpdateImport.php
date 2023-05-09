@@ -12,28 +12,56 @@ use Carbon\Carbon;
 
 class InsuranceUpdateImport implements ToModel, WithHeadingRow
 {
+    protected String $insurance_id;
+
+    function __construct(String $insurance_id)
+    {
+        $this->insurance_id = $insurance_id;
+    }
     /**
     * @param array $row
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
-    public function model(array $row)
+    public function model(array $row) 
     {
         $user_id = Auth::user()->id;
-        $insurance = Insurance::where('policy_number', strtolower($row['no_polis_induk']))->first();
+        // $insurance = Insurance::where('policy_number', strtolower($row['no_polis_induk']))->first();
 
-        // $insurance_id = InsuranceUpdate::where('policy_number', $row['no_polis_induk'])->first()->insurance_id;
+        $insurance_update = InsuranceUpdate::where('policy_number', $row['no_polis_induk']);
 
-        if ($insurance) {
+        if ($insurance_update->first()) {
             $insuranceUpdate = InsuranceUpdate::where('policy_number', $row['no_polis'])
-                ->where('insurance_id', $insurance->id)
+                ->where('insurance_id', $insurance_update->first()->insurance_id)
                 ->first();
 
             if (!$insuranceUpdate) {
                 $insuranceUpdate = new InsuranceUpdate();
                 $insuranceUpdate->policy_number = $row['no_polis'];
-                $insuranceUpdate->insurance_id = $insurance->id;
+                $insuranceUpdate->insurance_id = $this->insurance_id;
             }
+
+            $stock_inprov_id = InsuranceProvider::where('insurance_provider', preg_replace('/\s+/', '', $row['asuransi_stok']))->first()->id ?? null;
+            $building_inprov_id = InsuranceProvider::where('insurance_provider', preg_replace('/\s+/', '', $row['asuransi_bangunan']))->first()->id ?? null;
+
+            $insuranceUpdate->stock_inprov_id = $stock_inprov_id;
+            $insuranceUpdate->building_inprov_id = $building_inprov_id;
+            $insuranceUpdate->stock_worth = $row['nilai_stok'];
+            $insuranceUpdate->actual_stock_worth = ($row['nilai_aktual_stok'] !== null && $row['nilai_aktual_stok'] !== '') ? $row['nilai_aktual_stok'] : null;
+            $insuranceUpdate->stock_premium = $row['premi_stok'];
+            $insuranceUpdate->building_worth = $row['nilai_bangunan'];
+            $insuranceUpdate->building_premium = $row['premi_bangunan'];
+            $insuranceUpdate->join_date = Carbon::createFromFormat('Y-m-d', $row['tanggal_mulai']);
+            $insuranceUpdate->expired_date = Carbon::createFromFormat('Y-m-d', $row['tanggal_akhir']);
+            $insuranceUpdate->user_id = $user_id;
+            $insuranceUpdate->notes = $row['catatan'];
+            $insuranceUpdate->status = $row['status'] ?? 'BERJALAN';
+
+            $insuranceUpdate->save();
+        } else {
+            $insuranceUpdate = new InsuranceUpdate();
+            $insuranceUpdate->policy_number = $row['no_polis'];
+            $insuranceUpdate->insurance_id = $this->insurance_id;
 
             $stock_inprov_id = InsuranceProvider::where('insurance_provider', preg_replace('/\s+/', '', $row['asuransi_stok']))->first()->id ?? null;
             $building_inprov_id = InsuranceProvider::where('insurance_provider', preg_replace('/\s+/', '', $row['asuransi_bangunan']))->first()->id ?? null;

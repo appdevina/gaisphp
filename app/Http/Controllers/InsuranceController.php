@@ -32,13 +32,15 @@ class InsuranceController extends Controller
     {
         if ($request->search) {
             $insurances = Insurance::with([
-                'stock_insurance_provider',
-                'building_insurance_provider',
-                'insurance_category',
                 'insurance_scope',
-                'insurance_update'=> function($query) {$query->latest('expired_date');
-            }])
-            ->where('policy_number','LIKE','%'.$request->search.'%')
+                'insurance_category',
+                'insurance_update',
+                'insurance_update.stock_insurance_provider',
+                'insurance_update.building_insurance_provider',
+            ])
+            ->whereHas('insurance_update', function($query) use($request) {
+                $query->where('policy_number', 'LIKE', '%'.$request->search.'%');
+            })
             ->orWhere('insured_address','LIKE','%'.$request->search.'%')
             ->orWhere('insured_name','LIKE','%'.$request->search.'%')
             ->orWhere('insured_detail','LIKE','%'.$request->search.'%')
@@ -46,23 +48,16 @@ class InsuranceController extends Controller
             ->paginate(50);
         } else if ($request->selectStatus) {
             $insurances = Insurance::with([
-                'stock_insurance_provider',
-                'building_insurance_provider',
                 'insurance_category',
                 'insurance_scope',
-                'insurance_update' => function($query) use($request) {
-                    $query->latest('expired_date');
-            }])
-            ->select(['insurances.*', DB::raw('(SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id) as latest_expired_date')])
-            ->where(function($query) use($request) {
-                $query->where('insurances.status', 'LIKE', '%'.$request->selectStatus.'%')
-                    ->orWhereHas('insurance_update', function($query) use($request) {
-                        $query->where('status', 'LIKE', '%'.$request->selectStatus.'%')
-                        ->latest('expired_date');
-                        //latestnya gabisa
-                    });
+                'insurance_update',
+                'insurance_update.stock_insurance_provider',
+                'insurance_update.building_insurance_provider',
+            ])
+            ->whereHas('insurance_update', function($query) use($request) {
+                $query->where('status', $request->selectStatus)
+                ->whereRaw('expired_date = (SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id)');
             })
-            ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id), insurances.expired_date) ASC")
             ->paginate(50);
         } else {
             $insurances = Insurance::with([
@@ -108,7 +103,6 @@ class InsuranceController extends Controller
     public function store(Request $request)
     {
         try {
-            // dd($request->all());
             $user = Auth::user()->id;
 
             $insurance = Insurance::create([
@@ -136,11 +130,6 @@ class InsuranceController extends Controller
                 'user_id' => $user,
                 'notes' => $request->notes,
             ]);
-
-            // $request['user_id'] = $user;
-            // $request['join_date'] = Carbon::createFromFormat('d/m/Y', $request['join_date'])->format('Y-m-d');
-            // $request['expired_date'] = Carbon::createFromFormat('d/m/Y', $request['expired_date'])->format('Y-m-d');
-            // Insurance::create($request->all());
 
             return redirect('insurance')->with('success', 'Asuransi berhasil diinput !');  
         } catch (Exception $e) {
@@ -190,12 +179,7 @@ class InsuranceController extends Controller
      */
     public function update(Request $request, Insurance $insurance)
     {
-         try {
-            $user = Auth::user()->id;
-
-            $request['user_id'] = $user;
-            $request['join_date'] = Carbon::createFromFormat('d/m/Y', $request['join_date'])->format('Y-m-d');
-            $request['expired_date'] = Carbon::createFromFormat('d/m/Y', $request['expired_date'])->format('Y-m-d');
+        try {
             $insurance->update($request->all());
 
             return redirect('insurance')->with('success', 'Asuransi berhasil diupdate !');  
@@ -224,7 +208,6 @@ class InsuranceController extends Controller
     public function storeUpdate(Request $request)
     {
         try {
-            //d($request->all());
             $user = Auth::user()->id;
 
             $request['user_id'] = $user;
@@ -265,7 +248,7 @@ class InsuranceController extends Controller
         }
         $file->storeAs($path, $namaFile, $disk);
 
-        Excel::import(new InsuranceUpdateImport, storage_path('app/public/import/' . $namaFile));
+        Excel::import(new InsuranceUpdateImport($request->insurance_id), storage_path('app/public/import/' . $namaFile));
         return redirect('insurance/'.$request->insurance_id)->with(['success' => 'Berhasil import data asuransi !']);
     }
 

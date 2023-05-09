@@ -15,7 +15,6 @@ class Insurance extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'policy_number', 
         'insured_address', 
         'insured_name', 
         'warehouse_code',

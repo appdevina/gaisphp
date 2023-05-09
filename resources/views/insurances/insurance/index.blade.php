@@ -85,7 +85,7 @@
                                     <tbody>
                                     @foreach ($insurances as $insurance)
                                         @php
-                                            $expiredDate = Carbon\Carbon::parse($insurance->insurance_update->last()->expired_date);
+                                            $expiredDate = Carbon\Carbon::parse($insurance->insurance_update->last()->expired_date ?? now());
 
                                             $diffInDays = Carbon\Carbon::now()->diffInDays($expiredDate, false);
                                             $rowStyle = ''; // initialize the variable
@@ -93,7 +93,7 @@
                                             if ($diffInDays <= 30 && $diffInDays > 14) {
                                                 $rowStyle = 'background-color: #fcf8e3; color: #8a6d3b;';
                                             } elseif ($diffInDays <= 14) {
-                                                    $status = $insurance->insurance_update->last()->status;
+                                                    $status = $insurance->insurance_update->last()->status ?? '';
                                                     
                                                     if ($status === 'BERJALAN' || $status === 'PEMBAHARUAN') {
                                                         $rowStyle = 'background-color: #f2dede; color: #b96564;';
@@ -107,7 +107,7 @@
                                     <tr style="{{$rowStyle}}">
                                         <td>{{ $loop->iteration }}</td>
                                         <!-- NO POLIS -->
-                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insurance_update->last()->policy_number }}">{!! Str::limit($insurance->insurance_update->last()->policy_number, 12, '...') !!}</td>
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insurance_update->last()->policy_number ?? '' }}">{!! Str::limit($insurance->insurance_update->last()->policy_number ?? '', 12, '...') !!}</td>
                                         <!-- <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_address }}">{!! Str::limit($insurance->insured_address, 30, '...') !!}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_name }}">{{ $insurance->insured_name }}</td> -->
                                         <!-- KODE -->
@@ -122,29 +122,29 @@
                                         </td>
                                         <!-- NILAI STOK -->
                                         <td>
-                                                Rp {{ number_format($insurance->insurance_update->last()->stock_worth, 0, ',', '.') }}
+                                                Rp {{ number_format($insurance->insurance_update->last()->stock_worth ?? 0, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                                Rp {{ number_format($insurance->insurance_update->last()->actual_stock_worth, 0, ',', '.') }}
+                                                Rp {{ number_format($insurance->insurance_update->last()->actual_stock_worth ?? 0, 0, ',', '.') }}
                                         </td>
                                         <td><strong style="color: #b96564;">
-                                                Rp {{ number_format(($insurance->insurance_update->last()->stock_worth - $insurance->insurance_update->last()->actual_stock_worth), 0, ',', '.') }}
+                                                Rp {{ number_format((($insurance->insurance_update->last()->stock_worth ?? 0) - ($insurance->insurance_update->last()->actual_stock_worth ?? 0)), 0, ',', '.') }}
                                         </strong></td>
                                         <td>
                                                 {{ $insurance->insurance_update->last()->building_insurance_provider->insurance_provider ?? '' }}
                                         </td>
                                         <td>
-                                                Rp {{ number_format($insurance->insurance_update->last()->building_worth, 0, ',', '.') }}
+                                                Rp {{ number_format($insurance->insurance_update->last()->building_worth ?? 0, 0, ',', '.') }}
                                         </td>
                                         <td>{{ $insurance->insurance_category->insurance_category }}</td>
                                         <th>{{ $insurance->insurance_scope->insurance_scope }}</th>
                                         <!-- <td><strong>{{ Carbon\Carbon::parse($insurance->join_date)->format('d M Y') }}</strong></td> -->
                                         <td><strong>
-                                                {{ Carbon\Carbon::parse($insurance->insurance_update->last()->expired_date)->format('d M Y') }}
+                                                {{ Carbon\Carbon::parse($insurance->insurance_update->last()->expired_date ?? '')->format('d M Y') }}
                                             </strong>
                                         </td>
                                         <td>
-                                                {{ $insurance->insurance_update->last()->status }}
+                                                {{ $insurance->insurance_update->last()->status ?? '' }}
                                         </td>
                                         <td>
                                             <a href="/insurance/{{$insurance->id}}/edit" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
