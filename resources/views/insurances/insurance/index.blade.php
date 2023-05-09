@@ -39,7 +39,7 @@
                                             <select class="form-control" name="selectStatus">
                                                 <option selected value="">-- Status --</option>
                                                 <option value="BERJALAN">BERJALAN</option>
-                                                <option value="PEMBAHARUAN">PEMBAHARUAN</option>
+                                                <!-- <option value="PEMBAHARUAN">PEMBAHARUAN</option> -->
                                                 <option value="TUTUP">TUTUP</option>
                                                 <option value="REFUND">REFUND</option>
                                             </select>
@@ -67,7 +67,8 @@
                                         <th>Nama Tertanggung</th> -->
                                         <th>Kode</th>
                                         <th>Detail Asuransi</th>
-                                        <th>Alamat yg diasuransikan</th>
+                                        <!-- <th>Alamat yg diasuransikan</th> -->
+                                        <th>Tanggal Berakhir</th>
                                         <th>Asuransi Stok</th>
                                         <th>Nilai Stok</th>
                                         <th>Aktual Stok</th>
@@ -77,8 +78,8 @@
                                         <th>Kategori</th>
                                         <th>Cakupan</th>
                                         <!-- <th>Tanggal Mulai</th> -->
-                                        <th>Tanggal Berakhir</th>
                                         <th>Status</th>
+                                        <th>Catatan</th>
                                         <th>Aksi</th>
                                     </tr>
                                     </thead>
@@ -128,17 +129,31 @@
                                     @endphp
                                     <tr style="{{$rowStyle}}">
                                         <td>{{ $loop->iteration }}</td>
-                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->policy_number }}">{!! Str::limit($insurance->policy_number, 12, '...') !!}</td>
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insurance_update->isNotEmpty() ? $insurance->insurance_update->first()->policy_number : $insurance->policy_number }}">
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                {!! Str::limit($insurance->insurance_update->first()->policy_number, 12, '...') !!}
+                                            @else
+                                                {!! Str::limit($insurance->policy_number, 12, '...') !!}
+                                            @endif
+                                        </td>
                                         <!-- <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_address }}">{!! Str::limit($insurance->insured_address, 30, '...') !!}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_name }}">{{ $insurance->insured_name }}</td> -->
                                         <td>{{ $insurance->warehouse_code }}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insured_detail }}">{!! Str::limit($insurance->insured_detail, 15, '...') !!}</td>
-                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->risk_address }}">{!! Str::limit($insurance->risk_address, 24, '...') !!}</td>
+                                        <!-- <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->risk_address }}">{!! Str::limit($insurance->risk_address, 24, '...') !!}</td> -->
+                                        <td><strong>
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                {{ Carbon\Carbon::parse($insurance->insurance_update->first()->expired_date)->format('d M Y') }}
+                                            @else
+                                                {{ Carbon\Carbon::parse($insurance->expired_date)->format('d M Y') }}
+                                            @endif
+                                            </strong>
+                                        </td>
                                         <td>
                                             @if ($insurance->insurance_update->isNotEmpty())
                                                 {{ $insurance->insurance_update->first()->stock_insurance_provider->insurance_provider ?? '' }}
                                             @else
-                                                {{ $insurance->stock_insurance_provider->insurance_provider ?? ''}}
+                                            {{ $insurance->stock_insurance_provider->insurance_provider ?? ''}}
                                             @endif
                                         </td>
                                         <td>
@@ -179,14 +194,6 @@
                                         <td>{{ $insurance->insurance_category->insurance_category }}</td>
                                         <th>{{ $insurance->insurance_scope->insurance_scope }}</th>
                                         <!-- <td><strong>{{ Carbon\Carbon::parse($insurance->join_date)->format('d M Y') }}</strong></td> -->
-                                        <td><strong>
-                                            @if ($insurance->insurance_update->isNotEmpty())
-                                                {{ Carbon\Carbon::parse($insurance->insurance_update->first()->expired_date)->format('d M Y') }}
-                                            @else
-                                                {{ Carbon\Carbon::parse($insurance->expired_date)->format('d M Y') }}
-                                            @endif
-                                            </strong>
-                                        </td>
                                         <td>
                                             @if ($insurance->insurance_update->isNotEmpty())
                                                 {{ $insurance->insurance_update->first()->status }}
@@ -194,8 +201,15 @@
                                                 {{ $insurance->status }}
                                             @endif
                                         </td>
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insurance_update->isNotEmpty() ? $insurance->insurance_update->first()->notes : $insurance->notes }}">
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                {!! Str::limit($insurance->insurance_update->first()->notes, 12, '...') !!}
+                                            @else
+                                                {!! Str::limit($insurance->notes, 12, '...') !!}
+                                            @endif
+                                        </td>
                                         <td>
-                                            <a href="/insurance/{{$insurance->id}}/edit" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
+                                            <!-- <a href="/insurance/{{$insurance->id}}/edit" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a> -->
                                             <!-- BUTTON DELETE -->
                                             <!-- <a href="/insurance/{{$insurance->id}}/delete" class="btn btn-danger" onclick="return confirm('Yakin akan menghapus data ?')"><span class="lnr lnr-trash"></span></a> -->
                                             <a href="/insurance/{{$insurance->id}}" class="btn btn-default" type="button"><span class="lnr lnr-eye"></span></a>

@@ -71,9 +71,9 @@ class InsuranceController extends Controller
                 'insurance_category',
                 'insurance_scope',
                 'insurance_update' => function($query) {
-                    $query->latest('expired_date')
-                    ->where('status', '!=', 'TUTUP')
-                    ->where('status', '!=', 'REFUND');
+                    $query->latest('expired_date');
+                    // ->where('status', '!=', 'TUTUP')
+                    // ->where('status', '!=', 'REFUND');
             }])
             ->select(['insurances.*', DB::raw('(SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id) as latest_expired_date')])
             ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id), insurances.expired_date) ASC")

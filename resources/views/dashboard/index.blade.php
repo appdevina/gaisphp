@@ -152,6 +152,17 @@
                                 <h3 class="panel-title">Dashboard</h3>
                             </div> -->
                             <div class="panel-body">
+                                <!-- JUMBOTRON -->
+                                <div class="jumbotron">
+                                    <h2 class="display-4">Halo, {{ auth()->user()->fullname }}!</h2>
+                                    <!-- <p class="lead">Pengajuan ATK untuk bulan Mei telah dibuka pada tanggal 25 - 28 April 2023 </p> -->
+                                    <hr class="my-4">
+                                    <p>{{ $requestSetting->first()->request_detail }} untuk bulan {{ Carbon\Carbon::parse($requestSetting->first()->request_month)->locale('id')->isoFormat('MMMM YYYY'); }} telah dibuka pada tanggal {{ Carbon\Carbon::parse($requestSetting->first()->open_date)->locale('id')->isoFormat('DD MMMM YYYY'); }} - {{ Carbon\Carbon::parse($requestSetting->first()->closed_date)->locale('id')->isoFormat('DD MMMM YYYY') }}</p>
+                                    <br>
+                                    <p class="lead">
+                                        <a class="btn btn-info btn-lg" href="/request" role="button"><i class="lnr lnr-cart"></i> Pengajuan</a>
+                                    </p>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <a href="#" data-toggle="modal" data-target="#modalImageRequest">

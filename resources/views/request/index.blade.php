@@ -71,7 +71,7 @@
                                     <th>NO</th>
                                     <!-- <th>Kode</th> -->
                                     <th>Pemohon</th>
-                                    <th>Divisi</th>
+                                    <!-- <th>Divisi</th> -->
                                     <th>Diajukan pada</th>
                                     <th>Tipe Pengajuan</th>
                                     <!-- <th>Barang</th> -->
@@ -97,7 +97,7 @@
                                     <!-- PEMOHON -->
                                     <td>{{ $reqbar->user->fullname }}</td>
                                     <!-- DIVISI -->
-                                    <td>{{ $reqbar->user->division->division }}</td>
+                                    <!-- <td>{{ $reqbar->user->division->division }}</td> -->
                                     <!-- DIAJUKAN PADA -->
                                     <td>{{ Carbon\Carbon::parse($reqbar->date)->format('d M Y H:i') }}</td>
                                     <!-- TIPE PENGAJUAN -->

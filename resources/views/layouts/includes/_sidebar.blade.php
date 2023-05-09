@@ -15,7 +15,7 @@
 					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ auth()->user()->role_id == 1 ? $notifReportAdmin : (auth()->user()->role_id == 3 ? $notifReportAdmin : $notifReportUser) }}</span>
 				</span></a></li>
 				@endif
-				@if (auth()->user()->role_id == 1)
+				@if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
 					<li>
 					<a href="#subPagesInsurance" data-toggle="collapse" class="collapsed"><i class="lnr lnr-heart-pulse"></i> <span>ASURANSI</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
 					<div id="subPagesInsurance" class="collapse ">
@@ -50,6 +50,7 @@
 							<li><a href="/area" class="{{ Request::is('area') ? 'active' : '' }}"><i class="lnr lnr-apartment"></i>AREA</a></li>
 							<li><a href="/bu" class="{{ Request::is('bu') ? 'active' : '' }}"><i class="lnr lnr-apartment"></i>BADAN USAHA</a></li>
 							<li><a href="/division" class="{{ Request::is('division') ? 'active' : '' }}"><i class="lnr lnr-apartment"></i>DIVISI</a></li>
+							<li><a href="/request-settings" class="{{ Request::is('request-settings') ? 'active' : '' }}"><i class="lnr lnr-cart"></i>PENGAJUAN</a></li>
 						</ul>
 					</div>
 				</li>

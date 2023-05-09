@@ -147,6 +147,12 @@ Route::group(['middleware' => ['auth', 'checkRole:1,3']], function(){
     Route::post('/area/{area}/update', [AreaController::class, 'update']);
     Route::get('/area/{area}/delete', [AreaController::class, 'destroy']);
 
+    #REQUEST SETTING
+    Route::get('request-settings', [DashboardController::class, 'indexRequestSettings']);
+    Route::post('/request-settings/create', [DashboardController::class, 'createRequestSettings']);
+    Route::get('/request-settings/{rs}/edit', [DashboardController::class, 'editRequestSettings']);
+    Route::post('/request-settings/{rs}/update', [DashboardController::class, 'updateRequestSettings']);
+
     ##INSURANCE
     #INSURANCE
     Route::get('insurance', [InsuranceController::class, 'index']);

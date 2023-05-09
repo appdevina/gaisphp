@@ -139,4 +139,23 @@ $(document).ready(function () {
         format: "dd/mm/yyyy",
         parentEl: "#addinsurancesModal .modal-body",
     });
+
+    $("#requestMonth").datepicker({
+        format: "mm-yyyy",
+        startView: "months",
+        minViewMode: "months",
+        parentEl: "#requestSettingModal .modal-body",
+    });
+
+    $("#openDate").datepicker({
+        dateFormat: "yy-mm-dd",
+        format: "dd/mm/yyyy",
+        parentEl: "#requestSettingModal .modal-body",
+    });
+
+    $("#closedDate").datepicker({
+        dateFormat: "yy-mm-dd",
+        format: "dd/mm/yyyy",
+        parentEl: "#requestSettingModal .modal-body",
+    });
 });

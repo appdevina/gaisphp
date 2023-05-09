@@ -70,7 +70,7 @@
                                         <th>NO</th>
                                         <!-- <th>Kode</th> -->
                                         <th>Pelapor</th>
-                                        <th>Divisi</th>
+                                        <!-- <th>Divisi</th> -->
                                         <th>Tanggal Pelaporan</th>
                                         <th>Kategori</th>
                                         <th>Detail Pelaporan</th>
@@ -90,7 +90,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <!-- <td>{{ $problem->problem_report_code }}</td> -->
                                         <td>{{ $problem->user->fullname }}</td>
-                                        <td>{{ $problem->user->division->division }}</td>
+                                        <!-- <td>{{ $problem->user->division->division }}</td> -->
                                         <td>{{ Carbon\Carbon::parse($problem->date)->format('d M Y H:i') }}</td>
                                         <!-- <td>{{ $problem->title }}</td> -->
                                         <td>{{ $problem->prcategory->problem_report_category }}</td>

@@ -35,6 +35,7 @@
                                     <h5><strong>Alamat Tertanggung : </strong>{{ $detailInsurance->insured_address }}</h5>
                                     <h5><strong>Tanggal Mulai : </strong>{{ Carbon\Carbon::parse($detailInsurance->join_date)->format('d M Y') }}</h5>
                                     <h5><strong>Tanggal Akhir : </strong>{{ Carbon\Carbon::parse($detailInsurance->expired_date)->format('d M Y') }}</h5>
+                                    <h5><strong>Status : </strong>{{ $detailInsurance->status }}</h5>
                                 </div>
                                 <div class="col-md-4 text-left mb-100">
                                     <h5><strong>Asuransi Stok : </strong>{{ $detailInsurance->stock_insurance_provider->insurance_provider ?? '' }}</h5>
@@ -47,6 +48,7 @@
                                 </div>
                                 <div class="col-md-3 text-right">
                                     <div class="row">
+                                        <a href="/insurance/{{$detailInsurance->id}}/edit" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="Edit Kontrak Awal" type="button"><span class="lnr lnr-pencil"></span></a>
                                         <a href="/insurance/{{$detailInsurance->id}}/exportUpdate" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Export Asuransi"><span class="lnr lnr-download"></span></a>
                                         <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="bottom" title="Import Asuransi"><span class="lnr lnr-upload"></span></a>
                                         <a href="/insurance/export/templateUpdate" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>

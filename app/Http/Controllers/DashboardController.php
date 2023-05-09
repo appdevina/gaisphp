@@ -6,7 +6,9 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\ProblemReport;
 use App\Models\RequestBarang;
+use App\Models\RequestSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
@@ -45,6 +47,15 @@ class DashboardController extends Controller
             'totalUser' => $totalUser,
             'requestBarangs' => $requestBarangs,
             'problemReport' => $problemReport,
+            'requestSetting' => RequestSetting::all(),
+        ]);
+    }
+
+    
+    public function indexRequestSettings()
+    {
+        return view('settings.request-settings.index', [
+            'requestSettings' => RequestSetting::all(),
         ]);
     }
 
@@ -53,9 +64,18 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function createRequestSettings(Request $request)
     {
-        //
+        try {
+            $request['request_month'] = Carbon::createFromFormat('d-m-Y', '01-' . $request['request_month'])->format('Y-m-d');
+            $request['open_date'] = Carbon::createFromFormat('d/m/Y', $request['open_date'])->format('Y-m-d');
+            $request['closed_date'] = Carbon::createFromFormat('d/m/Y', $request['closed_date'])->format('Y-m-d');
+            RequestSetting::create($request->all());
+
+            return redirect('request-settings')->with('success', 'Pengaturan berhasil diinput !');
+        } catch (Exception $e) {
+            return redirect('request-settings')->with(['error' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -86,9 +106,11 @@ class DashboardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function editRequestSettings(RequestSetting $rs)
     {
-        //
+        return view('settings.request-settings.edit', [
+            'requestSetting' => $rs,
+        ]);
     }
 
     /**
@@ -98,9 +120,18 @@ class DashboardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateRequestSettings(Request $request, RequestSetting $rs)
     {
-        //
+        try {
+            $request['request_month'] = Carbon::createFromFormat('d-m-Y', '01-' . $request['request_month'])->format('Y-m-d');
+            $request['open_date'] = Carbon::createFromFormat('d/m/Y', $request['open_date'])->format('Y-m-d');
+            $request['closed_date'] = Carbon::createFromFormat('d/m/Y', $request['closed_date'])->format('Y-m-d');
+            $rs->update($request->all());
+
+            return redirect('request-settings')->with('success', 'Pengaturan berhasil diupdate !');  
+        } catch (Exception $e) {
+            return redirect('request-settings')->with(['error' => $e->getMessage()]);
+        }
     }
 
     /**
