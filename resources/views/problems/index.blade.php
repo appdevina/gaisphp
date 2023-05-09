@@ -71,14 +71,16 @@
                                         <!-- <th>Kode</th> -->
                                         <th>Pelapor</th>
                                         <!-- <th>Divisi</th> -->
-                                        <th>Tanggal Pelaporan</th>
+                                        <th>Tanggal</th>
                                         <th>Kategori</th>
-                                        <th>Detail Pelaporan</th>
+                                        <th>Detail</th>
+                                        <th>Foto Sebelum</th>
                                         <th>Status Pengerjaan</th>
                                         <th>Penjadwalan</th>
                                         <th>Diproses oleh</th>
                                         <th>Diproses pada</th>
                                         <th>Hasil Pengerjaan</th>
+                                        <th>Foto Sesudah</th>
                                         <th>Status Akhir</th>
                                         <th> @if (auth()->user()->role_id == 4) Aksi @endif</th>
                                         <th> @if (auth()->user()->role_id != 4) Aksi @endif </th>
@@ -95,11 +97,23 @@
                                         <!-- <td>{{ $problem->title }}</td> -->
                                         <td>{{ $problem->prcategory->problem_report_category }}</td>
                                         <td>{{ $problem->description }}</td>
+                                        <!-- PHOTO BEFORE -->
+                                        @if (Storage::exists('public/Problem_Report_File/' . $problem->photo_before) && Storage::size('public/Problem_Report_File/' . $problem->photo_before) > 0)
+                                            <td><a href="{{ asset('storage/Problem_Report_File/' . $problem->photo_before) }}">Lihat</a></td>
+                                        @else
+                                            <td>Tidak ada file</td>
+                                        @endif
                                         <td class={{ $problem->status == 'PENDING' ? "text-warning" : ($problem->status == 'CANCELLED' ? "text-danger" : "text-success") }}>{{ $problem->status == 'PENDING' ? 'MENUNGGU' : ( $problem->status == 'CLOSED' ? 'SELESAI' : 'DIBATALKAN' ) }}</td>
                                         <td>{{ $problem->scheduled_at == null ? '' : Carbon\Carbon::parse($problem->scheduled_at)->format('d M Y') }}</td>
                                         <td>{{ $problem->closed_by == null ? '' : $problem->closedby->fullname }}</td>
                                         <td>{{ $problem->closed_at == null ? '' : Carbon\Carbon::parse($problem->closed_at)->format('d M Y H:i') }}</td>
                                         <td>{{ $problem->result_desc }}</td>
+                                        <!-- PHOTO AFTER -->
+                                        @if (Storage::exists('public/Problem_Report_File/' . $problem->photo_after) && Storage::size('public/Problem_Report_File/' . $problem->photo_after) > 0)
+                                            <td><a href="{{ asset('storage/Problem_Report_File/' . $problem->photo_after) }}">Lihat</a></td>
+                                        @else
+                                            <td>Tidak ada file</td>
+                                        @endif
                                         <td class={{ $problem->status_client == 0 ? "text-warning" : "text-success" }}> {{ $problem->status_client == 0 ? 'MENUNGGU' : 'SELESAI' }}</td>
                                         <td>
                                             @if (auth()->user()->role_id == 4 && $problem->status == 'CLOSED' && $problem->status_client != 1)

@@ -23,7 +23,7 @@
                                 <h3 class="panel-title">Tambah Pelaporan</h3>
                             </div>
                             <div class="panel-body">
-                            <form action="/problemReport/store" method="POST">
+                            <form action="/problemReport/store" method="POST" enctype="multipart/form-data">
                             {{csrf_field()}}
                             <div class="form-group">
                                 <label for="inputUser" class="form-label hidden">User</label>
@@ -46,6 +46,10 @@
                             <div class="form-group">
                                 <label for="inputDescription" class="form-label">Deskripsi Pelaporan</label>
                                 <input name="description" type="text" class="form-control" id="inputDescription" placeholder="Deskripsi.." required>
+                            </div>
+                            <div class="form-group" id="inputPhotoBefore">
+                                <label for="inputPhotoBefore" class="form-label">Upload bukti foto ganggguan/kerusakan </label>
+                                <input type="file" name="photo_before" class="form-control">
                             </div>
                             <br>
                             <button type="submit" class="btn btn-info" onclick="return confirm('Laporan ini tidak dapat dibatalkan/revisi, yakin mengirim laporan ?')">SIMPAN</button>

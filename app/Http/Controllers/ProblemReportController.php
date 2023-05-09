@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Http\UploadedFile;
 use Exception;
 
 class ProblemReportController extends Controller
@@ -197,13 +200,67 @@ class ProblemReportController extends Controller
                 return redirect('problemReport/create')->with('error', 'Harap pilih jenis gangguan !');
             }
 
+            $photo_before = $request->photo_before == null ? null : $this->storeImage($request, 'photo_before');
             $request['date'] = Carbon::now()->format('Y-m-d H:i:s');
-            $problem = ProblemReport::create($request->all());
+            $problem = ProblemReport::create([
+                'user_id' => $request->user_id,
+                'description' => $request->description,
+                'pr_category_id' => $request->pr_category_id,
+                'date' => Carbon::now()->format('Y-m-d H:i:s'),
+            ]);
             
+            $problem->photo_before = $photo_before;
             $problem->problem_report_code = "PR".$problem->id;
             $problem->save();
 
-            return redirect('problemReport')->with('success', 'Data berhasil diinput !');
+            return redirect('problemReport')->with('success', 'Laporan berhasil diinput !');
+        } catch (Exception $e) {
+            return redirect('problemReport')->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function storeImage(Request $request, $fieldName, $disk = 'public')
+    {
+        try {
+            $this->validate($request, [
+                'photo_before' => 'file|image|mimes:jpeg,png,jpg,pdf',
+                'photo_after' => 'file|image|mimes:jpeg,png,jpg,pdf',
+            ]);
+            
+            if ($fieldName == 'photo_before') {
+                $file = $request->file('photo_before');
+                $date = Carbon::now()->format('Y-m-d');
+                $extension = $file->getClientOriginalExtension();
+                $path = 'Problem_Report_File';
+                if (! Storage::disk($disk)->exists($path)) {
+                    Storage::disk($disk)->makeDirectory($path);
+                }
+
+                $filename = "PR-BEFORE-".$date."_". time() .".".$extension;
+            } else {
+                $file = $request->file('photo_after');
+                $date = Carbon::now()->format('Y-m-d');
+                $extension = $file->getClientOriginalExtension();
+                $path = 'Problem_Report_File';
+                if (! Storage::disk($disk)->exists($path)) {
+                    Storage::disk($disk)->makeDirectory($path);
+                }
+
+                $filename = "PR-AFTER-".$date."_". time() .".".$extension;
+            }
+
+            // Use Intervention Image to convert the image
+            if (in_array($extension, ['jpeg', 'png', 'jpg']) && $file->getSize() > 2048 * 1024) {
+                $compressedImage = Image::make($file)->encode($extension, 30);
+                $tmpFile = tempnam(sys_get_temp_dir(), 'compressed-');
+                file_put_contents($tmpFile, $compressedImage);
+                $file = new UploadedFile($tmpFile, $file->getClientOriginalName(), $file->getClientMimeType(), null, true);
+            }
+    
+            $file->storeAs($path, $filename, $disk);
+    
+            return $filename;
+
         } catch (Exception $e) {
             return redirect('problemReport')->with(['error' => $e->getMessage()]);
         }
@@ -255,6 +312,8 @@ class ProblemReportController extends Controller
                 $problem->scheduled_at = Carbon::parse($request->scheduled_at)->format('Y-m-d');
             }
 
+            $photo_after = $request->photo_after == null ? null : $this->storeImage($request, 'photo_after');
+            $problem->photo_after = $photo_after;
             $problem->result_desc = $request->result_desc;
             $problem->status = $request->status;       
             $problem->save();

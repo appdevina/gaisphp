@@ -23,7 +23,7 @@
                                 <h3 class="panel-title">Edit</h3>
                             </div>
                             <div class="panel-body">
-                            <form action="/problemReport/{{$problem->id}}/updateStatus" method="POST">
+                            <form action="/problemReport/{{$problem->id}}/updateStatus" method="POST" enctype="multipart/form-data">
                                 {{csrf_field()}}
                             <div class="form-group">
                                 <label for="problemid" class="form-label">ID Pelaporan</label>
@@ -46,6 +46,10 @@
                                         <option value="CLOSED">SELESAI</option>
                                         <option value="CANCELLED">DIBATALKAN</option>
                                     </select>
+                            </div>
+                            <div class="form-group" id="inputPhotoAfter">
+                                <label for="inputPhotoAfter" class="form-label">Upload bukti foto pengerjaan </label>
+                                <input type="file" name="photo_after" class="form-control">
                             </div>
                                 <button type="submit" class="btn btn-warning">UPDATE</button>
                             </form>
