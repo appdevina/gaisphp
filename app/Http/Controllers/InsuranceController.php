@@ -71,16 +71,19 @@ class InsuranceController extends Controller
                 'insurance_category',
                 'insurance_scope',
                 'insurance_update' => function($query) {
-                    $query->latest('expired_date');
-                    // ->where('status', '!=', 'TUTUP')
-                    // ->where('status', '!=', 'REFUND');
-            }])
-            ->select(['insurances.*', DB::raw('(SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id) as latest_expired_date')])
-            ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id), insurances.expired_date) ASC")
-            ->where('insurances.status', '!=', 'TUTUP')
-            ->where('insurances.status', '!=', 'REFUND')
-            ->paginate(50);
-        }
+                    $query->where('status', '!=', 'TUTUP')
+                    ->where('status', '!=', 'REFUND')
+                    ->latest('expired_date');
+                }])
+                ->whereDoesntHave('insurance_update', function($query) {
+                    $query->whereIn('status', ['TUTUP', 'REFUND']);
+                })
+                ->select(['insurances.*', DB::raw('(SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id) as latest_expired_date')])
+                ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id), insurances.expired_date) ASC")
+                ->where('insurances.status', '!=', 'TUTUP')
+                ->where('insurances.status', '!=', 'REFUND')
+                ->paginate(50);
+            }
 
        return view('insurances.insurance.index', [
             'insurances' => $insurances,

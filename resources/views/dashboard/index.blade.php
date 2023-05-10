@@ -153,11 +153,10 @@
                             </div> -->
                             <div class="panel-body">
                                 <!-- JUMBOTRON -->
-                                <div class="jumbotron">
-                                    <h2 class="display-4">Halo, {{ auth()->user()->fullname }}!</h2>
-                                    <!-- <p class="lead">Pengajuan ATK untuk bulan Mei telah dibuka pada tanggal 25 - 28 April 2023 </p> -->
+                                <div class="jumbotron" style="background-color:#2b333e !important;">
+                                    <h2 class="display-4" style="color:white">Halo, {{ auth()->user()->fullname }}!</h2>
                                     <hr class="my-4">
-                                    <p>{{ $requestSetting->first()->request_detail }} untuk bulan {{ Carbon\Carbon::parse($requestSetting->first()->request_month)->locale('id')->isoFormat('MMMM YYYY'); }} telah dibuka pada tanggal {{ Carbon\Carbon::parse($requestSetting->first()->open_date)->locale('id')->isoFormat('DD MMMM YYYY'); }} - {{ Carbon\Carbon::parse($requestSetting->first()->closed_date)->locale('id')->isoFormat('DD MMMM YYYY') }}</p>
+                                    <p style="color: white;">{{ $requestSetting->first()->request_detail }} untuk bulan {{ Carbon\Carbon::parse($requestSetting->first()->request_month)->locale('id')->isoFormat('MMMM YYYY'); }} telah dibuka pada tanggal {{ Carbon\Carbon::parse($requestSetting->first()->open_date)->locale('id')->isoFormat('DD MMMM YYYY'); }} - {{ Carbon\Carbon::parse($requestSetting->first()->closed_date)->locale('id')->isoFormat('DD MMMM YYYY') }}</p>
                                     <br>
                                     <p class="lead">
                                         <a class="btn btn-info btn-lg" href="/request" role="button"><i class="lnr lnr-cart"></i> Pengajuan</a>

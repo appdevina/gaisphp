@@ -200,6 +200,10 @@ class ProblemReportController extends Controller
                 return redirect('problemReport/create')->with('error', 'Harap pilih jenis gangguan !');
             }
 
+            if ($request->photo_before == null) {
+                return redirect('problemReport/create')->with('error', 'Harap upload foto gangguan/kerusakan !');
+            }
+
             $photo_before = $request->photo_before == null ? null : $this->storeImage($request, 'photo_before');
             $request['date'] = Carbon::now()->format('Y-m-d H:i:s');
             $problem = ProblemReport::create([

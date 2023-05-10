@@ -73,6 +73,7 @@
                                         <th>Nilai Stok</th>
                                         <th>Aktual Stok</th>
                                         <th>Selisih</th>
+                                        <th>Status Stok</th>
                                         <th>Asuransi Bangunan</th>
                                         <th>Nilai Bangunan</th>
                                         <th>Kategori</th>
@@ -177,6 +178,53 @@
                                                 Rp {{ number_format(($insurance->stock_worth - $insurance->actual_stock_worth), 0, ',', '.') }}
                                             @endif
                                         </strong></td>
+                                        <td>
+                                            @if ($insurance->insurance_update->isNotEmpty())
+                                                @if ($insurance->insurance_update->first()->actual_stock_worth > $insurance->insurance_update->first()->stock_worth)
+                                                    @php
+                                                        $threshold = $insurance->insurance_update->first()->stock_worth * 0.3;
+                                                        $difference = $insurance->insurance_update->first()->actual_stock_worth - $insurance->insurance_update->first()->stock_worth;
+                                                    @endphp
+                                                    @if ($difference >= $threshold)
+                                                        Overlimit
+                                                    @else
+                                                        OK
+                                                    @endif
+                                                @else
+                                                    @php
+                                                        $threshold = $insurance->insurance_update->first()->stock_worth * 0.3;
+                                                        $difference = $insurance->insurance_update->first()->stock_worth - $insurance->insurance_update->first()->actual_stock_worth;
+                                                    @endphp
+                                                    @if ($difference >= $threshold)
+                                                        Underlimit
+                                                    @else
+                                                        OK
+                                                    @endif
+                                                @endif
+                                            @else
+                                                @if ($insurance->actual_stock_worth > $insurance->stock_worth)
+                                                    @php
+                                                        $threshold = $insurance->stock_worth * 0.3;
+                                                        $difference = $insurance->actual_stock_worth - $insurance->stock_worth;
+                                                    @endphp
+                                                    @if ($difference >= $threshold)
+                                                        Overlimit
+                                                    @else
+                                                        OK
+                                                    @endif
+                                                @else
+                                                    @php
+                                                        $threshold = $insurance->stock_worth * 0.3;
+                                                        $difference = $insurance->stock_worth - $insurance->actual_stock_worth;
+                                                    @endphp
+                                                    @if ($difference >= $threshold)
+                                                        Underlimit
+                                                    @else
+                                                        OK
+                                                    @endif
+                                                @endif
+                                            @endif
+                                        </td>
                                         <td>
                                             @if ($insurance->insurance_update->isNotEmpty())
                                                 {{ $insurance->insurance_update->first()->building_insurance_provider->insurance_provider ?? '' }}

@@ -48,7 +48,7 @@
                                 <input name="description" type="text" class="form-control" id="inputDescription" placeholder="Deskripsi.." required>
                             </div>
                             <div class="form-group" id="inputPhotoBefore">
-                                <label for="inputPhotoBefore" class="form-label">Upload bukti foto ganggguan/kerusakan </label>
+                                <label for="inputPhotoBefore" class="form-label">Upload bukti foto ganggguan/kerusakan *wajib</label>
                                 <input type="file" name="photo_before" class="form-control">
                             </div>
                             <br>
