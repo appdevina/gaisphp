@@ -26,6 +26,7 @@ class InsuranceTemplateExport implements WithHeadings
             'tanggal_mulai',
             'tanggal_akhir',
             'cakupan_asuransi',
+            'status',
             'catatan',
         ];
     }

@@ -158,4 +158,16 @@ $(document).ready(function () {
         format: "dd/mm/yyyy",
         parentEl: "#requestSettingModal .modal-body",
     });
+
+    $("#tanggalMulaiSewa").datepicker({
+        dateFormat: "yy-mm-dd",
+        format: "dd/mm/yyyy",
+        parentEl: "#addRentsModal .modal-body",
+    });
+
+    $("#tanggalAkhirSewa").datepicker({
+        dateFormat: "yy-mm-dd",
+        format: "dd/mm/yyyy",
+        parentEl: "#addRentsModal .modal-body",
+    });
 });

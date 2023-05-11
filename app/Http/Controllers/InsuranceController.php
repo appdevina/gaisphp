@@ -112,7 +112,6 @@ class InsuranceController extends Controller
     public function store(Request $request)
     {
         try {
-            // dd($request->all());
             $user = Auth::user()->id;
 
             $request['user_id'] = $user;

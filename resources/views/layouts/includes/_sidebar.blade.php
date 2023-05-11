@@ -16,7 +16,7 @@
 				</span></a></li>
 				@endif
 				@if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
-					<li>
+				<li>
 					<a href="#subPagesInsurance" data-toggle="collapse" class="collapsed"><i class="lnr lnr-heart-pulse"></i> <span>ASURANSI</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
 					<div id="subPagesInsurance" class="collapse ">
 						<ul class="nav">
@@ -24,6 +24,14 @@
 							<li><a href="/inprov" class="{{ Request::is('inprov') ? 'active' : '' }}"><i class="lnr lnr-apartment"></i>DATA PROVIDER</a></li>
 							<li><a href="/inscope" class="{{ Request::is('inscope') ? 'active' : '' }}"><i class="lnr lnr-apartment"></i>CAKUPAN ASURANSI</a></li>
 							<li><a href="/incategory" class="{{ Request::is('incategory') ? 'active' : '' }}"><i class="lnr lnr-apartment"></i>KATEGORI ASURANSI</a></li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="#subPagesRent" data-toggle="collapse" class="collapsed"><span class="icon"><i class="fa fa-handshake-o"></i>PERJANJIAN SEWA</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="subPagesRent" class="collapse ">
+						<ul class="nav">
+							<li><a href="/rent" class="{{ Request::is('rent') ? 'active' : '' }}"><i class="fa fa-handshake-o"></i>DATA SEWA</a></li>
 						</ul>
 					</div>
 				</li>

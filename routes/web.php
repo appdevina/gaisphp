@@ -14,6 +14,7 @@ use App\Http\Controllers\InsuranceUpdateController;
 use App\Http\Controllers\ProblemReportController;
 use App\Http\Controllers\PRCategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\RequestTypeController;
@@ -67,6 +68,10 @@ Route::get('unit_type/get', [UnitTypeController::class, 'get']);
     ##INSURANCE UPDATE
     Route::get('/insurance/{id}/exportUpdate',[InsuranceController::class,'exportUpdate']);
     Route::get('/insurance/export/templateUpdate',[InsuranceController::class,'templateUpdate']);
+
+    ##RENT
+    Route::get('/rent/export',[RentController::class,'export']);
+    Route::get('/rent/export/template',[RentController::class,'template']);
 
 #IMPORT
     ##USER
@@ -188,6 +193,15 @@ Route::group(['middleware' => ['auth', 'checkRole:1,3']], function(){
     Route::get('/incategory/{incategory}/edit', [InCategoryController::class, 'edit']);
     Route::post('/incategory/{incategory}/update', [InCategoryController::class, 'update']);
     Route::get('/incategory/{incategory}/delete', [InCategoryController::class, 'destroy']);
+
+    ##RENT
+    #RENT
+    Route::get('rent', [RentController::class, 'index']);
+    Route::post('/rent/store', [RentController::class, 'store']);
+    Route::get('/rent/{rent}/edit', [RentController::class, 'edit']);
+    Route::post('/rent/{rent}/update', [RentController::class, 'update']);
+    Route::get('/rent/{rent}/delete', [RentController::class, 'destroy']);
+    Route::get('/rent/{id}', [RentController::class, 'show']);
 
 });
 
