@@ -239,17 +239,21 @@ class InsuranceController extends Controller
 
     public function importUpdate(Request $request, $disk = 'public')
     {
-        $file = $request->file('fileImport');
-        $namaFile = $file->getClientOriginalName();
-
-        $path = 'import';
-        if (! Storage::disk($disk)->exists($path)) {
-            Storage::disk($disk)->makeDirectory($path);
+        try {
+            $file = $request->file('fileImport');
+            $namaFile = $file->getClientOriginalName();
+    
+            $path = 'import';
+            if (! Storage::disk($disk)->exists($path)) {
+                Storage::disk($disk)->makeDirectory($path);
+            }
+            $file->storeAs($path, $namaFile, $disk);
+    
+            Excel::import(new InsuranceUpdateImport($request->insurance_id), storage_path('app/public/import/' . $namaFile));
+            return redirect('insurance/'.$request->insurance_id)->with(['success' => 'Berhasil import data asuransi !']);
+        } catch (Exception $e) {
+            return redirect('insurance/'.$request->insurance_id)->with(['error' => $e->getMessage()]);
         }
-        $file->storeAs($path, $namaFile, $disk);
-
-        Excel::import(new InsuranceUpdateImport($request->insurance_id), storage_path('app/public/import/' . $namaFile));
-        return redirect('insurance/'.$request->insurance_id)->with(['success' => 'Berhasil import data asuransi !']);
     }
 
     public function template()
