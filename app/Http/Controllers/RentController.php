@@ -24,23 +24,51 @@ class RentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $rents = Rent::with([
-            'rent_update'  => function($query) {
-                $query->where('status', '!=', 'TUTUP')
-                ->where('status', '!=', 'REFUND')
-                ->latest('expired_date');
-            }])
-            ->whereDoesntHave('rent_update', function($query) {
-                $query->whereIn('status', ['TUTUP', 'REFUND']);
-            })
-            ->select(['rents.*', DB::raw('(SELECT MAX(expired_date) FROM rent_updates WHERE rent_id = rents.id) as latest_expired_date')])
-            ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM rent_updates WHERE rent_id = rents.id), rents.expired_date) ASC")
-            ->where('rents.status', '!=', 'TUTUP')
-            ->where('rents.status', '!=', 'REFUND')
-            ->paginate(50);
-
+        if ($request->search) {
+            $rents = Rent::with([
+                'rent_update'  => function($query) {
+                    $query->latest('expired_date');
+                }])
+                ->where('rent_code','LIKE','%'.$request->search.'%')
+                ->orWhere('rented_detail','LIKE','%'.$request->search.'%')
+                ->orWhere('rented_address','LIKE','%'.$request->search.'%')
+                ->orWhere('first_party','LIKE','%'.$request->search.'%')
+                ->orWhere('second_party','LIKE','%'.$request->search.'%')
+                ->paginate(50);
+        } else if ($request->selectStatus) {
+            $rents = Rent::with([
+                'rent_update'  => function($query) {
+                    $query->latest('expired_date');
+                }])
+                ->select(['rents.*', DB::raw('(SELECT MAX(expired_date) FROM rent_updates WHERE rent_id = rents.id) as latest_expired_date')])
+                ->where(function($query) use($request) {
+                    $query->where('rents.status', 'LIKE', '%'.$request->selectStatus.'%')
+                        ->orWhereHas('rent_update', function($query) use($request) {
+                            $query->where('status', 'LIKE', '%'.$request->selectStatus.'%')
+                            ->latest('expired_date');
+                        });
+                })
+                ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM rent_updates WHERE rent_id = rents.id), rents.expired_date) ASC")
+                ->paginate(50);
+        } else {
+            $rents = Rent::with([
+                'rent_update'  => function($query) {
+                    $query->where('status', '!=', 'TUTUP')
+                    ->where('status', '!=', 'REFUND')
+                    ->latest('expired_date');
+                }])
+                ->whereDoesntHave('rent_update', function($query) {
+                    $query->whereIn('status', ['TUTUP', 'REFUND']);
+                })
+                ->select(['rents.*', DB::raw('(SELECT MAX(expired_date) FROM rent_updates WHERE rent_id = rents.id) as latest_expired_date')])
+                ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM rent_updates WHERE rent_id = rents.id), rents.expired_date) ASC")
+                ->where('rents.status', '!=', 'TUTUP')
+                ->where('rents.status', '!=', 'REFUND')
+                ->paginate(50);
+        }
+        
         return view('rents.rent.index', [
             'rents' => $rents,
         ]);

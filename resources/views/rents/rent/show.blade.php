@@ -71,11 +71,12 @@
                                     <th>Alamat</th>
                                     <th>Pihak Pertama</th>
                                     <th>Pihak Kedua</th>
-                                    <th>Sewa pertahun</th>
-                                    <th>CV.CS</th>
-                                    <th>Online</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Akhir</th>
+                                    <th>Sewa pertahun</th>
+                                    <th>Total</th>
+                                    <th>CV.CS</th>
+                                    <th>Online</th>
                                     <th>BukPot</th>
                                     <th>Berkas</th>
                                     <th>Status</th>
@@ -113,11 +114,17 @@
                                             <td>{{ $detail->rented_address}}</td>
                                             <td>{{ $detail->first_party}}</td>
                                             <td>{{ $detail->second_party}}</td>
-                                            <td>Rp {{ number_format($detail->rent_per_year, 0, ',', '.') }}</td>
-                                            <td>Rp {{ number_format($detail->cvcs_fund, 0, ',', '.') }}</td>
-                                            <td>Rp {{ number_format($detail->online_fund, 0, ',', '.') }}</td>
                                             <td><strong>{{ Carbon\Carbon::parse($detail->join_date)->format('d M Y') }}</strong></td>
                                             <td><strong>{{ Carbon\Carbon::parse($detail->expired_date)->format('d M Y') }}</strong></td>
+                                            <td>Rp {{ number_format($detail->rent_per_year, 0, ',', '.') }}</td>
+                                            <td><strong>{{ number_format(
+                                                Carbon\Carbon::parse($detail->expired_date)->diffInYears(Carbon\Carbon::parse($detail->join_date)) == 0 
+                                                    ? 1 * $detail->rent_per_year 
+                                                    : Carbon\Carbon::parse($detail->expired_date)->diffInYears(Carbon\Carbon::parse($detail->join_date)) * $detail->rent_per_year, 0, ',', '.') 
+                                            }}
+                                            </strong></td>
+                                            <td>Rp {{ number_format($detail->cvcs_fund, 0, ',', '.') }}</td>
+                                            <td>Rp {{ number_format($detail->online_fund, 0, ',', '.') }}</td>
                                             <td>{{ $detail->deduction_evidence}}</td>
                                             <td>{{ $detail->document}}</td>
                                             <!-- <td>{{ $diffInDays }}</td> -->

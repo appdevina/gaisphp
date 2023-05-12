@@ -165,11 +165,14 @@
                                                 Rp {{ number_format(
                                                     Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) == 0 
                                                     ? 1 * $rent->rent_update->first()->rent_per_year 
-                                                    : number_format(Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) * $rent->rent_update->first()->rent_per_year, 0, ',', '.') 
-                                                ) 
+                                                    : Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) * $rent->rent_update->first()->rent_per_year, 0, ',', '.') 
                                             }}
                                             @else
-                                                Rp {{ number_format(Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) * $rent->rent_per_year, 0, ',', '.') }}
+                                                Rp {{ number_format(
+                                                    Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) == 0 
+                                                    ? 1 * $rent->rent_per_year 
+                                                    : Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) * $rent->rent_per_year, 0, ',', '.')  
+                                            }}
                                             @endif
                                         </strong></td>
                                         <td>
