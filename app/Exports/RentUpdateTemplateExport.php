@@ -4,14 +4,13 @@ namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class RentTemplateExport implements WithHeadings
+class RentUpdateTemplateExport implements WithHeadings
 {
     public function headings(): array
     {
         return [
+            'kode_sewa_induk',
             'kode',
-            'alamat_bangunan',
-            'nama_bangunan',
             'pihak_pertama',
             'pihak_kedua',
             'sewa_per_tahun',

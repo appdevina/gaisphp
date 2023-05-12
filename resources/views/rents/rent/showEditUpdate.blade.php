@@ -23,18 +23,10 @@
                                 <h3 class="panel-title">Edit</h3>
                             </div>
                             <div class="panel-body">
-                            <form action="/rent/{{$rent->id}}/update" method="POST">
+                            <form action="/rent/{{$rent->id}}/updateRentUpdate" method="POST">
                                 {{csrf_field()}}
                                 <div class="form-group">
-                                    <input name="rent_id" type="hidden" class="form-control" value="{{$rent->id}}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputRentedAddress" class="form-label">Alamat Bangunan</label>
-                                    <input name="rented_address" type="text" class="form-control" id="inputRentedAddress" value="{{$rent->rented_address}}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputRentedDetail" class="form-label">Detail/Nama Bangunan</label>
-                                    <input name="rented_detail" type="text" class="form-control" id="inputRentedDetail" value="{{$rent->rented_detail}}" required>
+                                    <input name="rent_id" type="hidden" class="form-control" value="{{$rent->rent_id}}" readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputFirstParty" class="form-label">Nama Pihak Pertama</label>

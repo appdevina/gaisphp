@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Exports\RentExport;
 use App\Exports\RentTemplateExport;
+use App\Exports\RentUpdateExport;
+use App\Exports\RentUpdateTemplateExport;
+use App\Imports\RentImport;
+use App\Imports\RentUpdateImport;
 use App\Models\Rent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use Exception;
@@ -146,13 +151,55 @@ class RentController extends Controller
         }
     }
 
+    public function import(Request $request, $disk = 'public')
+    {
+        $file = $request->file('fileImport');
+        $namaFile = $file->getClientOriginalName();
+
+        $path = 'import';
+        if (! Storage::disk($disk)->exists($path)) {
+            Storage::disk($disk)->makeDirectory($path);
+        }
+        $file->storeAs($path, $namaFile, $disk);
+
+        Excel::import(new RentImport, storage_path('app/public/import/' . $namaFile));
+        return redirect('rent')->with(['success' => 'Berhasil import data perjanjian sewa !']);
+    }
+
+    public function importUpdate(Request $request, $disk = 'public')
+    {
+        $file = $request->file('fileImport');
+        $namaFile = $file->getClientOriginalName();
+
+        $path = 'import';
+        if (! Storage::disk($disk)->exists($path)) {
+            Storage::disk($disk)->makeDirectory($path);
+        }
+        $file->storeAs($path, $namaFile, $disk);
+
+        Excel::import(new RentUpdateImport, storage_path('app/public/import/' . $namaFile));
+        return redirect('rent/'.$request->rent_id)->with(['success' => 'Berhasil import data perjanjian sewa !']);
+    }
+
     public function template()
     {
         return Excel::download(new RentTemplateExport, 'sewa_template.xlsx');
     }
 
+    public function templateUpdate()
+    {
+        return Excel::download(new RentUpdateTemplateExport, 'sewa_update_template.xlsx');
+    }
+
     public function export()
     {
         return Excel::download(new RentExport, 'sewa.xlsx');
+    }
+
+    public function exportUpdate($id)
+    {
+        $rent = Rent::find($id);
+
+        return Excel::download(new RentUpdateExport($rent->id, $rent->rent_code), 'sewa_update_kode-'.$rent->rent_code.'_.xlsx');
     }
 }

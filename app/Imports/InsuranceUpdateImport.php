@@ -51,5 +51,6 @@ class InsuranceUpdateImport implements ToModel, WithHeadingRow
 
             $insuranceUpdate->save();
         }
+        //else belum ada no_polis_induk nya
     }
 }

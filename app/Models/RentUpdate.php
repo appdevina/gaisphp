@@ -15,6 +15,7 @@ class RentUpdate extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
+        'rent_id',
         'rent_code',
         'first_party',
         'second_party',

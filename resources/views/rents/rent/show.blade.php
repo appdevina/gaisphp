@@ -37,7 +37,7 @@
                                     <h5><strong>Tanggal Akhir : </strong>{{ Carbon\Carbon::parse($detailRent->expired_date)->format('d M Y') }}</h5>
                                 </div>
                                 <div class="col-md-4 text-left mb-100">
-                                    <h5><strong>Sewa per Bulan : </strong>Rp {{ number_format($detailRent->rent_per_year, 0, ',', '.') }}</h5>
+                                    <h5><strong>Sewa per Tahun : </strong>Rp {{ number_format($detailRent->rent_per_year, 0, ',', '.') }}</h5>
                                     <h5><strong>Dana CV.CS : </strong>Rp {{ number_format($detailRent->cvcs_fund, 0, ',', '.') }}</h5>
                                     <h5><strong>Dana Online : </strong>Rp {{ number_format($detailRent->online_fund, 0, ',', '.') }}</h5>
                                     <h5><strong>Bukti Potong : </strong>{{ $detailRent->deduction_evidence }}</h5>
@@ -54,7 +54,7 @@
                                     </div>
                                     <br>
                                     <div class="row">
-                                        <a href="/rent/createUpdate" class="btn btn-success" data-toggle="modal" data-target="#addinsuranceUpdateModal" data-toggle="tooltip" data-placement="top" title="Update Perjanjian Sewa"><span class="lnr lnr-plus-circle"></span> Update</a>
+                                        <a href="/rent/createUpdate" class="btn btn-success" data-toggle="modal" data-target="#addRentUpdateModal" data-toggle="tooltip" data-placement="top" title="Update Perjanjian Sewa"><span class="lnr lnr-plus-circle"></span> Update</a>
                                     </div>
                                 </div>
                             </div>
@@ -71,7 +71,7 @@
                                     <th>Alamat</th>
                                     <th>Pihak Pertama</th>
                                     <th>Pihak Kedua</th>
-                                    <th>Sewa perbulan</th>
+                                    <th>Sewa pertahun</th>
                                     <th>CV.CS</th>
                                     <th>Online</th>
                                     <th>Tanggal Mulai</th>

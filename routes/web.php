@@ -15,6 +15,7 @@ use App\Http\Controllers\ProblemReportController;
 use App\Http\Controllers\PRCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RentController;
+use App\Http\Controllers\RentUpdateController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\RequestTypeController;
@@ -73,6 +74,10 @@ Route::get('unit_type/get', [UnitTypeController::class, 'get']);
     Route::get('/rent/export',[RentController::class,'export']);
     Route::get('/rent/export/template',[RentController::class,'template']);
 
+    ##RENT UPDATE
+    Route::get('/rent/{id}/exportUpdate',[RentController::class,'exportUpdate']);
+    Route::get('/rent/export/templateUpdate',[RentController::class,'templateUpdate']);
+
 #IMPORT
     ##USER
     Route::post('/user/import',[UserController::class,'import']);
@@ -81,8 +86,12 @@ Route::get('unit_type/get', [UnitTypeController::class, 'get']);
     Route::post('/product/import',[ProductController::class,'import']);
 
     ##INSURANCE
-    Route::post('/insurance/importUpdate',[InsuranceController::class,'importUpdate']);
     Route::post('/insurance/import',[InsuranceController::class,'import']);
+    Route::post('/insurance/importUpdate',[InsuranceController::class,'importUpdate']);
+
+    ##RENT
+    Route::post('/rent/import',[RentController::class,'import']);
+    Route::post('/rent/importUpdate',[RentController::class,'importUpdate']);
 
 Route::group(['middleware' => ['auth', 'checkRole:1,3']], function(){
     ##MASTER DATA
@@ -202,6 +211,12 @@ Route::group(['middleware' => ['auth', 'checkRole:1,3']], function(){
     Route::post('/rent/{rent}/update', [RentController::class, 'update']);
     Route::get('/rent/{rent}/delete', [RentController::class, 'destroy']);
     Route::get('/rent/{id}', [RentController::class, 'show']);
+
+    #RENT UPDATE
+    Route::post('/rent/storeUpdate', [RentUpdateController::class, 'storeUpdate']);
+    Route::get('/rent/{id}/editUpdate', [RentUpdateController::class, 'editUpdate']);
+    Route::post('/rent/{rentUpdate}/updateRentUpdate', [RentUpdateController::class, 'updateRentUpdate']);
+    Route::get('/rent/{rentUpdate}/deleteUpdate/{rent}', [RentUpdateController::class, 'deleteUpdate']);
 
 });
 

@@ -49,8 +49,8 @@
                                     </div>
                                     <div class="col-md-4 text-right">
                                         <a href="/rent/create" class="btn btn-info" data-toggle="modal" data-target="#addRentsModal" data-toggle="tooltip" data-placement="top" title="Tambah data baru"><span class="lnr lnr-plus-circle"></span></a>
-                                        <a href="/rent/export" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Export Asuransi"><span class="lnr lnr-download"></span></a>
-                                        <!-- <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import Asuransi"><span class="lnr lnr-upload"></span></a> -->
+                                        <a href="/rent/export" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Export Perjanjian Sewa"><span class="lnr lnr-download"></span></a>
+                                        <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import Perjanjian Sewa"><span class="lnr lnr-upload"></span></a>
                                         <a href="/rent/export/template" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
                                     </div>
                                     <br>
@@ -67,11 +67,12 @@
                                         <th>Alamat</th>
                                         <th>Pihak Pertama</th>
                                         <th>Pihak Kedua</th>
-                                        <th>Sewa perbulan</th>
-                                        <th>CV.CS</th>
-                                        <th>Online</th>
                                         <th>Tanggal Mulai</th>
                                         <th>Tanggal Akhir</th>
+                                        <th>Sewa pertahun</th>
+                                        <th>Total Biaya</th>
+                                        <th>CV.CS</th>
+                                        <th>Online</th>
                                         <th>BukPot</th>
                                         <th>Berkas</th>
                                         <th>Status</th>
@@ -136,27 +137,6 @@
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $rent->rented_address }}">{!! Str::limit($rent->rented_address, 30, '...') !!}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $rent->first_party }}">{!! Str::limit($rent->first_party, 12, '...') !!}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $rent->second_party }}">{!! Str::limit($rent->second_party, 12, '...') !!}</td>
-                                        <td>
-                                            @if ($rent->rent_update->isNotEmpty())
-                                                Rp {{ number_format($rent->rent_update->first()->rent_per_year, 0, ',', '.') }}
-                                            @else
-                                                Rp {{ number_format($rent->rent_per_year, 0, ',', '.') }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($rent->rent_update->isNotEmpty())
-                                                Rp {{ number_format($rent->rent_update->first()->cvcs_fund, 0, ',', '.') }}
-                                            @else
-                                                Rp {{ number_format($rent->cvcs_fund, 0, ',', '.') }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($rent->rent_update->isNotEmpty())
-                                                Rp {{ number_format($rent->rent_update->first()->online_fund, 0, ',', '.') }}
-                                            @else
-                                                Rp {{ number_format($rent->online_fund, 0, ',', '.') }}
-                                            @endif
-                                        </td>
                                         <td><strong>
                                             @if ($rent->rent_update->isNotEmpty())
                                                 {{ Carbon\Carbon::parse($rent->rent_update->first()->join_date)->format('d M Y') }}
@@ -172,6 +152,39 @@
                                                 {{ Carbon\Carbon::parse($rent->expired_date)->format('d M Y') }}
                                             @endif
                                             </strong>
+                                        </td>
+                                        <td>
+                                            @if ($rent->rent_update->isNotEmpty())
+                                                Rp {{ number_format($rent->rent_update->first()->rent_per_year, 0, ',', '.') }}
+                                                @else
+                                                Rp {{ number_format($rent->rent_per_year, 0, ',', '.') }}
+                                                @endif
+                                        </td>
+                                        <td><strong>
+                                            @if ($rent->rent_update->isNotEmpty())
+                                                Rp {{ number_format(
+                                                    Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) == 0 
+                                                    ? 1 * $rent->rent_update->first()->rent_per_year 
+                                                    : number_format(Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) * $rent->rent_update->first()->rent_per_year, 0, ',', '.') 
+                                                ) 
+                                            }}
+                                            @else
+                                                Rp {{ number_format(Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) * $rent->rent_per_year, 0, ',', '.') }}
+                                            @endif
+                                        </strong></td>
+                                        <td>
+                                            @if ($rent->rent_update->isNotEmpty())
+                                                Rp {{ number_format($rent->rent_update->first()->cvcs_fund, 0, ',', '.') }}
+                                            @else
+                                                Rp {{ number_format($rent->cvcs_fund, 0, ',', '.') }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($rent->rent_update->isNotEmpty())
+                                                Rp {{ number_format($rent->rent_update->first()->online_fund, 0, ',', '.') }}
+                                            @else
+                                                Rp {{ number_format($rent->online_fund, 0, ',', '.') }}
+                                            @endif
                                         </td>
                                         <td>
                                             @if ($rent->rent_update->isNotEmpty())
@@ -310,7 +323,7 @@
         </div>
     </div>
     <!-- Modal -->
-    <!-- <form action="/rent/import" method="POST" enctype="multipart/form-data">
+    <form action="/rent/import" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="modal fade importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -332,6 +345,6 @@
                 </div>
             </form>
         </div>
-    </div> -->
+    </div>
 </div>
 @stop
