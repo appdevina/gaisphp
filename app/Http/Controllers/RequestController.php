@@ -234,6 +234,15 @@ class RequestController extends Controller
                     ->where('request_type_id', 2)
                     ->orderBy('date', 'desc')
                     ->paginate(30);
+                ##DIVISI MKLI-HO
+                } else if ($userDivisi == 80) {
+                    $requestBarangs = RequestBarang::with('user.division.area','closedby','request_detail','request_type','request_approval')
+                    ->whereHas('user.division.area', function ($query) {
+                        $query->whereIn('area_id', [11]);
+                    })
+                    ->where('request_type_id', 2)
+                    ->orderBy('date', 'desc')
+                    ->paginate(30);
                 ##DIVISI IT
                 } else if ($userDivisi == 11) {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type','request_approval')
@@ -407,7 +416,7 @@ class RequestController extends Controller
                     'status_po' => 0,
                     'request_type_id' => $request->request_type_id,
                 ]);
-               $requestBarang->request_file = $request_file;
+                $requestBarang->request_file = $request_file;
                 $requestBarang->request_file_2 = $request_file_2;
                 $requestBarang->request_code = "REQ".$requestBarang->id;
                 $requestBarang->save();

@@ -41,6 +41,7 @@ class RentUpdateImport implements ToModel, WithHeadingRow
             $rentUpdate->deduction_evidence = $row['bukti_potong'];
             $rentUpdate->document = $row['berkas'];
             $rentUpdate->status = $row['status'] ?? 'BERJALAN';
+            $rentUpdate->month_before_reminder = $row['reminder_bulan_sebelumnya'];
             $rentUpdate->notes = $row['catatan'];
             $rentUpdate->user_id = Auth::id();
 

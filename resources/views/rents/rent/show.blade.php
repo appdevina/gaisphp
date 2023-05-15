@@ -74,11 +74,14 @@
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Akhir</th>
                                     <th>Sewa pertahun</th>
-                                    <th>Total</th>
+                                    <th>Total Tagihan</th>
                                     <th>CV.CS</th>
                                     <th>Online</th>
+                                    <th>Sisa Tagihan</th>
+                                    <th>Status Tagihan</th>
                                     <th>BukPot</th>
                                     <th>Berkas</th>
+                                    <th>Bukti Bayar</th>
                                     <th>Status</th>
                                     <th>Catatan</th>
                                     <th>Aksi</th>
@@ -125,8 +128,32 @@
                                             </strong></td>
                                             <td>Rp {{ number_format($detail->cvcs_fund, 0, ',', '.') }}</td>
                                             <td>Rp {{ number_format($detail->online_fund, 0, ',', '.') }}</td>
+                                            <td><strong>
+                                                Rp {{ number_format(
+                                                    Carbon\Carbon::parse($detail->expired_date)->diffInYears(Carbon\Carbon::parse($detail->join_date)) == 0 
+                                                    ? (1 * $detail->rent_per_year) - ($detail->cvcs_fund + $detail->online_fund)
+                                                    : (Carbon\Carbon::parse($detail->expired_date)->diffInYears(Carbon\Carbon::parse($detail->join_date)) * $detail->rent_per_year) - ($detail->cvcs_fund + $detail->online_fund), 0, ',', '.')  
+                                            }}
+                                            </strong></td>
+                                            <td><strong>
+                                                @php
+                                                    $remainingPayment = (Carbon\Carbon::parse($detail->expired_date)->diffInYears(Carbon\Carbon::parse($detail->join_date)) == 0)
+                                                    ? (1 * $detail->rent_per_year) - ($detail->cvcs_fund + $detail->online_fund)
+                                                    : (Carbon\Carbon::parse($detail->expired_date)->diffInYears(Carbon\Carbon::parse($detail->join_date)) * $detail->rent_per_year) - ($detail->cvcs_fund + $detail->online_fund);
+
+                                                    $status = $remainingPayment === 0 ? 'LUNAS' : ($remainingPayment < 0 ? 'LEBIH' : 'BELUM LUNAS');
+                                                @endphp
+                                                {{ $status }}
+                                            </strong></td>
                                             <td>{{ $detail->deduction_evidence}}</td>
                                             <td>{{ $detail->document}}</td>
+                                            <td>
+                                                @if (Storage::exists('public/Rent_File/' . $detail->payment_evidence_file) && Storage::size('public/Rent_File/' . $detail->payment_evidence_file) > 0)
+                                                    <a href="{{ asset('storage/Rent_File/' . $detail->payment_evidence_file) }}">Lihat Dokumen</a></td>
+                                                @else
+                                                    <td>Tidak ada file</td>
+                                                @endif
+                                            </td>
                                             <!-- <td>{{ $diffInDays }}</td> -->
                                             <td>{{ $detail->status }}</td>
                                             <td>{{ $detail->notes }}</td>
@@ -156,7 +183,7 @@
                     <h1 class="modal-title" id="addRentModalLabel">Tambah Update Perjanjian Sewa</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="/rent/storeUpdate" method="POST">
+                    <form action="/rent/storeUpdate" method="POST" enctype="multipart/form-data">
                     {{csrf_field()}}
                     <div class="form-group">
                         <input name="rent_id" type="hidden" class="form-control" value="{{ $detailRent->id }}">
@@ -175,11 +202,11 @@
                     </div>
                     <div class="form-group">
                         <label for="inputCvcsFund" class="form-label">Dana CV.CS</label>
-                        <input name="cvcs_fund" type="number" class="form-control" id="inputCvcsFund" placeholder="Dana CV.CS.." required>
+                        <input name="cvcs_fund" type="number" class="form-control" id="inputCvcsFund" placeholder="Dana CV.CS..">
                     </div>
                     <div class="form-group">
                         <label for="inputOnlineFund" class="form-label">Dana Online</label>
-                        <input name="online_fund" type="number" class="form-control" id="inputOnlineFund" placeholder="Dana Online.." required>
+                        <input name="online_fund" type="number" class="form-control" id="inputOnlineFund" placeholder="Dana Online..">
                     </div>
                     <div class="form-group">
                         <label for="inputJoinDate" class="form-label">Tanggal Mulai</label>
@@ -191,7 +218,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputDeductionEvidence" class="form-label">Bukti Potong</label>
-                        <select class="form-control" name="deduction_evidence" required>
+                        <select class="form-control" name="deduction_evidence">
                             <option selected disabled>-- Pilih --</option>
                                 <option value="ADA">ADA</option>
                                 <option value="TIDAK ADA">TIDAK ADA</option>
@@ -199,7 +226,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputDocument" class="form-label">Berkas</label>
-                        <select class="form-control" name="document" required>
+                        <select class="form-control" name="document">
                             <option selected disabled>-- Pilih --</option>
                                 <option value="ADA">ADA</option>
                                 <option value="TIDAK ADA">TIDAK ADA</option>
@@ -207,7 +234,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputStatus" class="form-label">Status</label>
-                        <select class="form-control" name="status" required>
+                        <select class="form-control" name="status">
                             <option selected disabled>-- Pilih --</option>
                                 <option value="BERJALAN" selected>BERJALAN</option>
                                 <option value="PEMBAHARUAN">PEMBAHARUAN</option>
@@ -215,9 +242,17 @@
                                 <option value="REFUND">REFUND</option>
                         </select>
                     </div>
+                    <div class="form-group" id="inputPaymentEvidence">
+                        <label for="inputPaymentEvidence" class="form-label">Upload bukti foto pembayaran (jpg,jpeg,png) </label>
+                        <input type="file" name="payment_evidence_file" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputMonthBeforeReminder" class="form-label">Reminder Berapa bulan sebelumnya</label>
+                        <input name="month_before_reminder" type="number" class="form-control" id="inputMonthBeforeReminder" placeholder="Jumlah Bulan..">
+                    </div>
                     <div class="form-group">
                         <label for="inputNotes" class="form-label">Catatan</label>
-                        <input name="notes" type="text" class="form-control" id="inputNotes" placeholder="Catatan.." required>
+                        <input name="notes" type="text" class="form-control" id="inputNotes" placeholder="Catatan..">
                     </div>
                 </div>
                     <div class="modal-footer">

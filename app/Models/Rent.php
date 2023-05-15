@@ -29,7 +29,9 @@ class Rent extends Model
         'deduction_evidence_file',
         'document',
         'document_file',
+        'payment_evidence_file',
         'status',
+        'month_before_reminder',
         'user_id',
         'notes',
     ];

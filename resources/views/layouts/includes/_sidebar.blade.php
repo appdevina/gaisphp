@@ -9,7 +9,7 @@
 					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ auth()->user()->role_id == 2 ? $notifRequestAcc : ( auth()->user()->role_id == 3 ? $notifRequestApprov : (auth()->user()->role_id >= 4 ? $notifRequestUser : $notifRequestAdmin )) }}</span>
 				</span></a></li>
 				<!-- role admin atau user, atau executor tapi selain yg divisi whm/audit -->
-				@if (auth()->user()->role_id == 1 || auth()->user()->role_id > 3 || (auth()->user()->role_id == 3 && (auth()->user()->division_id != 9 && auth()->user()->division_id != 12)))
+				@if (auth()->user()->role_id == 1 || auth()->user()->role_id > 3 || (auth()->user()->role_id == 3 && (auth()->user()->division_id != 9 && auth()->user()->division_id != 12 && auth()->user()->division_id != 80)))
 				<li id="problemReport"><a href="/problemReport" class="{{ Request::is('problemReport') ? 'active' : '' }}"><i class="lnr lnr-bubble"></i> 
 				<span>LAPOR GANGGUAN
 					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ auth()->user()->role_id == 1 ? $notifReportAdmin : (auth()->user()->role_id == 3 ? $notifReportAdmin : $notifReportUser) }}</span>

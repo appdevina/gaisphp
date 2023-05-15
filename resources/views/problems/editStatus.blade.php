@@ -32,7 +32,7 @@
                             @if ($problem->scheduled_at == null)
                             <div class="form-group">
                                 <label for="inputScheduledAt" class="form-label">Penjadwalan</label>
-                                <input type="text" class="form-control float-right" value="" name="scheduled_at" id="tanggalScheduled" required>
+                                <input type="text" class="form-control float-right" value="" name="scheduled_at" id="tanggalScheduled">
                             </div>
                             @endif
                             <div class="form-group">

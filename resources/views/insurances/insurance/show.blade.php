@@ -159,7 +159,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputStockInprov" class="form-label">Asuransi Stok</label>
-                        <select class="form-control" name="stock_inprov_id" required>
+                        <select class="form-control" name="stock_inprov_id">
                             <option selected disabled>-- Pilih Provider Asuransi --</option>
                             @foreach ($inprovs as $inprov)
                                 <option value="{{ $inprov->id }}">
@@ -169,19 +169,19 @@
                     </div>
                     <div class="form-group">
                         <label for="inputStockWorth" class="form-label">Nilai Stok</label>
-                        <input name="stock_worth" type="number" class="form-control" id="inputStockWorth" placeholder="Nilai Stok.." required>
+                        <input name="stock_worth" type="number" class="form-control" id="inputStockWorth" placeholder="Nilai Stok..">
                     </div>
                     <div class="form-group">
                         <label for="inputActualStockWorth" class="form-label">Nilai Aktual Stok</label>
-                        <input name="actual_stock_worth" type="number" class="form-control" id="inputActualStockWorth" placeholder="Nilai Aktual Stok.." required>
+                        <input name="actual_stock_worth" type="number" class="form-control" id="inputActualStockWorth" placeholder="Nilai Aktual Stok..">
                     </div>
                     <div class="form-group">
                         <label for="inputStockPremium" class="form-label">Premi Stok</label>
-                        <input name="stock_premium" type="number" class="form-control" id="inputStockPremium" placeholder="Premi Stok.." required>
+                        <input name="stock_premium" type="number" class="form-control" id="inputStockPremium" placeholder="Premi Stok..">
                     </div>
                     <div class="form-group">
                         <label for="inputBulldingInprov" class="form-label">Asuransi Bangunan</label>
-                        <select class="form-control" name="building_inprov_id" required>
+                        <select class="form-control" name="building_inprov_id">
                             <option selected disabled>-- Pilih Provider Asuransi --</option>
                             @foreach ($inprovs as $inprov)
                                 <option value="{{ $inprov->id }}">
@@ -191,11 +191,11 @@
                     </div>
                     <div class="form-group">
                         <label for="inputBuildingWorth" class="form-label">Nilai Bangunan</label>
-                        <input name="building_worth" type="number" class="form-control" id="inputBuildingWorth" placeholder="Nilai Bangunan.." required>
+                        <input name="building_worth" type="number" class="form-control" id="inputBuildingWorth" placeholder="Nilai Bangunan..">
                     </div>
                     <div class="form-group">
                         <label for="inputBuildingPremium" class="form-label">Premi Bangunan</label>
-                        <input name="building_premium" type="number" class="form-control" id="inputBuildingPremium" placeholder="Premi Bangunan.." required>
+                        <input name="building_premium" type="number" class="form-control" id="inputBuildingPremium" placeholder="Premi Bangunan..">
                     </div>
                     <div class="form-group">
                         <label for="inputJoinDate" class="form-label">Tanggal Mulai</label>
@@ -207,7 +207,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputNotes" class="form-label">Catatan</label>
-                        <input name="notes" type="text" class="form-control" id="inputNotes" placeholder="Catatan.." required>
+                        <input name="notes" type="text" class="form-control" id="inputNotes" placeholder="Catatan..">
                     </div>
                 </div>
                     <div class="modal-footer">

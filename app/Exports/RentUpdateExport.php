@@ -44,6 +44,7 @@ class RentUpdateExport implements FromCollection, WithHeadings, WithMapping
             'bukti_potong',
             'berkas',
             'status',
+            'reminder_bulan_sebelumnya',
             'catatan',
         ];
     }
@@ -63,6 +64,7 @@ class RentUpdateExport implements FromCollection, WithHeadings, WithMapping
             $rentUpdate->deduction_evidence,
             $rentUpdate->document,
             $rentUpdate->status,
+            $rentUpdate->month_before_reminder,
             $rentUpdate->notes,
         ];
     }

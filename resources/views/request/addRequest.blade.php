@@ -137,7 +137,7 @@ function toggleQtySisa() {
         $('#th-qty-sisa').show();
         $('#th-no-nota').show();
         $('#th-alasan').hide();
-    } else if (requestTypeId == 2 && (areaId == 3 || areaId == 4 || areaId == 5)){
+    } else if (requestTypeId == 2 && (areaId == 3 || areaId == 4 || areaId == 5 || areaId == 11)){
         $('#th-qty-sisa').show();
         $('#th-no-nota').hide();
         $('#th-alasan').show();

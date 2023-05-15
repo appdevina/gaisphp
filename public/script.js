@@ -27,7 +27,10 @@ $(document).ready(function () {
                         productindex +
                         '" name="products[]" required></select></td>' +
                         ((request_type_id == 2 || request_type_id == 3) &&
-                        (area_id == 3 || area_id == 4 || area_id == 5)
+                        (area_id == 3 ||
+                            area_id == 4 ||
+                            area_id == 5 ||
+                            area_id == 11)
                             ? '<td><input type="number" placeholder="Sisa" class="form-control col-lg-3" name="qty_remainings[]"></td>'
                             : "") +
                         '<td><input type="number" placeholder="request" class="form-control col-lg-3" name="qty_requests[]" min="1"></td><td><input type="text" placeholder="..." class="form-control col-lg-3" name="descriptions[]"></td><td><a href="#formreplaceproduct" class="badge bg-danger btn_remove" id="product' +
@@ -97,20 +100,6 @@ $(document).ready(function () {
             $("#label-nota-file").show();
         }
     });
-
-    // $("#request_type_id_2").change(function () {
-    //     console.log($(this).val());
-    //     if ($(this).val() == "1") {
-    //         $("#inputRequestFile").show();
-    //         $("#formaddmanyproduct").show();
-    //         $("#formaddproduct").show();
-    //     }
-    //     if ($(this).val() == "2") {
-    //         $("#inputRequestFile").hide();
-    //         $("#formaddproduct").show();
-    //         $("#formaddmanyproduct").show();
-    //     }
-    // });
 
     $("#tanggal-problem").daterangepicker();
 

@@ -21,6 +21,7 @@ class RentUpdateTemplateExport implements WithHeadings
             'bukti_potong',
             'berkas',
             'status',
+            'reminder_bulan_sebelumnya',
             'catatan',
         ];
     }

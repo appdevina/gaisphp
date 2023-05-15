@@ -23,7 +23,7 @@
                                 <h3 class="panel-title">Edit</h3>
                             </div>
                             <div class="panel-body">
-                            <form action="/rent/{{$rent->id}}/update" method="POST">
+                            <form action="/rent/{{$rent->id}}/update" method="POST" enctype="multipart/form-data">
                                 {{csrf_field()}}
                                 <div class="form-group">
                                     <input name="rent_id" type="hidden" class="form-control" value="{{$rent->id}}">
@@ -105,6 +105,14 @@
                                                 {{ $rent->status === 'REFUND' ? 'selected' : '' }}>
                                                 REFUND</option>
                                     </select>
+                                </div>
+                                <div class="form-group" id="inputPaymentEvidence">
+                                    <label for="inputPaymentEvidence" class="form-label">Upload bukti foto pembayaran (jpg,jpeg,png) </label>
+                                    <input type="file" name="payment_evidence_file" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputMonthBeforeReminder" class="form-label">Reminder Berapa bulan sebelumnya</label>
+                                    <input name="month_before_reminder" type="number" class="form-control" value="{{$rent->month_before_reminder}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="inputNotes" class="form-label">Catatan</label>

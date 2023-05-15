@@ -29,6 +29,7 @@ class RentImport implements ToModel, WithHeadingRow
                 'deduction_evidence' => $row['bukti_potong'],
                 'document' => $row['berkas'],
                 'status' => $row['status'] ?? 'BERJALAN',
+                'month_before_reminder' => $row['reminder_bulan_sebelumnya'],
                 'notes' => $row['catatan'],
                 'user_id' => Auth::id(),
             ]);
@@ -51,6 +52,7 @@ class RentImport implements ToModel, WithHeadingRow
                 'deduction_evidence' => $row['bukti_potong'],
                 'document' => $row['berkas'],
                 'status' => $row['status'] ?? 'BERJALAN',
+                'month_before_reminder' => $row['reminder_bulan_sebelumnya'],
                 'notes' => $row['catatan'],
                 'user_id' => Auth::id(),
             ]);

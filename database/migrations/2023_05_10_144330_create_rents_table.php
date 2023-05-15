@@ -29,9 +29,11 @@ class CreateRentsTable extends Migration
             $table->string('deduction_evidence_file')->nullable();
             $table->string('document')->nullable();
             $table->string('document_file')->nullable();
+            $table->string('payment_evidence_file')->nullable();
             $table->string('status')->default('BERJALAN');
+            $table->string('month_before_reminder')->nullable();
             $table->foreignId('user_id');
-            $table->string('notes');
+            $table->string('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

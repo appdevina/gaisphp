@@ -179,7 +179,8 @@
                                         @switch(auth()->user()->role_id)
                                             @case(1)
                                             @case(3)
-                                                @if ((auth()->user()->division_id == 9 && $reqbar->request_type_id == 2) || (auth()->user()->division_id == 12 && $reqbar->request_type_id == 3))
+                                                <!-- Button check kalau divisi Role Executor WHM, AUDIT, MKLI-HO -->
+                                                @if ((auth()->user()->division_id == 9 && $reqbar->request_type_id == 2) || (auth()->user()->division_id == 12 && $reqbar->request_type_id == 3) || (auth()->user()->division_id == 80 && $reqbar->request_type_id == 2))
                                                     @foreach($reqbar->request_approval as $approval)
                                                         @if ($approval->approval_type == 'MANAGER' && $approval->approved_by == null)
                                                             <a href="/request/{{$reqbar->id}}" class="btn btn-warning" type="button">Check</a>

@@ -43,12 +43,12 @@ class AutoApprove extends Command
     public function handle()
     {
         ##AUTO APPROVE PROBLEM REPORT
-        $date24HoursAgo = Carbon::now()->subHours(24)->toDateTimeString();
+        // $date24HoursAgo = Carbon::now()->subHours(24)->toDateTimeString();
 
         $problems = DB::table('problem_report')
         ->where('closed_by','!=', null)
         ->where('status_client', 0)
-        ->whereDate('closed_at', '<', $date24HoursAgo)
+        // ->whereDate('closed_at', '<', $date24HoursAgo)
         ->get();
         
         foreach ($problems as $problem) {

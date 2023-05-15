@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Carbon;
+use Illuminate\Http\UploadedFile;
+use Intervention\Image\ImageManagerStatic as Image;
 use Maatwebsite\Excel\Facades\Excel;
 use Exception;
 
@@ -93,18 +95,67 @@ class RentController extends Controller
     public function store(Request $request)
     {
         try {
-            $user = Auth::user()->id;
             $prefix = 'RENT';
             $count = DB::table('rents')->count() + 1;
             $rent_code = $prefix . str_pad($count, 4, '0', STR_PAD_LEFT);
+            $payment_evidence_file = $request->payment_evidence_file == null ? null : $this->storeImage($request, 'payment_evidence_file');
 
             $request['rent_code'] = $rent_code;
-            $request['user_id'] = $user;
+            $request['user_id'] = Auth::id();
             $request['join_date'] = Carbon::createFromFormat('d/m/Y', $request['join_date'])->format('Y-m-d');
             $request['expired_date'] = Carbon::createFromFormat('d/m/Y', $request['expired_date'])->format('Y-m-d');
-            Rent::create($request->all());
+            $rent = Rent::create($request->all());
+
+            $rent->payment_evidence_file = $payment_evidence_file;
+            $rent->save();
 
             return redirect('rent')->with('success', 'Perjanjian Sewa berhasil diinput !');  
+        } catch (Exception $e) {
+            return redirect('rent')->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function storeImage(Request $request, $fieldName, $disk = 'public')
+    {
+        try {
+            $this->validate($request, [
+                'payment_evidence_file' => 'file|image|mimes:jpeg,png,jpg,pdf',
+            ]);
+            
+            if ($fieldName == 'payment_evidence_file') {
+                $file = $request->file('payment_evidence_file');
+                $date = Carbon::now()->format('Y-m-d');
+                $extension = $file->getClientOriginalExtension();
+                $path = 'Rent_File';
+                if (! Storage::disk($disk)->exists($path)) {
+                    Storage::disk($disk)->makeDirectory($path);
+                }
+
+                $filename = "RENT-PAYMENT-".$date."_". time() .".".$extension;
+            } else {
+                $file = $request->file('deduction_evidence');
+                $date = Carbon::now()->format('Y-m-d');
+                $extension = $file->getClientOriginalExtension();
+                $path = 'Rent_File';
+                if (! Storage::disk($disk)->exists($path)) {
+                    Storage::disk($disk)->makeDirectory($path);
+                }
+
+                $filename = "RENT-DEDUCT-".$date."_". time() .".".$extension;
+            }
+
+            // Use Intervention Image to convert the image
+            if (in_array($extension, ['jpeg', 'png', 'jpg']) && $file->getSize() > 2048 * 1024) {
+                $compressedImage = Image::make($file)->encode($extension, 30);
+                $tmpFile = tempnam(sys_get_temp_dir(), 'compressed-');
+                file_put_contents($tmpFile, $compressedImage);
+                $file = new UploadedFile($tmpFile, $file->getClientOriginalName(), $file->getClientMimeType(), null, true);
+            }
+    
+            $file->storeAs($path, $filename, $disk);
+    
+            return $filename;
+
         } catch (Exception $e) {
             return redirect('rent')->with(['error' => $e->getMessage()]);
         }
@@ -149,13 +200,20 @@ class RentController extends Controller
     public function update(Request $request, Rent $rent)
     {
         try {
-            $user = Auth::user()->id;
+            if ($request->payment_evidence_file != null) {
+                $payment_evidence_file = $this->storeImage($request, 'payment_evidence_file');
+            }
 
-            $request['user_id'] = $user;
+            $payment_evidence_file = $request->payment_evidence_file == null ? null : $this->storeImage($request, 'payment_evidence_file');
+
+            $request['user_id'] = Auth::id();
             $request['join_date'] = Carbon::createFromFormat('d/m/Y', $request['join_date'])->format('Y-m-d');
             $request['expired_date'] = Carbon::createFromFormat('d/m/Y', $request['expired_date'])->format('Y-m-d');
             $rent->update($request->all());
 
+            $rent->payment_evidence_file = $request->payment_evidence_file == null ? $rent->payment_evidence_file : $payment_evidence_file;
+            $rent->save();
+            
             return redirect('rent/'.$request->rent_id)->with('success', 'Perjanjian Sewa berhasil diupdate !');  
         } catch (Exception $e) {
             return redirect('rent/'.$request->rent_id)->with(['error' => $e->getMessage()]);

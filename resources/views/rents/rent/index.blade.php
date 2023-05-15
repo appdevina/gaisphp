@@ -70,11 +70,14 @@
                                         <th>Tanggal Mulai</th>
                                         <th>Tanggal Akhir</th>
                                         <th>Sewa pertahun</th>
-                                        <th>Total Biaya</th>
+                                        <th>Total Tagihan</th>
                                         <th>CV.CS</th>
                                         <th>Online</th>
+                                        <th>Sisa Tagihan</th>
+                                        <th>Status Tagihan</th>
                                         <th>BukPot</th>
                                         <th>Berkas</th>
+                                        <th>Bukti Bayar</th>
                                         <th>Status</th>
                                         <th>Catatan</th>
                                         <th>Aksi</th>
@@ -189,6 +192,42 @@
                                                 Rp {{ number_format($rent->online_fund, 0, ',', '.') }}
                                             @endif
                                         </td>
+                                        <td><strong>
+                                            @if ($rent->rent_update->isNotEmpty())
+                                                Rp {{ number_format(
+                                                    Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) == 0 
+                                                    ? (1 * $rent->rent_update->first()->rent_per_year) - ($rent->rent_update->first()->cvcs_fund + $rent->rent_update->first()->online_fund)
+                                                    : (Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) * $rent->rent_update->first()->rent_per_year) - ($rent->rent_update->first()->cvcs_fund + $rent->rent_update->first()->online_fund), 0, ',', '.') 
+                                            }}
+                                            @else
+                                                Rp {{ number_format(
+                                                    Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) == 0 
+                                                    ? (1 * $rent->rent_per_year) - ($rent->cvcs_fund + $rent->online_fund)
+                                                    : (Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) * $rent->rent_per_year) - ($rent->cvcs_fund + $rent->online_fund), 0, ',', '.')  
+                                            }}
+                                            @endif
+                                        </strong></td>
+                                        <td><strong>
+                                            @if ($rent->rent_update->isNotEmpty())
+                                                @php
+                                                    $remainingPayment = (Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) == 0)
+                                                    ? (1 * $rent->rent_update->first()->rent_per_year) - ($rent->rent_update->first()->cvcs_fund + $rent->rent_update->first()->online_fund)
+                                                    : (Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) * $rent->rent_update->first()->rent_per_year) - ($rent->rent_update->first()->cvcs_fund + $rent->rent_update->first()->online_fund);
+
+                                                    $status = $remainingPayment === 0 ? 'LUNAS' : ($remainingPayment < 0 ? 'LEBIH' : 'BELUM LUNAS');
+                                                @endphp
+                                                {{ $status }}
+                                            @else
+                                                @php
+                                                    $remainingPayment = (Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) == 0)
+                                                    ? (1 * $rent->rent_per_year) - ($rent->cvcs_fund + $rent->online_fund)
+                                                    : (Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) * $rent->rent_per_year) - ($rent->cvcs_fund + $rent->online_fund);
+
+                                                    $status = $remainingPayment === 0 ? 'LUNAS' : ($remainingPayment < 0 ? 'LEBIH' : 'BELUM LUNAS');
+                                                @endphp
+                                                {{ $status }}
+                                            @endif
+                                        </strong></td>
                                         <td>
                                             @if ($rent->rent_update->isNotEmpty())
                                                 {{ $rent->rent_update->first()->deduction_evidence }}
@@ -201,6 +240,21 @@
                                                 {{ $rent->rent_update->first()->document }}
                                             @else
                                                 {{ $rent->document }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($rent->rent_update->isNotEmpty())
+                                                @if (Storage::exists('public/Rent_File/' . $rent->rent_update->first()->payment_evidence_file) && Storage::size('public/Rent_File/' . $rent->rent_update->first()->payment_evidence_file) > 0)
+                                                    <a href="{{ asset('storage/Rent_File/' . $rent->rent_update->first()->payment_evidence_file) }}">Lihat Dokumen</a></td>
+                                                @else
+                                                    <td>Tidak ada file</td>
+                                                @endif
+                                            @else
+                                                @if (Storage::exists('public/Rent_File/' . $rent->payment_evidence_file) && Storage::size('public/Rent_File/' . $rent->payment_evidence_file) > 0)
+                                                    <a href="{{ asset('storage/Rent_File/' . $rent->payment_evidence_file) }}">Lihat Dokumen</a></td>
+                                                @else
+                                                    <td>Tidak ada file</td>
+                                                @endif
                                             @endif
                                         </td>
                                         <td>
@@ -247,7 +301,7 @@
                     <h1 class="modal-title" id="addRentsModalLabel">Tambah Perjanjian Sewa Baru</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="/rent/store" method="POST">
+                    <form action="/rent/store" method="POST" enctype="multipart/form-data">
                     {{csrf_field()}}
                     <div class="form-group">
                         <label for="inputRentedAddress" class="form-label">Alamat Bangunan</label>
@@ -271,11 +325,11 @@
                     </div>
                     <div class="form-group">
                         <label for="inputCvcsFund" class="form-label">Dana CV.CS</label>
-                        <input name="cvcs_fund" type="number" class="form-control" id="inputCvcsFund" placeholder="Dana CV.CS.." required>
+                        <input name="cvcs_fund" type="number" class="form-control" id="inputCvcsFund" placeholder="Dana CV.CS..">
                     </div>
                     <div class="form-group">
                         <label for="inputOnlineFund" class="form-label">Dana Online</label>
-                        <input name="online_fund" type="number" class="form-control" id="inputOnlineFund" placeholder="Dana Online.." required>
+                        <input name="online_fund" type="number" class="form-control" id="inputOnlineFund" placeholder="Dana Online..">
                     </div>
                     <div class="form-group">
                         <label for="inputJoinDate" class="form-label">Tanggal Mulai</label>
@@ -287,7 +341,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputDeductionEvidence" class="form-label">Bukti Potong</label>
-                        <select class="form-control" name="deduction_evidence" required>
+                        <select class="form-control" name="deduction_evidence">
                             <option selected disabled>-- Pilih --</option>
                                 <option value="ADA">ADA</option>
                                 <option value="TIDAK ADA">TIDAK ADA</option>
@@ -295,7 +349,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputDocument" class="form-label">Berkas</label>
-                        <select class="form-control" name="document" required>
+                        <select class="form-control" name="document">
                             <option selected disabled>-- Pilih --</option>
                                 <option value="ADA">ADA</option>
                                 <option value="TIDAK ADA">TIDAK ADA</option>
@@ -311,9 +365,17 @@
                                 <option value="REFUND">REFUND</option>
                         </select>
                     </div>
+                    <div class="form-group" id="inputPaymentEvidence">
+                        <label for="inputPaymentEvidence" class="form-label">Upload bukti foto pembayaran (jpg,jpeg,png) </label>
+                        <input type="file" name="payment_evidence_file" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputMonthBeforeReminder" class="form-label">Reminder Berapa bulan sebelumnya</label>
+                        <input name="month_before_reminder" type="number" class="form-control" id="inputMonthBeforeReminder" placeholder="Jumlah Bulan..">
+                    </div>
                     <div class="form-group">
                         <label for="inputNotes" class="form-label">Catatan</label>
-                        <input name="notes" type="text" class="form-control" id="inputNotes" placeholder="Catatan.." required>
+                        <input name="notes" type="text" class="form-control" id="inputNotes" placeholder="Catatan..">
                     </div>
                 </div>
                     <div class="modal-footer">
