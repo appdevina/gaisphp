@@ -66,6 +66,7 @@
 							<table class="table table-hover">
 								<thead>
                                 <tr>
+                                    <th>Aksi</th>
                                     <th>NO</th>
                                     <th>No Polis</th>
                                     <th>Asuransi Stok</th>
@@ -80,7 +81,6 @@
                                     <th>Tanggal Berakhir</th>
                                     <th>Status</th>
                                     <th>Catatan</th>
-                                    <th>Aksi</th>
                                 </tr>
 								</thead>
 								<tbody>
@@ -107,6 +107,11 @@
                                             }
                                         @endphp
                                         <tr style="{{$rowStyle}}">
+                                            <td>
+                                            <a href="/insurance/{{$detail->id}}/editUpdate" class="btn btn-warning btn-xs" type="button"><span class="lnr lnr-pencil"></span></a>
+                                            <!-- BUTTON DELETE -->
+                                            <!-- <a href="/insurance/{{$detail->id}}/deleteUpdate/{{$detailInsurance->id}}" class="btn btn-danger btn-xs" onclick="return confirm('Yakin akan menghapus data ?')"><span class="lnr lnr-trash"></span></a> -->
+                                            </td> 
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $detail->policy_number }}</td>
                                             <td>{{ $detail->stock_insurance_provider->insurance_provider ?? ''}}</td>
@@ -122,11 +127,6 @@
                                             <!-- <td>{{ $diffInDays }}</td> -->
                                             <td>{{ $detail->status }}</td>
                                             <td>{{ $detail->notes }}</td>
-                                            <td>
-                                            <a href="/insurance/{{$detail->id}}/editUpdate" class="btn btn-warning" type="button"><span class="lnr lnr-pencil"></span></a>
-                                            <!-- BUTTON DELETE -->
-                                            <!-- <a href="/insurance/{{$detail->id}}/deleteUpdate/{{$detailInsurance->id}}" class="btn btn-danger" onclick="return confirm('Yakin akan menghapus data ?')"><span class="lnr lnr-trash"></span></a> -->
-                                            </td> 
                                         </tr>
                                         @endforeach
                                     @endif

@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command(AutoApprove::class)->daily()->appendOutputTo(storage_path('logs/scheduler.log'));
+        $schedule->command(AutoApprove::class)->everyMinute()->appendOutputTo(storage_path('logs/scheduler.log'));
     }
 
     /**

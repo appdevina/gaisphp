@@ -60,7 +60,8 @@
                             <div class="panel-body table-responsive">
                                 <table class="table table-hover text-nowrap">
                                     <thead>
-                                    <tr>
+                                        <tr>
+                                        <th>Aksi</th>
                                         <th>NO</th>
                                         <th>No Polis</th>
                                         <!-- <th>Alamat Tertanggung</th>
@@ -81,7 +82,6 @@
                                         <!-- <th>Tanggal Mulai</th> -->
                                         <th>Status</th>
                                         <th>Catatan</th>
-                                        <th>Aksi</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -129,6 +129,12 @@
                                         }
                                     @endphp
                                     <tr style="{{$rowStyle}}">
+                                        <td>
+                                            <!-- <a href="/insurance/{{$insurance->id}}/edit" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a> -->
+                                            <!-- BUTTON DELETE -->
+                                            <!-- <a href="/insurance/{{$insurance->id}}/delete" class="btn btn-danger btn-xs" onclick="return confirm('Yakin akan menghapus data ?')"><span class="lnr lnr-trash"></span></a> -->
+                                            <a href="/insurance/{{$insurance->id}}" class="btn btn-default btn-xs" type="button"><span class="lnr lnr-eye"></span></a>
+                                        </td>
                                         <td>{{ $loop->iteration }}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $insurance->insurance_update->isNotEmpty() ? $insurance->insurance_update->first()->policy_number : $insurance->policy_number }}">
                                             @if ($insurance->insurance_update->isNotEmpty())
@@ -255,12 +261,6 @@
                                             @else
                                                 {!! Str::limit($insurance->notes, 12, '...') !!}
                                             @endif
-                                        </td>
-                                        <td>
-                                            <!-- <a href="/insurance/{{$insurance->id}}/edit" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a> -->
-                                            <!-- BUTTON DELETE -->
-                                            <!-- <a href="/insurance/{{$insurance->id}}/delete" class="btn btn-danger" onclick="return confirm('Yakin akan menghapus data ?')"><span class="lnr lnr-trash"></span></a> -->
-                                            <a href="/insurance/{{$insurance->id}}" class="btn btn-default" type="button"><span class="lnr lnr-eye"></span></a>
                                         </td>
                                     </tr>
                                     @endforeach

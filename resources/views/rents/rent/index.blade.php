@@ -60,7 +60,8 @@
                             <div class="panel-body table-responsive">
                                 <table class="table table-hover text-nowrap">
                                     <thead>
-                                    <tr>
+                                        <tr>
+                                        <th>Aksi</th>
                                         <th>NO</th>
                                         <th>KODE</th>
                                         <th>Nama Toko</th>
@@ -69,6 +70,8 @@
                                         <th>Pihak Kedua</th>
                                         <th>Tanggal Mulai</th>
                                         <th>Tanggal Akhir</th>
+                                        <th>Reminder</th>
+                                        <th>Tanggal Reminder</th>
                                         <th>Sewa pertahun</th>
                                         <th>Total Tagihan</th>
                                         <th>CV.CS</th>
@@ -80,7 +83,6 @@
                                         <th>Bukti Bayar</th>
                                         <th>Status</th>
                                         <th>Catatan</th>
-                                        <th>Aksi</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -95,17 +97,19 @@
                                     @php
                                         if ($rent->rent_update->isNotEmpty()) {
                                             $expiredDate = Carbon\Carbon::parse($rent->rent_update->first()->expired_date);
+                                            $reminderDate = Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->subMonths($rent->rent_update->first()->month_before_reminder)->format('d M Y');
                                         } else {
                                             $expiredDate = Carbon\Carbon::parse($rent->expired_date);
+                                            $reminderDate = Carbon\Carbon::parse($rent->expired_date)->subMonths($rent->month_before_reminder)->format('d M Y');
                                         }
 
                                         $diffInDays = Carbon\Carbon::now()->diffInDays($expiredDate, false);
 
                                         $rowStyle = ''; // initialize the variable
 
-                                        if ($diffInDays <= 30 && $diffInDays > 14) {
+                                        if ((Carbon\Carbon::now() >= Carbon\Carbon::parse($reminderDate)->subDays(30)) && (Carbon\Carbon::now() < Carbon\Carbon::parse($reminderDate))) {
                                             $rowStyle = 'background-color: #fcf8e3; color: #8a6d3b;';
-                                        } elseif ($diffInDays <= 14) {
+                                        } elseif (Carbon\Carbon::now() >= Carbon\Carbon::parse($reminderDate)) {
                                             if ($rent->rent_update->isNotEmpty()) {
                                                 $status = $rent->rent_update->first()->status;
                                                 
@@ -128,6 +132,12 @@
                                         }
                                     @endphp
                                     <tr style="{{$rowStyle}}">
+                                        <td>
+                                            <!-- <a href="/rent/{{$rent->id}}/edit" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a> -->
+                                            <!-- BUTTON DELETE -->
+                                            <!-- <a href="/rent/{{$rent->id}}/delete" class="btn btn-danger btn-xs" onclick="return confirm('Yakin akan menghapus data ?')"><span class="lnr lnr-trash"></span></a> -->
+                                            <a href="/rent/{{$rent->id}}" class="btn btn-default btn-xs" type="button"><span class="lnr lnr-eye"></span></a>
+                                        </td>
                                         <td>{{ $loop->iteration }}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $rent->rent_update->isNotEmpty() ? $rent->rent_update->first()->rent_code : $rent->rent_code }}">
                                             @if ($rent->rent_update->isNotEmpty())
@@ -136,7 +146,7 @@
                                                 {!! Str::limit($rent->rent_code, 12, '...') !!}
                                             @endif
                                         </td>
-                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $rent->rented_detail }}">{{ $rent->rented_detail }}</td>
+                                        <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $rent->rented_detail }}">{!! Str::limit($rent->rented_detail, 30, '...') !!}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $rent->rented_address }}">{!! Str::limit($rent->rented_address, 30, '...') !!}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $rent->first_party }}">{!! Str::limit($rent->first_party, 12, '...') !!}</td>
                                         <td data-toggle="tooltip" data-placement="top" data-container="body" title="{{ $rent->second_party }}">{!! Str::limit($rent->second_party, 12, '...') !!}</td>
@@ -156,6 +166,22 @@
                                             @endif
                                             </strong>
                                         </td>
+                                        <!-- BULAN REMINDER -->
+                                        <td>
+                                            @if ($rent->rent_update->isNotEmpty())
+                                                {{ $rent->rent_update->first()->month_before_reminder}} bulan
+                                            @else
+                                                {{ $rent->month_before_reminder}} bulan
+                                            @endif    
+                                        </td>
+                                        <!-- TANGGAL REMINDER -->
+                                        <td><strong>
+                                            @if ($rent->rent_update->isNotEmpty())
+                                                {{ Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->subMonths($rent->rent_update->first()->month_before_reminder)->format('d M Y') }}
+                                            @else
+                                                {{ Carbon\Carbon::parse($rent->expired_date)->subMonths($rent->month_before_reminder)->format('d M Y') }}
+                                            @endif
+                                        </strong></td>
                                         <td>
                                             @if ($rent->rent_update->isNotEmpty())
                                                 Rp {{ number_format($rent->rent_update->first()->rent_per_year, 0, ',', '.') }}
@@ -163,18 +189,19 @@
                                                 Rp {{ number_format($rent->rent_per_year, 0, ',', '.') }}
                                                 @endif
                                         </td>
+                                        <!-- TOTAL TAGIHAN -->
                                         <td><strong>
                                             @if ($rent->rent_update->isNotEmpty())
                                                 Rp {{ number_format(
-                                                    Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) == 0 
+                                                    Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInDays($rent->rent_update->first()->join_date) / 366 == 1 
                                                     ? 1 * $rent->rent_update->first()->rent_per_year 
-                                                    : Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) * $rent->rent_update->first()->rent_per_year, 0, ',', '.') 
+                                                    : ceil(Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInDays($rent->rent_update->first()->join_date) / 366) * $rent->rent_update->first()->rent_per_year, 0, ',', '.') 
                                             }}
                                             @else
                                                 Rp {{ number_format(
-                                                    Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) == 0 
+                                                    Carbon\Carbon::parse($rent->expired_date)->diffInDays($rent->join_date) / 366 == 1 
                                                     ? 1 * $rent->rent_per_year 
-                                                    : Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) * $rent->rent_per_year, 0, ',', '.')  
+                                                    : ceil(Carbon\Carbon::parse($rent->expired_date)->diffInDays($rent->join_date) / 366) * $rent->rent_per_year, 0, ',', '.')  
                                             }}
                                             @endif
                                         </strong></td>
@@ -192,38 +219,40 @@
                                                 Rp {{ number_format($rent->online_fund, 0, ',', '.') }}
                                             @endif
                                         </td>
+                                        <!-- SISA TAGIHAN -->
                                         <td><strong>
                                             @if ($rent->rent_update->isNotEmpty())
                                                 Rp {{ number_format(
-                                                    Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) == 0 
+                                                    Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInDays($rent->rent_update->first()->join_date) / 366 == 1 
                                                     ? (1 * $rent->rent_update->first()->rent_per_year) - ($rent->rent_update->first()->cvcs_fund + $rent->rent_update->first()->online_fund)
-                                                    : (Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) * $rent->rent_update->first()->rent_per_year) - ($rent->rent_update->first()->cvcs_fund + $rent->rent_update->first()->online_fund), 0, ',', '.') 
+                                                    : (ceil(Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInDays($rent->rent_update->first()->join_date) / 366) * $rent->rent_update->first()->rent_per_year) - ($rent->rent_update->first()->cvcs_fund + $rent->rent_update->first()->online_fund), 0, ',', '.') 
                                             }}
                                             @else
                                                 Rp {{ number_format(
-                                                    Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) == 0 
+                                                    Carbon\Carbon::parse($rent->expired_date)->diffInDays($rent->join_date) / 366 == 1 
                                                     ? (1 * $rent->rent_per_year) - ($rent->cvcs_fund + $rent->online_fund)
-                                                    : (Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) * $rent->rent_per_year) - ($rent->cvcs_fund + $rent->online_fund), 0, ',', '.')  
+                                                    : (ceil(Carbon\Carbon::parse($rent->expired_date)->diffInDays($rent->join_date) / 366 ) * $rent->rent_per_year) - ($rent->cvcs_fund + $rent->online_fund), 0, ',', '.')  
                                             }}
                                             @endif
                                         </strong></td>
+                                        <!-- STATUS TAGIHAN -->
                                         <td><strong>
                                             @if ($rent->rent_update->isNotEmpty())
                                                 @php
-                                                    $remainingPayment = (Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) == 0)
+                                                    $remainingPayment = (Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInDays($rent->rent_update->first()->join_date) / 366 == 1)
                                                     ? (1 * $rent->rent_update->first()->rent_per_year) - ($rent->rent_update->first()->cvcs_fund + $rent->rent_update->first()->online_fund)
-                                                    : (Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInYears(Carbon\Carbon::parse($rent->rent_update->first()->join_date)) * $rent->rent_update->first()->rent_per_year) - ($rent->rent_update->first()->cvcs_fund + $rent->rent_update->first()->online_fund);
+                                                    : (ceil(Carbon\Carbon::parse($rent->rent_update->first()->expired_date)->diffInDays($rent->rent_update->first()->join_date) / 366) * $rent->rent_update->first()->rent_per_year) - ($rent->rent_update->first()->cvcs_fund + $rent->rent_update->first()->online_fund);
 
-                                                    $status = $remainingPayment === 0 ? 'LUNAS' : ($remainingPayment < 0 ? 'LEBIH' : 'BELUM LUNAS');
+                                                    $status = $remainingPayment == 0 ? 'LUNAS' : ($remainingPayment < 0 ? 'LEBIH' : 'BELUM LUNAS');
                                                 @endphp
                                                 {{ $status }}
                                             @else
                                                 @php
-                                                    $remainingPayment = (Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) == 0)
+                                                    $remainingPayment = (Carbon\Carbon::parse($rent->expired_date)->diffInDays($rent->join_date) / 366 == 1)
                                                     ? (1 * $rent->rent_per_year) - ($rent->cvcs_fund + $rent->online_fund)
-                                                    : (Carbon\Carbon::parse($rent->expired_date)->diffInYears(Carbon\Carbon::parse($rent->join_date)) * $rent->rent_per_year) - ($rent->cvcs_fund + $rent->online_fund);
+                                                    : (ceil(Carbon\Carbon::parse($rent->expired_date)->diffInDays($rent->join_date) / 366) * $rent->rent_per_year) - ($rent->cvcs_fund + $rent->online_fund);
 
-                                                    $status = $remainingPayment === 0 ? 'LUNAS' : ($remainingPayment < 0 ? 'LEBIH' : 'BELUM LUNAS');
+                                                    $status = $remainingPayment == 0 ? 'LUNAS' : ($remainingPayment < 0 ? 'LEBIH' : 'BELUM LUNAS');
                                                 @endphp
                                                 {{ $status }}
                                             @endif
@@ -247,13 +276,13 @@
                                                 @if (Storage::exists('public/Rent_File/' . $rent->rent_update->first()->payment_evidence_file) && Storage::size('public/Rent_File/' . $rent->rent_update->first()->payment_evidence_file) > 0)
                                                     <a href="{{ asset('storage/Rent_File/' . $rent->rent_update->first()->payment_evidence_file) }}">Lihat Dokumen</a></td>
                                                 @else
-                                                    <td>Tidak ada file</td>
+                                                    Tidak ada file
                                                 @endif
                                             @else
                                                 @if (Storage::exists('public/Rent_File/' . $rent->payment_evidence_file) && Storage::size('public/Rent_File/' . $rent->payment_evidence_file) > 0)
                                                     <a href="{{ asset('storage/Rent_File/' . $rent->payment_evidence_file) }}">Lihat Dokumen</a></td>
                                                 @else
-                                                    <td>Tidak ada file</td>
+                                                    Tidak ada file
                                                 @endif
                                             @endif
                                         </td>
@@ -270,12 +299,6 @@
                                             @else
                                                 {!! Str::limit($rent->notes, 12, '...') !!}
                                             @endif
-                                        </td>
-                                        <td>
-                                            <!-- <a href="/rent/{{$rent->id}}/edit" class="btn btn-warning" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a> -->
-                                            <!-- BUTTON DELETE -->
-                                            <!-- <a href="/rent/{{$rent->id}}/delete" class="btn btn-danger" onclick="return confirm('Yakin akan menghapus data ?')"><span class="lnr lnr-trash"></span></a> -->
-                                            <a href="/rent/{{$rent->id}}" class="btn btn-default" type="button"><span class="lnr lnr-eye"></span></a>
                                         </td>
                                     </tr>
                                     @endforeach
