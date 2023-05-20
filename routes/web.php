@@ -104,7 +104,7 @@ Route::group(['middleware' => ['auth', 'checkRole:1,3']], function(){
     Route::get('/user/{user}/delete', [UserController::class, 'destroy']);
     Route::get('/user/{user}/active', [UserController::class, 'active']);
 
-    #BARANG
+    #PRODUCT
     Route::get('product', [ProductController::class, 'index']);
     Route::post('/product/create', [ProductController::class, 'create']);
     Route::get('/product/{product}/edit', [ProductController::class, 'edit']);
@@ -178,7 +178,7 @@ Route::group(['middleware' => ['auth', 'checkRole:1,3']], function(){
     Route::post('/insurance/storeUpdate', [InsuranceController::class, 'storeUpdate']);
 
     #INSURANCE UPDATE
-    Route::get('/insurance/{id}/editUpdate', [InsuranceUpdateController::class, 'editUpdate']);
+    Route::get('/insurance/{id}/{insuranceId}/editUpdate', [InsuranceUpdateController::class, 'editUpdate']);
     Route::post('/insurance/{insuranceUpdate}/updateInsuranceUpdate', [InsuranceUpdateController::class, 'updateInsuranceUpdate']);
     Route::get('/insurance/{insuranceUpdate}/deleteUpdate/{insurance}', [InsuranceUpdateController::class, 'deleteUpdate']);
 
@@ -214,7 +214,7 @@ Route::group(['middleware' => ['auth', 'checkRole:1,3']], function(){
 
     #RENT UPDATE
     Route::post('/rent/storeUpdate', [RentUpdateController::class, 'storeUpdate']);
-    Route::get('/rent/{id}/editUpdate', [RentUpdateController::class, 'editUpdate']);
+    Route::get('/rent/{id}/{rentId}/editUpdate', [RentUpdateController::class, 'editUpdate']);
     Route::post('/rent/{rentUpdate}/updateRentUpdate', [RentUpdateController::class, 'updateRentUpdate']);
     Route::get('/rent/{rentUpdate}/deleteUpdate/{rent}', [RentUpdateController::class, 'deleteUpdate']);
 
@@ -246,7 +246,7 @@ Route::group(['middleware' => ['auth', 'checkRole:1,2,3,4']], function(){
     Route::post('/request/store', [RequestController::class, 'store']);
     Route::post('/fixRequest/{id}', [RequestController::class, 'fixRequest']);
     Route::get('/request/{id}', [RequestController::class, 'show']);
-    Route::get('/editRequest/{id}', [RequestController::class, 'showEditPage']);
+    Route::get('/editRequest/{id}/{productId}', [RequestController::class, 'showEditPage']);
     Route::post('/request/{id}/updateRequest', [RequestController::class, 'updateRequest']);
     Route::get('/request/{requestBarang}/editStatus', [RequestController::class, 'editStatus']);
     Route::post('/request/{requestBarang}/updateStatus', [RequestController::class, 'updateStatus']);

@@ -20,8 +20,14 @@
                     <div class="col-md-12">
                     <div class="panel">
 						<div class="panel-heading">
-                            <div class="col-md-4">
-                                <h3 class="panel-title">Perjanjian Sewa Update</h3>
+                            <div class="col-md-12" style="margin-bottom: 20px;">
+                                <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/dashboard">Beranda</a></li>
+                                    <li class="breadcrumb-item"><a href="/rent">Perjanjian Sewa</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Perjanjian Sewa Update</li>
+                                </ol>
+                                </nav>
                             </div>
 						</div>
                         <hr>
@@ -137,7 +143,7 @@
                                         @endphp
                                         <tr style="{{$rowStyle}}">
                                             <td>
-                                            <a href="/rent/{{$detail->id}}/editUpdate" class="btn btn-warning btn-xs" type="button"><span class="lnr lnr-pencil"></span></a>
+                                            <a href="/rent/{{$detail->id}}/{{$detailRent->id}}/editUpdate" class="btn btn-warning btn-xs" type="button"><span class="lnr lnr-pencil"></span></a>
                                             <!-- BUTTON DELETE -->
                                             <!-- <a href="/rent/{{$detail->id}}/deleteUpdate/{{$detailRent->id}}" class="btn btn-danger btn-xs" onclick="return confirm('Yakin akan menghapus data ?')"><span class="lnr lnr-trash"></span></a> -->
                                             </td>

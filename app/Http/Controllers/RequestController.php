@@ -645,12 +645,14 @@ class RequestController extends Controller
         }
     }
 
-    public function showEditPage($id)
+    public function showEditPage($id, $requestId)
     {
         $detail = RequestDetail::with('product')->find($id);
+        $requestId = RequestBarang::find($requestId);
 
         return view('request.showEdit', [
             'detail' => $detail,
+            'requestId' => $requestId,
         ]);
     }
 

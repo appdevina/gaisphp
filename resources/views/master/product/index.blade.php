@@ -68,9 +68,27 @@
                                     <!-- <td><img src="{{ $product->getProductImage() }}" class="img" width="100px" alt="Barang"></td> -->
                                     <td>{{ $product->updated_at->formatLocalized('%A, %d %b %Y') }}</td>
                                     <td>
-                                        <a href="/product/{{$product->id}}/edit" class="btn btn-warning btn-sm"><span class="lnr lnr-pencil"></span></a>
-                                        <!-- <a href="/product/{{$product->id}}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
+                                        <a href="/product/{{$product->id}}/edit" class="btn btn-warning btn-xs"><span class="lnr lnr-pencil"></span></a>
+                                        <a href="#" data-toggle="modal" data-target="#qrModal{{$product->id}}" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Create QR Code"><i class="fa fa-qrcode"></i></a>
+                                        <!-- <a href="/product/{{$product->id}}/delete" class="btn btn-danger btn-xs" onclick="return confirm('Yakin akan menghapus data ?')">Hapus</a> -->
                                     </td>
+
+                                    <!-- Modal QR -->
+                                    <div class="modal fade" id="qrModal{{$product->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="myModalLabel">QR Code</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body" style="margin: 0 auto; width: 230px;">
+                                                    <div>{!! DNS2D::getBarcodeHTML(strval($product->id), 'QRCODE') !!}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </tr>
                                 @endforeach
 								</tbody>

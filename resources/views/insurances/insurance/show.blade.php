@@ -20,11 +20,16 @@
                     <div class="col-md-12">
                     <div class="panel">
 						<div class="panel-heading">
-                            <div class="col-md-4">
-                                <h3 class="panel-title">Asuransi Update</h3>
+                            <div class="col-md-12" style="margin-bottom: 10px;">
+                                <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/dashboard">Beranda</a></li>
+                                    <li class="breadcrumb-item"><a href="/insurance">Asuransi</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Asuransi Update</li>
+                                </ol>
+                                </nav>
                             </div>
 						</div>
-                        <hr>
 						<div class="panel-body table-responsive">
                             <div class="col-md-12">
                                 <div class="col-md-5 text-left mb-100">
@@ -108,7 +113,7 @@
                                         @endphp
                                         <tr style="{{$rowStyle}}">
                                             <td>
-                                            <a href="/insurance/{{$detail->id}}/editUpdate" class="btn btn-warning btn-xs" type="button"><span class="lnr lnr-pencil"></span></a>
+                                            <a href="/insurance/{{$detail->id}}/{{$detailInsurance->id}}/editUpdate" class="btn btn-warning btn-xs" type="button"><span class="lnr lnr-pencil"></span></a>
                                             <!-- BUTTON DELETE -->
                                             <!-- <a href="/insurance/{{$detail->id}}/deleteUpdate/{{$detailInsurance->id}}" class="btn btn-danger btn-xs" onclick="return confirm('Yakin akan menghapus data ?')"><span class="lnr lnr-trash"></span></a> -->
                                             </td> 

@@ -25,7 +25,7 @@ class UserController extends Controller{
             if (!Auth::attempt($credentials)) {
                 return ResponseFormatter::error([
                     'message' => 'Unauthorized'
-                ],  'Authentication Failed', 500
+                ],  'Cek Kembali username atau password !', 500
             );
             }
 
@@ -47,14 +47,16 @@ class UserController extends Controller{
             return ResponseFormatter::error([
                 'message' => 'Something went wrong',
                 //'error' => $error
-            ],  'Authentication Failed', 500
+            ],  
+            $error->getMessage(), 500
         );
-        $error->getMessage();
        } 
     }
 
     public function fetch(Request $request)
     {
-        return ResponseFormatter::success(Auth::user(),'Data profile user berhasil diambil');
+        $user = User::with('division', 'division.area', 'badan_usaha', 'role')->find(Auth::id());
+
+        return ResponseFormatter::success($user,'Data profile user berhasil diambil');
     }
 }

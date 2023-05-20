@@ -12,13 +12,17 @@ use Exception;
 
 class InsuranceUpdateController extends Controller
 {
-    public function editUpdate($id)
+    public function editUpdate($id, $insuranceId)
     {
         $insurance = InsuranceUpdate::find($id);
+        $insuranceId = Insurance::find($insuranceId);
+
 
         return view('insurances.insurance.showEditUpdate', [
             'insurance' => $insurance,
             'inprovs' => InsuranceProvider::orderBy('insurance_provider')->get(),
+            'insuranceId' => $insuranceId,
+
         ]);
     }
 

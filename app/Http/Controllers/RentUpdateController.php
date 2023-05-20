@@ -86,12 +86,14 @@ class RentUpdateController extends Controller
         }
     }
 
-    public function editUpdate($id)
+    public function editUpdate($id, $rentId)
     {
         $rent = RentUpdate::find($id);
+        $rentId = Rent::find($rentId);
 
         return view('rents.rent.showEditUpdate', [
             'rent' => $rent,
+            'rentId' => $rentId,
         ]);
     }
 

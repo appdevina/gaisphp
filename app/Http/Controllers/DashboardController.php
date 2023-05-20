@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Http\Controllers; 
+namespace App\Http\Controllers;
 
+use App\Models\Insurance;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\ProblemReport;
+use App\Models\Rent;
 use App\Models\RequestBarang;
 use App\Models\RequestSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class DashboardController extends Controller
 {
@@ -23,6 +27,8 @@ class DashboardController extends Controller
         $totalProblem = ProblemReport::count();
         $totalProduct = Product::count();
         $totalUser = User::count();
+        $totalInsurance = Insurance::count();
+        $totalRent = Rent::count();
 
         $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type', 'request_approval')
         ->whereHas('request_approval', function ($q) {
@@ -40,6 +46,42 @@ class DashboardController extends Controller
         ->take(5)
         ->get();
 
+        $insurances = Insurance::with([
+            'stock_insurance_provider',
+            'building_insurance_provider',
+            'insurance_category',
+            'insurance_scope',
+            'insurance_update' => function($query) {
+                $query->where('status', '!=', 'TUTUP')
+                ->where('status', '!=', 'REFUND')
+                ->latest('expired_date');
+            }])
+            ->whereDoesntHave('insurance_update', function($query) {
+                $query->whereIn('status', ['TUTUP', 'REFUND']);
+            })
+            ->select(['insurances.*', DB::raw('(SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id) as latest_expired_date')])
+            ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM insurance_updates WHERE insurance_id = insurances.id), insurances.expired_date) ASC")
+            ->where('insurances.status', '!=', 'TUTUP')
+            ->where('insurances.status', '!=', 'REFUND')
+            ->take(5)
+            ->get();
+            
+        $rents = Rent::with([
+            'rent_update'  => function($query) {
+                $query->where('status', '!=', 'TUTUP')
+                ->where('status', '!=', 'REFUND')
+                ->latest('expired_date');
+            }])
+            ->whereDoesntHave('rent_update', function($query) {
+                $query->whereIn('status', ['TUTUP', 'REFUND']);
+            })
+            ->select(['rents.*', DB::raw('(SELECT MAX(expired_date) FROM rent_updates WHERE rent_id = rents.id) as latest_expired_date')])
+            ->orderByRaw("COALESCE((SELECT MAX(expired_date) FROM rent_updates WHERE rent_id = rents.id), rents.expired_date) ASC")
+            ->where('rents.status', '!=', 'TUTUP')
+            ->where('rents.status', '!=', 'REFUND')
+            ->take(5)
+            ->get();
+
         return view('dashboard.index', [
             'totalRequest' => $totalRequest,
             'totalProblem' => $totalProblem,
@@ -48,6 +90,10 @@ class DashboardController extends Controller
             'requestBarangs' => $requestBarangs,
             'problemReport' => $problemReport,
             'requestSetting' => RequestSetting::all(),
+            'totalInsurance' => $totalInsurance,
+            'totalRent' => $totalRent,
+            'insurances' => $insurances,
+            'rents' => $rents,
         ]);
     }
 

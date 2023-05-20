@@ -20,12 +20,16 @@
                     <div class="col-md-12">
                         <div class="panel">
                             <div class="panel-heading">
-                                <div class="col-md-12">
-                                    <div class="col-md-2">
-                                        <h3 class="panel-title">Data Asuransi</h3>
-                                        <br>
-                                    </div>
-                                    <div class="col-md-3 text-center">
+                                <div class="col-md-12" style="margin-bottom: 20px;">
+                                    <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="/dashboard">Beranda</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Asuransi</li>
+                                    </ol>
+                                    </nav>
+                                </div>
+                                <div class="col-md-12" style="margin-bottom: 20px;">
+                                    <div class="col-md-4 text-center">
                                     <form class="form-inline" id="search_form" action="/insurance">
                                         <div class="form-group">
                                         <input type="text" class="form-control" name="search" placeholder="Cari ..." style="width: 140px;">
@@ -47,7 +51,7 @@
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="col-md-4 text-right">
+                                    <div class="col-md-5 text-right">
                                         <a href="/insurance/create" class="btn btn-info" data-toggle="modal" data-target="#addinsurancesModal" data-toggle="tooltip" data-placement="top" title="Tambah data baru"><span class="lnr lnr-plus-circle"></span></a>
                                         <a href="/insurance/export" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Export Asuransi"><span class="lnr lnr-download"></span></a>
                                         <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import Asuransi"><span class="lnr lnr-upload"></span></a>
@@ -267,7 +271,7 @@
                                     </tbody>
                                 </table>
                                 <div style="float:right">
-                                    {{ $insurances->links() }}
+                                    {{ $insurances->appends(Request::except('page'))->links() }}
                                 </div>
                             </div>
                         </div>

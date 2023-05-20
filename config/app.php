@@ -164,6 +164,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Ladumor\LaravelPwa\PWAServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Milon\Barcode\BarcodeServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -235,6 +236,8 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'LaravelPwa' => \Ladumor\LaravelPwa\LaravelPwa::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
+        'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
 
     ],
 

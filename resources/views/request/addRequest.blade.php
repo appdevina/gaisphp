@@ -20,67 +20,78 @@
                 <div class="col-md-12">
                     <div class="panel">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Tambah Pengajuan</h3>
+                            <div class="col-md-12" style="margin-bottom: 20px;">
+                                <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/dashboard">Beranda</a></li>
+                                    <li class="breadcrumb-item"><a href="/request">Pengajuan</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Tambah Pengajuan</li>
+                                </ol>
+                                </nav>
+                            </div>
                         </div>
                         <div class="panel-body" >
-                            <div class="form-group">
-                                <label for="request_type_id" class="form-label">Tipe Pengajuan</label>
-                                <select class="form-control" id="request_type_id" name="request_type_id" required onchange="toggleQtySisa()">
-                                    <option selected disabled>-- Pilih Tipe Pengajuan --</option>
-                                    @foreach ($request_types as $reqtype)
-                                        <option value="{{ $reqtype->id }}">
-                                            {{ $reqtype->request_type }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="" id="formaddmanyproduct" >
-                                <form action="/request/store" method="POST" enctype="multipart/form-data">
-                                {{csrf_field()}}
+                            <div class="col-md-12">
+
                                 <div class="form-group">
-                                    <label for="inputUser" class="form-label hidden">User</label>
-                                    <input name="user_id" type="hidden" class="form-control" id="inputUser" value="{{ auth()->user()->id }}">
+                                    <label for="request_type_id" class="form-label">Tipe Pengajuan</label>
+                                    <select class="form-control" id="request_type_id" name="request_type_id" required onchange="toggleQtySisa()">
+                                        <option selected disabled>-- Pilih Tipe Pengajuan --</option>
+                                        @foreach ($request_types as $reqtype)
+                                            <option value="{{ $reqtype->id }}">
+                                                {{ $reqtype->request_type }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <div class="form-group">
-                                    <input name="area_id" type="hidden" class="form-control" id="inputArea" value="{{ auth()->user()->division->area->id }}">
-                                </div>
-                                <div class="form-group">
-                                    <input name="request_type_id" type="hidden" class="form-control" id="inputRequestTypeId" value="">
-                                </div>
-                                <div>
-                                    <div class="form-group" >
-                                        <div class="card-body table-responsive p-0" style="min-height: 300px;">
-                                            <table class="table table-head-fixed text-nowrap">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Nama Barang</th>
-                                                        <th style="width:15%;" id="th-qty-sisa">Qty Sisa</th>
-                                                        <th style="width:15%;">Qty Req</th>
-                                                        <th style="width:30%;" id="th-alasan">Alasan</th>
-                                                        <th style="width:30%;" id="th-no-nota">Ket / No nota yg akan dikirim</th>
-                                                        <th style="width:10%;">
-                                                            <a href="#addproduct" class="badge bg-success" id="addProduct">Add <span class="lnr lnr-plus-circle"></span></a>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tableproduct" class="tableproduct">
-                                                </tbody>
-                                            </table>
+                                <div class="" id="formaddmanyproduct" >
+                                    <form action="/request/store" method="POST" enctype="multipart/form-data">
+                                    {{csrf_field()}}
+                                    <div class="form-group">
+                                        <label for="inputUser" class="form-label hidden">User</label>
+                                        <input name="user_id" type="hidden" class="form-control" id="inputUser" value="{{ auth()->user()->id }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="area_id" type="hidden" class="form-control" id="inputArea" value="{{ auth()->user()->division->area->id }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="request_type_id" type="hidden" class="form-control" id="inputRequestTypeId" value="">
+                                    </div>
+                                    <div>
+                                        <div class="form-group" >
+                                            <div class="card-body table-responsive p-0" style="min-height: 300px;">
+                                                <table class="table table-head-fixed text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nama Barang</th>
+                                                            <th style="width:15%;" id="th-qty-sisa">Qty Sisa</th>
+                                                            <th style="width:15%;">Qty Req</th>
+                                                            <th style="width:30%;" id="th-alasan">Alasan</th>
+                                                            <th style="width:30%;" id="th-no-nota">Ket / No nota yg akan dikirim</th>
+                                                            <th style="width:10%;">
+                                                                <a href="#addproduct" class="badge bg-success" id="addProduct">Add <span class="lnr lnr-plus-circle"></span></a>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tableproduct" class="tableproduct">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="inputRequestFile">
+                                            <label for="inputRequestFile" class="form-label" id="label-approved-file">Upload bukti foto bahwa pengajuan telah disetujui Atasan(jpg,jpeg,png) </label>
+                                            <label for="inputRequestFile" class="form-label" id="label-nota-file">Upload bukti foto nota lama dengan nomor nota yang terlihat jelas (jpg,jpeg,png) </label>
+                                            <input type="file" name="request_file" class="form-control">
+                                        </div>
+                                        <div class="form-group" id="inputRequestFile2">
+                                            <label for="inputRequestFile2" class="form-label" id="label-approved-file-2">Upload bukti foto bahwa pengajuan telah disetujui COO (jpg,jpeg,png) </label>
+                                            <input type="file" name="request_file_2" class="form-control">
                                         </div>
                                     </div>
-                                    <div class="form-group" id="inputRequestFile">
-                                        <label for="inputRequestFile" class="form-label" id="label-approved-file">Upload bukti foto bahwa pengajuan telah disetujui Atasan(jpg,jpeg,png) </label>
-                                        <label for="inputRequestFile" class="form-label" id="label-nota-file">Upload bukti foto nota lama dengan nomor nota yang terlihat jelas (jpg,jpeg,png) </label>
-                                        <input type="file" name="request_file" class="form-control">
-                                    </div>
-                                    <div class="form-group" id="inputRequestFile2">
-                                        <label for="inputRequestFile2" class="form-label" id="label-approved-file-2">Upload bukti foto bahwa pengajuan telah disetujui COO (jpg,jpeg,png) </label>
-                                        <input type="file" name="request_file_2" class="form-control">
-                                    </div>
+                                    <br>
+                                    <button type="submit" class="btn btn-info" onclick="return confirm('Pengajuan ini tanpa revisi, pastikan pengajuan sudah benar!!')">SIMPAN</button>
                                 </div>
-                                <br>
-                                <button type="submit" class="btn btn-info" onclick="return confirm('Pengajuan ini tanpa revisi, pastikan pengajuan sudah benar!!')">SIMPAN</button>
+                                </form>
                             </div>
-                            </form>
 
                         <!-- <div class=""  id="formaddproduct">
                             <form action="/request/store" method="POST" enctype="multipart/form-data">

@@ -21,39 +21,45 @@
                         <div class="panel">
                             <div class="panel-heading">
                                 <div class="col-md-12">
-                                    <div class="col-md-2">
-                                        <h3 class="panel-title">Perjanjian Sewa</h3>
-                                        <br>
+                                    <div class="col-md-12" style="margin-bottom: 20px;">
+                                        <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="/dashboard">Beranda</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">Perjanjian Sewa</li>
+                                        </ol>
+                                        </nav>
                                     </div>
-                                    <div class="col-md-3 text-center">
-                                    <form class="form-inline" id="search_form" action="/rent">
-                                        <div class="form-group">
-                                        <input type="text" class="form-control" name="search" placeholder="Cari ..." style="width: 140px;">
-                                        <a href="javascript:{}" onclick="document.getElementById('search_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
-                                        </div>
-                                    </form>
-                                    </div>
-                                    <div class="col-md-3 text-right">
-                                        <form class="form-inline" id="inputStatus" action="/rent">
+                                    <div class="col-md-12" style="margin-bottom: 30px;">
+                                        <div class="col-md-5 text-center">
+                                        <form class="form-inline" id="search_form" action="/rent">
                                             <div class="form-group">
-                                            <select class="form-control" name="selectStatus">
-                                                <option selected value="">-- Status --</option>
-                                                <option value="BERJALAN">BERJALAN</option>
-                                                <!-- <option value="PEMBAHARUAN">PEMBAHARUAN</option> -->
-                                                <option value="TUTUP">TUTUP</option>
-                                                <option value="REFUND">REFUND</option>
-                                            </select>
-                                            <a href="javascript:{}" onclick="document.getElementById('inputStatus').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                            <input type="text" class="form-control" name="search" placeholder="Cari ..." style="width: 140px;">
+                                            <a href="javascript:{}" onclick="document.getElementById('search_form').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
                                             </div>
                                         </form>
+                                        </div>
+                                        <div class="col-md-3 text-right">
+                                            <form class="form-inline" id="inputStatus" action="/rent">
+                                                <div class="form-group">
+                                                <select class="form-control" name="selectStatus">
+                                                    <option selected value="">-- Status --</option>
+                                                    <option value="BERJALAN">BERJALAN</option>
+                                                    <!-- <option value="PEMBAHARUAN">PEMBAHARUAN</option> -->
+                                                    <option value="TUTUP">TUTUP</option>
+                                                    <option value="REFUND">REFUND</option>
+                                                </select>
+                                                <a href="javascript:{}" onclick="document.getElementById('inputStatus').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-4 text-right">
+                                            <a href="/rent/create" class="btn btn-info" data-toggle="modal" data-target="#addRentsModal" data-toggle="tooltip" data-placement="top" title="Tambah data baru"><span class="lnr lnr-plus-circle"></span></a>
+                                            <a href="/rent/export" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Export Perjanjian Sewa"><span class="lnr lnr-download"></span></a>
+                                            <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import Perjanjian Sewa"><span class="lnr lnr-upload"></span></a>
+                                            <a href="/rent/export/template" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
+                                        </div>
+                                        <br>
                                     </div>
-                                    <div class="col-md-4 text-right">
-                                        <a href="/rent/create" class="btn btn-info" data-toggle="modal" data-target="#addRentsModal" data-toggle="tooltip" data-placement="top" title="Tambah data baru"><span class="lnr lnr-plus-circle"></span></a>
-                                        <a href="/rent/export" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Export Perjanjian Sewa"><span class="lnr lnr-download"></span></a>
-                                        <a class="btn btn-success" data-toggle="modal" data-target=".importModal" data-toggle="tooltip" data-placement="top" title="Import Perjanjian Sewa"><span class="lnr lnr-upload"></span></a>
-                                        <a href="/rent/export/template" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Download template"><span class="lnr lnr-text-align-justify"></span></a>
-                                    </div>
-                                    <br>
                                 </div>
                             </div>
                             <br><br><br>
@@ -305,7 +311,7 @@
                                     </tbody>
                                 </table>
                                 <div style="float:right">
-                                    {{ $rents->links() }}
+                                    {{ $rents->appends(Request::except('page'))->links() }}
                                 </div>
                             </div>
                         </div>

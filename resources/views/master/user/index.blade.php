@@ -67,12 +67,12 @@
                                     <td>{{ $user->role->role }}</td>
                                     <td>{{ $user->approval->fullname }}</td>
                                     <td class="text-center">
-                                        <a href="/user/{{$user->id}}/edit" class="btn btn-warning btn-sm"><span class="lnr lnr-pencil"></span></a>
+                                        <a href="/user/{{$user->id}}/edit" class="btn btn-warning btn-xs"><span class="lnr lnr-pencil"></span></a>
                                         @if ($user->deleted_at)
-                                            <a href="/user/{{ $user->id }}/active" class="btn btn-danger btn-sm" style="width: 50px"
+                                            <a href="/user/{{ $user->id }}/active" class="btn btn-danger btn-xs"
                                                 onclick="return confirm('Mengaktifkan kembali user {{ $user->fullname }}?')"><span class="lnr lnr-cross-circle"></span></a>
                                         @else
-                                            <a href="/user/{{$user->id}}/delete" class="btn btn-success btn-sm" style="width: 50px"
+                                            <a href="/user/{{$user->id}}/delete" class="btn btn-success btn-xs"
                                                 onclick="return confirm('Apalah anda yakin menonaktifkan user {{ $user->fullname }}?')"><span class="lnr lnr-checkmark-circle"></span></a>
                                         @endif
                                     </td>
