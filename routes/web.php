@@ -47,6 +47,9 @@ Route::get('logout', [AuthController::class, 'logout']);
 Route::get('product/get', [ProductController::class, 'get']);
 Route::get('unit_type/get', [UnitTypeController::class, 'get']);
 
+#SCAN
+Route::get('scanqr', [AuthController::class, 'scanqr']);
+
 ##EXPORT
     ##USER
     Route::get('/user/export',[UserController::class,'export']);

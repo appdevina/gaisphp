@@ -71,7 +71,25 @@
                                             @if (auth()->user()->role_id == 3 && in_array(auth()->user()->division_id, [9, 12, 80]))
                                             <a href="/editRequest/{{$detail->id}}/{{$requestBarang->id}}" class="btn btn-warning" type="button"><span class="lnr lnr-pencil"></span></a>
                                             @endif   
+                                            <a href="#" data-toggle="modal" data-target="#qrModal{{$detail->id}}" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" title="Create QR Code"><i class="fa fa-qrcode"></i></a>
                                             </td> 
+
+                                            <!-- Modal QR -->
+                                            <div class="modal fade" id="qrModal{{$detail->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="myModalLabel">QR Code</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body" style="margin: 0 auto; width: 230px;">
+                                                            <div>{!! DNS2D::getBarcodeHTML(strval($detail->id), 'QRCODE') !!}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </tr>
                                         @endforeach
                                     </tbody>

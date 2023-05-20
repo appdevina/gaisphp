@@ -28,6 +28,11 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
+    public function scanqr()
+    {
+        return view('auths.scanqr');
+    }
+
     /**
      * Display a listing of the resource.
      *
