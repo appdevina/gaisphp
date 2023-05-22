@@ -48,7 +48,7 @@
 	<div id="wrapper">
 		<div class="vertical-align-wrap">
 			<div class="vertical-align-middle">
-				<div class="auth-box" style="height: 1400px; !important">
+				<div class="auth-box" style="height: 1000px; !important">
 					<div class="left">
 						<div class="content">
 							<div class="header">
@@ -60,14 +60,14 @@
 								<div class="form-group">
 									<div class="row">
 										<div class="col-md-12">
-											<h5><strong>Scan QR Pengajuan</strong></h5>
+											<h5><strong>Scan QR Barang</strong></h5>
 										</div>
 									</div>
 								</div>
 								<div class="form-group">
 									<div class="row">
 										<div class="col-md-4">
-											<h5><strong>Barang :</strong></h5>
+											<h5><strong>Nama Barang :</strong></h5>
 										</div>
 										<div class="col-md-8">
 											<input type="text" id="product" class="form-control">
@@ -77,121 +77,30 @@
 								<div class="form-group">
 									<div class="row">
 										<div class="col-md-4">
-											<h5><strong>Jml Request :</strong></h5>
+											<h5><strong>Tipe Unit :</strong></h5>
 										</div>
 										<div class="col-md-8">
-											<input type="text" id="qty_request" class="form-control">
-										</div>
-									</div>
-								</div>
-								<!-- <div class="form-group">
-									<div class="row">
-										<div class="col-md-4">
-											<h5><strong>Jml Sisa :</strong></h5>
-										</div>
-										<div class="col-md-8">
-											<input type="text" id="qty_remaining" class="form-control">
-										</div>
-									</div>
-								</div> -->
-								<div class="form-group">
-									<div class="row">
-										<div class="col-md-4">
-											<h5><strong>Jml Approved :</strong></h5>
-										</div>
-										<div class="col-md-8">
-											<input type="text" id="qty_approved" class="form-control">
+											<input type="text" id="unittype" class="form-control">
 										</div>
 									</div>
 								</div>
 								<div class="form-group">
 									<div class="row">
 										<div class="col-md-4">
-											<h5><strong>Keterangan :</strong></h5>
+											<h5><strong>Harga :</strong></h5>
 										</div>
 										<div class="col-md-8">
-											<input type="text" id="description" class="form-control">
-										</div>
-									</div>
-								</div>
-								<hr>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-md-4">
-											<h5><strong>Pengaju :</strong></h5>
-										</div>
-										<div class="col-md-8">
-											<input type="text" id="name" class="form-control">
+											<input type="text" id="price" class="form-control">
 										</div>
 									</div>
 								</div>
 								<div class="form-group">
 									<div class="row">
 										<div class="col-md-4">
-											<h5><strong>Tanggal :</strong></h5>
+											<h5><strong>Kategori :</strong></h5>
 										</div>
 										<div class="col-md-8">
-											<input type="text" id="date" class="form-control">
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-md-4">
-											<h5><strong>Status PO :</strong></h5>
-										</div>
-										<div class="col-md-8">
-											<input type="text" id="status_po" class="form-control">
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-md-4">
-											<h5><strong>Diproses oleh :</strong></h5>
-										</div>
-										<div class="col-md-8">
-											<input type="text" id="closed_by" class="form-control">
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-md-4">
-											<h5><strong>Diproses pada :</strong></h5>
-										</div>
-										<div class="col-md-8">
-											<input type="text" id="closed_at" class="form-control">
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-md-4">
-											<h5><strong>Status Client :</strong></h5>
-										</div>
-										<div class="col-md-8">
-											<input type="text" id="status_client" class="form-control">
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-md-4">
-											<h5><strong>Catatan GA :</strong></h5>
-										</div>
-										<div class="col-md-8">
-											<input type="text" id="notes" class="form-control">
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-md-4">
-											<h5><strong>Catatan User :</strong></h5>
-										</div>
-										<div class="col-md-8">
-											<input type="text" id="user_notes" class="form-control">
+											<input type="text" id="category" class="form-control">
 										</div>
 									</div>
 								</div>
@@ -219,11 +128,13 @@
 			// handle the scanned code as you like, for example:
 			// console.log(`Code matched = ${decodedText}`, decodedResult);
 			$("#result").val(decodedText);
+			console.log(decodedText);
+
 			$('#loading').show();
 
 			// Send AJAX request to search data
 			$.ajax({
-				url: '/search',
+				url: '/search-product',
 				method: 'POST',
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -232,39 +143,24 @@
 					id: decodedText
 				},
 				success: function(response) {
+					// Handle the response from the server
+					console.log(response);
+
 					if (response.length > 0) {
 						var data = response[0];
-						var requestDetail = data.request_detail.find(detail => detail.id == decodedText);
-						if (requestDetail) {
-							$('#product').val(requestDetail.product.product);
-							$('#qty_approved').val(requestDetail.qty_approved);
-							$('#qty_remaining').val(requestDetail.qty_remaining);
-							$('#qty_request').val(requestDetail.qty_request);
-							$('#description').val(requestDetail.description);
-						}
 
-						var requestApproval = data.request_approval;
-						if (requestApproval) {
-							var executor = requestApproval.find(detail => detail.approval_type == 'EXECUTOR');
-							$('#closed_by').val(executor.user?.fullname ?? '');
-							var closedAt = moment(executor.approved_at).format('DD-MMM-YYYY HH:mm') ?? '';
-							$('#closed_at').val(closedAt);
-						}
-
-						$('#name').val(data.user.fullname);
-						var date = moment(data.date).format('DD-MMM-YYYY HH:mm');
-						$('#date').val(date);
-						$('#status_po').val(data.status_po === 0 ? 'TIDAK' : 'YA');
-						$('#status_client').val(data.status_client === 0 ? 'MENUNGGU' : (data.status_client === 1 ? 'SELESAI' : 'DIBATALKAN'));
-						$('#notes').val(data.notes);
-						$('#user_notes').val(data.user_notes);
+						$('#product').val(data.product);
+						$('#category').val(data.category.category);
+						$('#unittype').val(data.unit_type.unit_type);
+						$('#price').val(data.price);
 					}
 					$('#loading').hide();
 				},
 				error: function(xhr, status, error) {
 					console.error(xhr.status + ': ' + xhr.statusText);
 					console.error(error);
-					$('#loading').hide();
+
+					 $('#loading').hide();
 				}
 			});
 		}

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\RequestBarang;
+use App\Models\RequestDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,6 +34,34 @@ class AuthController extends Controller
     public function scanqr()
     {
         return view('auths.scanqr');
+    }
+
+    public function search(Request $request)
+    {
+        $id = $request->input('id');
+
+        $requestId = RequestDetail::where('id', $id)->pluck('request_id');
+        $requestBarang = RequestBarang::with('user','closedby','request_detail', 'request_detail.product', 'request_type', 'request_approval', 'request_approval.user')
+        ->where('id', $requestId)
+        ->get();
+
+        return response()->json($requestBarang);
+    }
+
+    public function productqr()
+    {
+        return view('auths.productqr');
+    }
+
+    public function searchProduct(Request $request)
+    {
+        $id = $request->input('id');
+
+        $product = Product::with('unit_type','category')
+        ->where('id', $id)
+        ->get();
+
+        return response()->json($product);
     }
 
     /**

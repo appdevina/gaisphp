@@ -50,6 +50,15 @@
 					</div>
 				</li>
 				<li>
+					<a href="#subPagesScanQR" data-toggle="collapse" class="collapsed"><i class="fa fa-qrcode"></i> <span>SCAN QR</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+					<div id="subPagesScanQR" class="collapse ">
+						<ul class="nav">
+							<li><a href="/scanqr" class="{{ Request::is('scanqr') ? 'active' : '' }}"><i class="fa fa-qrcode"></i>QR PENGAJUAN</a></li>
+							<li><a href="/productqr" class="{{ Request::is('productqr') ? 'active' : '' }}"><i class="fa fa-qrcode"></i>QR BARANG</a></li>						
+						</ul>
+					</div>
+				</li>
+				<li>
 					<a href="#subPagesSettings" data-toggle="collapse" class="collapsed"><i class="lnr lnr-cog"></i> <span>PENGATURAN</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
 					<div id="subPagesSettings" class="collapse ">
 						<ul class="nav">
