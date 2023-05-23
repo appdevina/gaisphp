@@ -118,7 +118,7 @@
 								<div class="form-group">
 									<div class="row">
 										<div class="col-md-4">
-											<h5><strong>Pengaju :</strong></h5>
+											<h5><strong>Pemohon :</strong></h5>
 										</div>
 										<div class="col-md-8">
 											<input type="text" id="name" class="form-control">

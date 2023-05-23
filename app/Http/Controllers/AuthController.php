@@ -7,6 +7,7 @@ use App\Models\RequestBarang;
 use App\Models\RequestDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AuthController extends Controller
 {
@@ -46,6 +47,14 @@ class AuthController extends Controller
         ->get();
 
         return response()->json($requestBarang);
+    }
+
+    public function printrequestqr(Request $request, RequestDetail $id)
+    {
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadHTML(DNS2D::getBarcodeHTML(strval($id), 'QRCODE'));
+
+        return $pdf->download('itsolutionstuff.pdf');
     }
 
     public function productqr()

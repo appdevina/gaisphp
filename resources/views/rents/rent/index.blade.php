@@ -80,8 +80,8 @@
                                         <th>Tanggal Reminder</th>
                                         <th>Sewa pertahun</th>
                                         <th>Total Tagihan</th>
-                                        <th>CV.CS</th>
-                                        <th>Online</th>
+                                        <th>Dana PKP</th>
+                                        <th>Dana NON-PKP</th>
                                         <th>Sisa Tagihan</th>
                                         <th>Status Tagihan</th>
                                         <th>BukPot</th>

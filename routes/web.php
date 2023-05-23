@@ -49,6 +49,7 @@ Route::get('unit_type/get', [UnitTypeController::class, 'get']);
 
 #SCAN
 Route::get('scanqr', [AuthController::class, 'scanqr']);
+Route::get('/printrequestqr/{{id}}', [AuthController::class, 'printrequestqr']);
 Route::post('search', [AuthController::class, 'search']);
 
 Route::get('productqr', [AuthController::class, 'productqr']);

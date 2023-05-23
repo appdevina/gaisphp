@@ -79,6 +79,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h4 class="modal-title" id="myModalLabel">QR Code</h4>
+                                                    <a href="/printrequestqr/{{$product->id}}" class="btn btn-info btn-sm">Print</a>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>

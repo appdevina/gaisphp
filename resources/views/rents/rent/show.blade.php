@@ -54,8 +54,8 @@
                                             ? 1 * $detailRent->rent_per_year 
                                             : ceil(Carbon\Carbon::parse($detailRent->expired_date)->diffInDays($detailRent->join_date) / 366) * $detailRent->rent_per_year, 0, ',', '.') 
                                     }}</h5>
-                                    <h5><strong>Dana CV.CS : </strong>Rp {{ number_format($detailRent->cvcs_fund, 0, ',', '.') }}</h5>
-                                    <h5><strong>Dana Online : </strong>Rp {{ number_format($detailRent->online_fund, 0, ',', '.') }}</h5>
+                                    <h5><strong>Dana PKP : </strong>Rp {{ number_format($detailRent->cvcs_fund, 0, ',', '.') }}</h5>
+                                    <h5><strong>Dana NON-PKP : </strong>Rp {{ number_format($detailRent->online_fund, 0, ',', '.') }}</h5>
                                     <h5><strong>Sisa Tagihan : </strong>
                                     Rp {{ number_format(
                                             Carbon\Carbon::parse($detailRent->expired_date)->diffInDays($detailRent->join_date) / 366 == 1 
@@ -106,8 +106,8 @@
                                     <th>Tanggal Reminder</th>
                                     <th>Sewa pertahun</th>
                                     <th>Total Tagihan</th>
-                                    <th>CV.CS</th>
-                                    <th>Online</th>
+                                    <th>Dana PKP</th>
+                                    <th>Dana NON-PKP</th>
                                     <th>Sisa Tagihan</th>
                                     <th>Status Tagihan</th>
                                     <th>BukPot</th>
