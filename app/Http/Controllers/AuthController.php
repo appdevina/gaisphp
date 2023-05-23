@@ -8,6 +8,8 @@ use App\Models\RequestDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\App;
+use Milon\Barcode\DNS2D;
 
 class AuthController extends Controller
 {
@@ -49,30 +51,40 @@ class AuthController extends Controller
         return response()->json($requestBarang);
     }
 
-    public function printrequestqr(Request $request, RequestDetail $id)
+    public function printrequestqr($id)
     {
         $pdf = App::make('dompdf.wrapper');
-        $pdf->loadHTML(DNS2D::getBarcodeHTML(strval($id), 'QRCODE'));
+        $barcode = new DNS2D();
+        $pdf->loadHTML($barcode->getBarcodeHTML(strval($id), 'QRCODE'));
 
-        return $pdf->download('itsolutionstuff.pdf');
+        return $pdf->stream('requestqr.pdf');
     }
-
+    
     public function productqr()
     {
         return view('auths.productqr');
     }
-
+    
     public function searchProduct(Request $request)
     {
         $id = $request->input('id');
-
+        
         $product = Product::with('unit_type','category')
         ->where('id', $id)
         ->get();
-
+        
         return response()->json($product);
     }
+    
+    public function printproductqr($id)
+    {
+        $pdf = App::make('dompdf.wrapper');
+        $barcode = new DNS2D();
+        $pdf->loadHTML($barcode->getBarcodeHTML(strval($id), 'QRCODE'));
 
+        return $pdf->stream('productqr.pdf');
+    }
+    
     /**
      * Display a listing of the resource.
      *

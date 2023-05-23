@@ -498,8 +498,8 @@ class RequestController extends Controller
     {
         try {
             $this->validate($request, [
-                'request_file' => 'required|file|image|mimes:jpeg,png,jpg,pdf',
-                'request_file_2' => 'file|image|mimes:jpeg,png,jpg,pdf',
+                'request_file' => 'required|file|mimes:jpeg,png,jpg,pdf',
+                'request_file_2' => 'file|mimes:jpeg,png,jpg,pdf',
             ]);
             
             if ($fieldName == 'request_file') {

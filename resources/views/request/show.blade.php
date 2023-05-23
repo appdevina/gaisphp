@@ -84,8 +84,16 @@
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
-                                                        <div class="modal-body" style="margin: 0 auto; width: 230px;">
-                                                            <div>{!! DNS2D::getBarcodeHTML(strval($detail->id), 'QRCODE') !!}</div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-md-12 text-right">
+                                                                    <a href="/printrequestqr/{{$detail->id}}" class="btn btn-info btn-sm"><span class="lnr lnr-printer"></span></a>
+                                                                </div>
+                                                                <br>
+                                                                <div class="col-md-12 text-center">
+                                                                    <div style="display: inline-block;">{!! DNS2D::getBarcodeHTML(strval($detail->id), 'QRCODE') !!}</div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

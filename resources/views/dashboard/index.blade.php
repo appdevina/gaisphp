@@ -26,28 +26,6 @@
                             <div class="panel-body">
                                 <!-- OVERVIEW -->
                                 <div class="row">
-                                    <a href="/request">
-                                        <div class="col-md-3">
-                                            <div class="metric">
-                                                <span class="icon"><i class="fa fa-shopping-cart"></i></span>
-                                                <p>
-                                                    <span class="number">{{$totalRequest}}</span>
-                                                    <span class="title">Pengajuan</span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="/problemReport">
-                                        <div class="col-md-3">
-                                            <div class="metric">
-                                                <span class="icon"><i class="fa fa-comment"></i></span>
-                                                <p>
-                                                    <span class="number">{{$totalProblem}}</span>
-                                                    <span class="title">Lapor Gangguan</span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </a>
                                     <a href="/product">
                                         <div class="col-md-3">
                                             <div class="metric">
@@ -89,6 +67,46 @@
                                                     <span class="number">{{$totalRent}}</span>
                                                     <span class="title">Perjanjian Sewa</span>
                                                 </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                     <a href="/request">
+                                        <div class="col-md-3">
+                                            <div class="metric">
+                                                <span class="icon"><i class="fa fa-shopping-cart"></i></span>
+                                                <p>
+                                                    <span class="number">{{$totalRequest}}</span>
+                                                    <span class="title">Pengajuan</span>
+                                                </p>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p style="opacity: 70%;">Selesai: {{$requestDone}}</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p style="opacity: 70%;">Pending: {{$requestPending}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="/problemReport">
+                                        <div class="col-md-3">
+                                            <div class="metric">
+                                                <span class="icon"><i class="fa fa-comment"></i></span>
+                                                <p>
+                                                    <span class="number">{{$totalProblem}}</span>
+                                                    <span class="title">Lapor Gangguan</span>
+                                                </p>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p style="opacity: 70%;">Selesai: {{$problemDone}}</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p style="opacity: 70%;">Pending: {{$problemPending}}</p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </a>

@@ -79,13 +79,20 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h4 class="modal-title" id="myModalLabel">QR Code</h4>
-                                                    <a href="/printrequestqr/{{$product->id}}" class="btn btn-info btn-sm">Print</a>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-                                                <div class="modal-body" style="margin: 0 auto; width: 230px;">
-                                                    <div>{!! DNS2D::getBarcodeHTML(strval($product->id), 'QRCODE') !!}</div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12 text-right">
+                                                            <a href="/printproductqr/{{$product->id}}" class="btn btn-info btn-sm"><span class="lnr lnr-printer"></span></a>
+                                                        </div>
+                                                        <br>
+                                                        <div class="col-md-12 text-center">
+                                                            <div style="display: inline-block;">{!! DNS2D::getBarcodeHTML(strval($product->id), 'QRCODE') !!}</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -78,12 +78,12 @@
                                             </div>
                                         </div>
                                         <div class="form-group" id="inputRequestFile">
-                                            <label for="inputRequestFile" class="form-label" id="label-approved-file">Upload bukti foto bahwa pengajuan telah disetujui Atasan(jpg,jpeg,png) </label>
-                                            <label for="inputRequestFile" class="form-label" id="label-nota-file">Upload bukti foto nota lama dengan nomor nota yang terlihat jelas (jpg,jpeg,png) </label>
+                                            <label for="inputRequestFile" class="form-label" id="label-approved-file">Upload bukti foto bahwa pengajuan telah disetujui Atasan(jpg,jpeg,png,pdf) </label>
+                                            <label for="inputRequestFile" class="form-label" id="label-nota-file">Upload bukti foto nota lama dengan nomor nota yang terlihat jelas (jpg,jpeg,png,pdf) </label>
                                             <input type="file" name="request_file" class="form-control">
                                         </div>
                                         <div class="form-group" id="inputRequestFile2">
-                                            <label for="inputRequestFile2" class="form-label" id="label-approved-file-2">Upload bukti foto bahwa pengajuan telah disetujui COO (jpg,jpeg,png) </label>
+                                            <label for="inputRequestFile2" class="form-label" id="label-approved-file-2">Upload bukti foto bahwa pengajuan telah disetujui COO (jpg,jpeg,png,pdf) </label>
                                             <input type="file" name="request_file_2" class="form-control">
                                         </div>
                                     </div>

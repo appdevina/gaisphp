@@ -24,7 +24,9 @@ class DashboardController extends Controller
     public function index()
     {
         $totalRequest = RequestBarang::count();
+        $requestDone = RequestBarang::where('status_client', 1)->count();
         $totalProblem = ProblemReport::count();
+        $problemDone = ProblemReport::where('status_client', 1)->count();
         $totalProduct = Product::count();
         $totalUser = User::count();
         $totalInsurance = Insurance::count();
@@ -94,6 +96,10 @@ class DashboardController extends Controller
             'totalRent' => $totalRent,
             'insurances' => $insurances,
             'rents' => $rents,
+            'problemDone' => $problemDone,
+            'problemPending' => $totalProblem - $problemDone,
+            'requestDone' => $requestDone,
+            'requestPending' => $totalRequest - $requestDone,
         ]);
     }
 
