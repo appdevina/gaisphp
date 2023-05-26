@@ -201,6 +201,7 @@ class RequestController extends Controller
                         ->orderBy('date','DESC')
                         ->paginate(30);
                     }
+                ##DIVISI WHM
                 } else if ($request->selectStatusAkhir != null && $userDivisi == 9) {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
                     ->whereHas('user.division.area', function ($query) {
@@ -210,17 +211,19 @@ class RequestController extends Controller
                     ->where('request_type_id', 2)
                     ->orderBy('date','DESC')
                     ->paginate(30);
+                ##DIVISI IT
                 } else if ($request->selectStatusAkhir != null && $userDivisi == 11) {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
                     ->where('user_id', $user)
                     ->where('status_client', $request->selectStatusAkhir)
                     ->orderBy('date','DESC')
                     ->paginate(30);
+                ##DIVISI AUDIT
                 } else if ($request->selectStatusAkhir != null && $userDivisi == 12) {
                     $requestBarangs = RequestBarang::with('user','closedby','request_detail','request_type')
-                    ->whereHas('user.division.area', function ($query) {
-                        $query->whereIn('area_id', [3,4,5]);
-                    })
+                    // ->whereHas('user.division.area', function ($query) {
+                    //     $query->whereIn('area_id', [3,4,5]);
+                    // })
                     ->where('status_client', $request->selectStatusAkhir)
                     ->where('request_type_id', 3)
                     ->orderBy('date','DESC')
@@ -252,9 +255,9 @@ class RequestController extends Controller
                 ##DIVISI AUDIT
                 } else if ($userDivisi == 12) {
                     $requestBarangs = RequestBarang::with('user.division.area','closedby','request_detail','request_type','request_approval')
-                    ->whereHas('user.division.area', function ($query) {
-                        $query->whereIn('area_id', [3,4,5]);
-                    })
+                    // ->whereHas('user.division.area', function ($query) {
+                    //     $query->whereIn('area_id', [3,4,5]);
+                    // })
                     ->where('request_type_id', 3)
                     ->orderBy('date', 'desc')
                     ->paginate(30);
@@ -357,6 +360,8 @@ class RequestController extends Controller
             ->where('status_client', '0')
             ->count();
 
+            // dd($pengajuanATK);
+
             $pengajuanNota = RequestBarang::with('user')
             ->where('user_id', $user)
             ->where('request_type_id', '3')
@@ -366,19 +371,52 @@ class RequestController extends Controller
             if ($pengajuanAsset >= 1 && $pengajuanATK >=1 && $pengajuanNota >=1) {
                 return redirect('request')->with(['error' => 'Harap menunggu hingga pengajuan diproses dan status akhir diselesaikan !']);
             }
+
+            //TRY LOGIC
+            $requestTypes = [];
+
+            if ($pengajuanAsset == 0) {
+                array_push($requestTypes, RequestType::find(1));
+            }
+
+            if ($pengajuanNota == 0) {
+                array_push($requestTypes, RequestType::find(3));
+            } 
+            
+            if ($pengajuanATK == 0) {
+                array_push($requestTypes, RequestType::find(2));
+            }
+            // END LOGIC
             
             $startDate = '2023-05-03';
             $endDate = '2023-05-31';
             
             //TAMPILKAN OPSI PENGAJUAN ATK BERDASARKAN TANGGAL YANG DITENTUKAN
             if (now() > Carbon::createFromFormat('Y-m-d', $startDate) && now() < Carbon::createFromFormat('Y-m-d', $endDate)) {
-                $request_types = $pengajuanAsset >= 1 ? RequestType::where('id', '!=', 1)->get() : ($pengajuanNota >= 1 ? RequestType::where('id', '!=', 3)->get() : ($pengajuanATK >= 1 ? RequestType::where('id', '!=', 2)->get() : RequestType::all()));
+                $request_types = [];
+
+                if ($pengajuanAsset == 0) {
+                    array_push($requestTypes, RequestType::find(1));
+                }
+                if ($pengajuanNota == 0) {
+                    array_push($requestTypes, RequestType::find(3));
+                } 
+                if ($pengajuanATK == 0) {
+                    array_push($requestTypes, RequestType::find(2));
+                }
             } else {
-                $request_types = $pengajuanAsset >= 1 ? RequestType::whereNotIn('id', [1,2]) : ($pengajuanNota >= 1 ? RequestType::whereNotIn('id', [3,2]) ->get() : ($pengajuanATK >= 1 ? RequestType::where('id', '!=', 2)->get() : RequestType::whereNotIn('id', [2])->get()));
+                $request_types = [];
+                
+                if ($pengajuanAsset == 0) {
+                    array_push($requestTypes, RequestType::find(1));
+                }
+                if ($pengajuanNota == 0) {
+                    array_push($requestTypes, RequestType::find(3));
+                } 
             }
 
             return view('request.addRequest', [
-                'request_types' => $pengajuanAsset >= 1 ? RequestType::where('id', '!=', 1)->get() : ($pengajuanNota >= 1 ? RequestType::where('id', '!=', 3)->get() : ($pengajuanATK >= 1 ? RequestType::where('id', '!=', 2)->get() : RequestType::all())),
+                'request_types' => $requestTypes,
                 'products' => Product::all(),
                 'pengajuanAsset' => $pengajuanAsset,
             ]);
@@ -626,6 +664,7 @@ class RequestController extends Controller
                 $getData->save();
 
                 $requestBarang->notes = $request->notes;
+                $requestBarang->status_client = 4;
                 $requestBarang->save();
             }
             
@@ -636,6 +675,16 @@ class RequestController extends Controller
                 
                 $requestBarang->notes = $request->notes;
                 $requestBarang->status_client = 2;
+                $requestBarang->save();
+            }
+
+            if($request->status == 'PROCESSED'){
+                $getData->approved_by = Auth::user()->id;
+                $getData->approved_at = Carbon::now()->format('Y-m-d H:i:s');
+                $getData->save();
+                
+                $requestBarang->notes = $request->notes;
+                $requestBarang->status_client = 3;
                 $requestBarang->save();
             }
 

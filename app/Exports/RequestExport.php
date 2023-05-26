@@ -143,6 +143,23 @@ class RequestExport implements FromArray, WithHeadings, WithMapping
                         ->whereBetween('created_at',[$this->date1,$this->date2])
                         ->get();
                         break;
+                    case 5:
+                        $requests = RequestBarang::with('user.division', 'user.division.area','closedby','request_detail.product','request_type')
+                        ->where('request_type_id', $request_type_id)
+                        ->whereHas('request_detail', function ($query) use ($product) {
+                            $query->where('product_id', $product->id);
+                            
+                        })
+                        ->whereHas('user', function ($query) use ($division) {
+                            $query->where('division_id', $division->id);
+                        })
+                        ->whereHas('user.division.area', function ($query) use ($area_id) {
+                            $query->whereIn('area_id', [$area_id]);
+                        })
+                        ->where('status_client', 4)
+                        ->whereBetween('created_at',[$this->date1,$this->date2])
+                        ->get();
+                        break;
                     default:
                         $requests = RequestBarang::with('user.division', 'user.division.area','closedby','request_detail.product','request_type')
                         ->where('request_type_id', $request_type_id)

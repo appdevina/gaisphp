@@ -25,7 +25,7 @@
 						<span class="badge bg-danger">{{ $totalNotif }}</span>
 					</a>
 					<ul class="dropdown-menu notifications">
-						@if ($requestApprove->where('status_client', '==', 0)->count() > 0)
+						@if ($requestApprove->where('status_client', '==', 4)->count() > 0)
 							@foreach ($requestApprove as $ra) 
 								@foreach ($ra->request_approval as $ral)
 									@if ($ral->approval_type == 'EXECUTOR' && $ral->approved_by != null)

@@ -91,7 +91,9 @@
                                                                 </div>
                                                                 <br>
                                                                 <div class="col-md-12 text-center">
-                                                                    <div style="display: inline-block;">{!! DNS2D::getBarcodeHTML(strval($detail->id), 'QRCODE') !!}</div>
+                                                                    <div style="display: inline-block; margin-bottom: 50px;">{!! DNS2D::getBarcodeHTML(strval($detail->id), 'QRCODE') !!}</div>
+                                                                    <br>
+                                                                    <div style="display: inline-block;">{!! DNS1D::getBarcodeHTML(strval($detail->id), 'C39') !!}</div>
                                                                 </div>
                                                             </div>
                                                         </div>

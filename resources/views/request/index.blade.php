@@ -48,6 +48,8 @@
                                             <option selected value="">-- Status Akhir --</option>
                                             <option value="undone">BELUM PROSES</option>
                                             <option value="0">MENUNGGU</option>
+                                            <option value="3">DIPROSES</option>
+                                            <option value="4">SELESAI</option>
                                             <option value="1">DITERIMA</option>
                                             <option value="2">DIBATALKAN</option>
                                         </select>
@@ -172,6 +174,10 @@
                                                     {{"text-warning"}}
                                                 @elseif ($reqbar->status_client == '1')
                                                     {{"text-success"}}
+                                                @elseif ($reqbar->status_client == '3')
+                                                    {{"text-info"}}
+                                                @elseif ($reqbar->status_client == '4')
+                                                    {{"text-info"}}
                                                 @else
                                                     {{"text-danger"}}
                                                 @endif
@@ -180,6 +186,10 @@
                                                     {{"MENUNGGU"}}
                                                 @elseif ($reqbar->status_client == '1')
                                                     {{"DITERIMA"}}
+                                                @elseif ($reqbar->status_client == '3')
+                                                    {{"DIPROSES"}}
+                                                @elseif ($reqbar->status_client == '4')
+                                                    {{"SELESAI"}}
                                                 @else
                                                     {{"DIBATALKAN"}}
                                                 @endif
@@ -199,10 +209,14 @@
                                                     @else
                                                         <!-- Sementara IT gabisa liat button edit -->
                                                         @if (auth()->user()->division_id != 11)
-                                                            @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_type_id >= 2)
+                                                            @if ($reqbar->status_client == 3)
                                                                 <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
-                                                            @elseif ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ACCOUNTING')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 1)
-                                                                <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
+                                                            @else
+                                                                @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_type_id >= 2)
+                                                                    <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
+                                                                @elseif ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ACCOUNTING')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 1)
+                                                                    <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
+                                                                @endif
                                                             @endif
                                                         @endif
                                                     @endif
@@ -217,7 +231,7 @@
                                                     @break
     
                                                 @default
-                                                    @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ENDUSER')->whereNull('approved_by')->isNotEmpty() && $reqbar->status_client != 2)
+                                                    @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ENDUSER')->whereNull('approved_by')->isNotEmpty() && $reqbar->status_client == 4)
                                                     <a href="/request/{{$reqbar->id}}/editStatusClient" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                                     @endif
                                                     @if ($reqbar->request_approval->where('approval_type', 'MANAGER')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->status_client != 2)
@@ -416,8 +430,9 @@
                                     <option selected value="">-- Filter --</option>
                                     <option value="0">BELUM PROSES</option>
                                     <option value="1">SUDAH PROSES</option>
+                                    <option value="5">SELESAI</option>
                                     <option value="4">DIBATALKAN</option>
-                                    <option value="3">TANPA YG DIBATALKAN</option>
+                                    <!-- <option value="3">TANPA YG DIBATALKAN</option> -->
                                     <option value="2">SEMUA</option>
                                 </select>
                         </div>

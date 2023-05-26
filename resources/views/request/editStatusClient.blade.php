@@ -40,8 +40,8 @@
                                     <div class="form-group">
                                         <label for="inputStatus" class="form-label">Status Client</label>
                                             <select class="form-control" id="status_client" name="status_client">
-                                                <option selected value="0">MENUNGGU</option>
-                                                <option value="1">DITERIMA</option>
+                                                <option {{ $requestBarang->status_client == 0 ? 'selected' : '' }} value="0">MENUNGGU</option>
+                                                <option {{ $requestBarang->status_client == 1 ? 'selected' : '' }} value="1">DITERIMA</option>
                                             </select>
                                     </div>
                                     <div class="form-group">

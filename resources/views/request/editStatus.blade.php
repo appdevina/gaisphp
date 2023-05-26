@@ -43,9 +43,10 @@
                                     <div class="form-group">
                                         <label for="inputStatus" class="form-label">Status</label>
                                             <select class="form-control" id="status" name="status">
-                                                <option selected value="PENDING">MENUNGGU</option>
-                                                <option value="CLOSED">SELESAI</option>
-                                                <option value="CANCELLED">DIBATALKAN</option>
+                                                <option {{ $requestBarang->status_client == 0 ? 'selected' : '' }} value="PENDING">MENUNGGU</option>
+                                                <option {{ $requestBarang->status_client == 3 ? 'selected' : '' }} value="PROCESSED">DIPROSES</option>
+                                                <option {{ $requestBarang->status_client == 1 ? 'selected' : '' }} value="CLOSED">SELESAI</option>
+                                                <option {{ $requestBarang->status_client == 2 ? 'selected' : '' }} value="CANCELLED">DIBATALKAN</option>
                                             </select>
                                     </div>
                                     <div class="form-group">

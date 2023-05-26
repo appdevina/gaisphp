@@ -23,7 +23,7 @@ $(document).ready(function () {
                 $("#tableproduct").append(
                     '<tr id="rowproduct' +
                         productindex +
-                        '"><td><select class="form-control" id="selectproduct' +
+                        '"><td><select class="form-control select2" id="selectproduct' +
                         productindex +
                         '" name="products[]" required></select></td>' +
                         ((request_type_id == 2 || request_type_id == 3) &&
@@ -37,6 +37,10 @@ $(document).ready(function () {
                         productindex +
                         '"><span class="lnr lnr-circle-minus"></span></a></td></tr>'
                 );
+                // Initialize Select2 on the select element
+                $("#selectproduct" + productindex).select2({
+                    placeholder: "Search for a product",
+                });
 
                 $.each(data, function (index, value) {
                     var productUnitType =
