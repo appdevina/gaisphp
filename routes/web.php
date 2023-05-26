@@ -71,6 +71,7 @@ Route::post('search-product', [AuthController::class, 'searchProduct']);
 
     ##REQUEST
     Route::post('/request/export',[RequestController::class,'export']);
+    Route::post('/request/exportMasterQR',[RequestController::class,'exportMasterQR']);
 
     ##INSURANCE
     Route::get('/insurance/export',[InsuranceController::class,'export']);

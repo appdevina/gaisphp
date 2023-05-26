@@ -117,6 +117,10 @@ $(document).ready(function () {
         parentEl: "#exportRequest .modal-body",
     });
 
+    $("#tanggal-export-qr").daterangepicker({
+        parentEl: "#exportQR .modal-body",
+    });
+
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });

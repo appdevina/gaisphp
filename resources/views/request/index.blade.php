@@ -71,6 +71,7 @@
                                     @endif
                                     @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6) || (auth()->user()->role_id == 3 && auth()->user()->division_id == 11))
                                         <a href="#exportRequest" data-toggle="modal" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Export pengajuan"><span class="lnr lnr-download"></span></a>
+                                        <a href="#exportQR" data-toggle="modal" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Export master QR pengajuan"><span class="lnr lnr-download">  </span><i class="fa fa-qrcode"></i></a>
                                     @endif
                                 </div>
                             </div>
@@ -231,7 +232,7 @@
                                                     @break
     
                                                 @default
-                                                    @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ENDUSER')->whereNull('approved_by')->isNotEmpty() && $reqbar->status_client == 4)
+                                                    @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ENDUSER')->whereNull('approved_by')->isNotEmpty() && ($reqbar->status_client == 4 || $reqbar->status_client == 0))
                                                     <a href="/request/{{$reqbar->id}}/editStatusClient" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                                     @endif
                                                     @if ($reqbar->request_approval->where('approval_type', 'MANAGER')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->status_client != 2)
@@ -435,6 +436,43 @@
                                     <!-- <option value="3">TANPA YG DIBATALKAN</option> -->
                                     <option value="2">SEMUA</option>
                                 </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Export</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Modal Export -->
+    <form action="request/exportMasterQR" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="modal fade" id="exportQR" aria-labelledby="exportQRtLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="exportQRtLabel">Export Laporan Pengajuan</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="inputRequestType" class="form-label">Tipe Pengajuan</label>
+                                <select class="form-control" id="request_type_id" name="request_type_id">
+                                   <option selected disabled>-- Pilih Tipe Pengajuan --</option>
+                                    @foreach ($request_types as $reqtype)
+                                        <option value="{{ $reqtype->id }}">
+                                            {{ $reqtype->request_type }}</option>
+                                    @endforeach
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="date" class="form-label">Tanggal</label>
+                                <form action="request">
+                                    <input type="text" class="form-control float-right" value="" name="exportQR"
+                                        id="tanggal-export-qr" required>
+                                </form>
                         </div>
                     </div>
                     <div class="modal-footer">

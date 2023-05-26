@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\RequestExport;
+use App\Exports\RequestMasterQRExport;
 use App\Models\Area;
 use App\Models\RequestType;
 use App\Models\RequestBarang;
@@ -606,7 +607,9 @@ class RequestController extends Controller
     public function updateStatusClient(Request $request, RequestBarang $requestBarang)
     {
         try {
-            if ($request->status_client == 0 && $request->user_notes == null) {
+            if ($request->status_client == 0) {
+                $requestBarang->user_notes = $request->user_notes;
+                $requestBarang->save();
                 return redirect('request')->with('success', 'Status masih menunggu !');
             }
             $requestBarang->status_client = $request->status_client;
@@ -789,5 +792,22 @@ class RequestController extends Controller
         }
 
         return Excel::download(new RequestExport($date1, $date2, $area_id, $request_type_id, $filter_request), 'pengajuan_'. str_replace(['/', '\\'], '_', $request_type) . '_'. $date1 . '_to_' . $date2 . '.xlsx');
+    }
+
+    public function exportMasterQR(Request $request){
+        
+        if ($request->exportQR) {
+            $data = explode('-', preg_replace('/\s+/', '', $request->exportQR));
+            $date1 = Carbon::parse($data[0])->format('Y-m-d');
+            // dd($date1);
+            $date2 = Carbon::parse($data[1])->format('Y-m-d');
+            $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+            //GET ADDITIONAL ID
+            // $area_id = $request->area_id;
+            $request_type_id = $request->request_type_id;
+            $request_type = RequestType::where('id', $request_type_id)->value('request_type');
+        }
+        
+        return Excel::download(new RequestMasterQRExport($date1, $date2, $request_type_id), 'QR_pengajuan_'. str_replace(['/', '\\'], '_', $request_type) . '_'. $date1 . '_to_' . $date2 . '.xlsx');
     }
 }
