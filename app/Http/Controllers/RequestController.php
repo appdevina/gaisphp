@@ -352,13 +352,13 @@ class RequestController extends Controller
             $pengajuanAsset = RequestBarang::with('user')
             ->where('user_id', $user)
             ->where('request_type_id', '1')
-            ->where('status_client', '0')
+            ->whereIn('status_client', [0, 3, 4])
             ->count();
             
             $pengajuanATK = RequestBarang::with('user')
             ->where('user_id', $user)
             ->where('request_type_id', '2')
-            ->where('status_client', '0')
+            ->whereIn('status_client', [0, 3, 4])
             ->count();
 
             // dd($pengajuanATK);
@@ -366,7 +366,7 @@ class RequestController extends Controller
             $pengajuanNota = RequestBarang::with('user')
             ->where('user_id', $user)
             ->where('request_type_id', '3')
-            ->where('status_client', '0')
+            ->whereIn('status_client', [0, 3, 4])
             ->count();
 
             if ($pengajuanAsset >= 1 && $pengajuanATK >=1 && $pengajuanNota >=1) {
@@ -393,28 +393,28 @@ class RequestController extends Controller
             $endDate = '2023-05-31';
             
             //TAMPILKAN OPSI PENGAJUAN ATK BERDASARKAN TANGGAL YANG DITENTUKAN
-            if (now() > Carbon::createFromFormat('Y-m-d', $startDate) && now() < Carbon::createFromFormat('Y-m-d', $endDate)) {
-                $request_types = [];
+            // if (now() > Carbon::createFromFormat('Y-m-d', $startDate) && now() < Carbon::createFromFormat('Y-m-d', $endDate)) {
+            //     $request_types = [];
 
-                if ($pengajuanAsset == 0) {
-                    array_push($requestTypes, RequestType::find(1));
-                }
-                if ($pengajuanNota == 0) {
-                    array_push($requestTypes, RequestType::find(3));
-                } 
-                if ($pengajuanATK == 0) {
-                    array_push($requestTypes, RequestType::find(2));
-                }
-            } else {
-                $request_types = [];
+            //     if ($pengajuanAsset == 0) {
+            //         array_push($request_types, RequestType::find(1));
+            //     }
+            //     if ($pengajuanNota == 0) {
+            //         array_push($request_types, RequestType::find(3));
+            //     } 
+            //     if ($pengajuanATK == 0) {
+            //         array_push($request_types, RequestType::find(2));
+            //     }
+            // } else {
+            //     $request_types = [];
                 
-                if ($pengajuanAsset == 0) {
-                    array_push($requestTypes, RequestType::find(1));
-                }
-                if ($pengajuanNota == 0) {
-                    array_push($requestTypes, RequestType::find(3));
-                } 
-            }
+            //     if ($pengajuanAsset == 0) {
+            //         array_push($request_types, RequestType::find(1));
+            //     }
+            //     if ($pengajuanNota == 0) {
+            //         array_push($request_types, RequestType::find(3));
+            //     } 
+            // }
 
             return view('request.addRequest', [
                 'request_types' => $requestTypes,
@@ -660,6 +660,16 @@ class RequestController extends Controller
             $getData = RequestApproval::where('request_id', $requestBarang->id)
             ->where('approval_type', 'EXECUTOR')
             ->first();
+
+            if($request->status == 'PENDING'){
+                $getData->approved_by = null;
+                $getData->approved_at = null;
+                $getData->save();
+
+                $requestBarang->notes = $request->notes;
+                $requestBarang->status_client = 0;
+                $requestBarang->save();
+            }
             
             if($request->status == 'CLOSED'){
                 $getData->approved_by = Auth::user()->id;

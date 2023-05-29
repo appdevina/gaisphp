@@ -16,7 +16,42 @@
                         <i class="fa fa-check-circle"></i> {{session('error')}}
                 </div>
                 @endif
-                @if (auth()->user()->role_id == 1)
+                @if (auth()->user()->role_id != 1)
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-headline">
+                            <!-- <div class="panel-heading">
+                                <h3 class="panel-title">Dashboard</h3>
+                            </div> -->
+                            <div class="panel-body">
+                                <!-- JUMBOTRON -->
+                                <div class="jumbotron" style="background-color:#2b333e !important;">
+                                    <h2 class="display-4" style="color:white">Halo, {{ auth()->user()->fullname }}!</h2>
+                                    <hr class="my-4">
+                                    <p style="color: white;">{{ $requestSetting->first()->request_detail }} untuk bulan {{ Carbon\Carbon::parse($requestSetting->first()->request_month)->locale('id')->isoFormat('MMMM YYYY'); }} telah dibuka pada tanggal {{ Carbon\Carbon::parse($requestSetting->first()->open_date)->locale('id')->isoFormat('DD MMMM YYYY'); }} - {{ Carbon\Carbon::parse($requestSetting->first()->closed_date)->locale('id')->isoFormat('DD MMMM YYYY') }}</p>
+                                    <br>
+                                    <p class="lead">
+                                        <a class="btn btn-info btn-lg" href="/request" role="button"><i class="lnr lnr-cart"></i> Pengajuan</a>
+                                    </p>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="#" data-toggle="modal" data-target="#modalImageRequest">
+                                            <img src="{{asset('admin/assets/img/INFOGRAF - PENGAJUAN.jpg')}}" class="img-fluid" alt="INFOGRAFIS LAPOR GANGGUAN" style="max-width: 100%; height: auto;">
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="#" data-toggle="modal" data-target="#modalImageProblem">
+                                            <img src="{{asset('admin/assets/img/INFOGRAF - GANGGUAN.jpg')}}" class="img-fluid" alt="INFOGRAFIS LAPOR GANGGUAN" style="max-width: 100%; height: auto;">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+                @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6))
                 <div class="row">
                     <div class="col-md-12">
                             <div class="panel panel-headline">
@@ -312,41 +347,6 @@
                                 </div>
                                 <!-- END CHART -->
                             </div>
-                    </div>
-                </div>
-                @endif
-                @if (auth()->user()->role_id != 1)
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel panel-headline">
-                            <!-- <div class="panel-heading">
-                                <h3 class="panel-title">Dashboard</h3>
-                            </div> -->
-                            <div class="panel-body">
-                                <!-- JUMBOTRON -->
-                                <div class="jumbotron" style="background-color:#2b333e !important;">
-                                    <h2 class="display-4" style="color:white">Halo, {{ auth()->user()->fullname }}!</h2>
-                                    <hr class="my-4">
-                                    <p style="color: white;">{{ $requestSetting->first()->request_detail }} untuk bulan {{ Carbon\Carbon::parse($requestSetting->first()->request_month)->locale('id')->isoFormat('MMMM YYYY'); }} telah dibuka pada tanggal {{ Carbon\Carbon::parse($requestSetting->first()->open_date)->locale('id')->isoFormat('DD MMMM YYYY'); }} - {{ Carbon\Carbon::parse($requestSetting->first()->closed_date)->locale('id')->isoFormat('DD MMMM YYYY') }}</p>
-                                    <br>
-                                    <p class="lead">
-                                        <a class="btn btn-info btn-lg" href="/request" role="button"><i class="lnr lnr-cart"></i> Pengajuan</a>
-                                    </p>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <a href="#" data-toggle="modal" data-target="#modalImageRequest">
-                                            <img src="{{asset('admin/assets/img/INFOGRAF - PENGAJUAN.jpg')}}" class="img-fluid" alt="INFOGRAFIS LAPOR GANGGUAN" style="max-width: 100%; height: auto;">
-                                        </a>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a href="#" data-toggle="modal" data-target="#modalImageProblem">
-                                            <img src="{{asset('admin/assets/img/INFOGRAF - GANGGUAN.jpg')}}" class="img-fluid" alt="INFOGRAFIS LAPOR GANGGUAN" style="max-width: 100%; height: auto;">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 @endif
