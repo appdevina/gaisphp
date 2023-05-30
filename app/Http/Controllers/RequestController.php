@@ -10,6 +10,8 @@ use App\Models\RequestBarang;
 use App\Models\RequestDetail;
 use App\Models\RequestApproval;
 use App\Models\Product;
+use App\Models\RequestLog;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -819,5 +821,47 @@ class RequestController extends Controller
         }
         
         return Excel::download(new RequestMasterQRExport($date1, $date2, $request_type_id), 'QR_pengajuan_'. str_replace(['/', '\\'], '_', $request_type) . '_'. $date1 . '_to_' . $date2 . '.xlsx');
+    }
+
+    public function editApplicant(RequestBarang $requestBarang)
+    {
+        return view('request.editApplicant', [
+            'requestBarang' => $requestBarang,
+            'users' => User::whereNotIn('id', [1, 2, 3])->get(),
+        ]);
+    }
+
+    public function updateApplicant(Request $request, RequestBarang $requestBarang)
+    {
+        try {
+            if ($request->EditType == 'editApplicant') {
+                $requestBarang->user_id = $request->user_id;
+                $requestBarang->save();
+
+                $newApplicant = User::where('id', $request->user_id)->first()->fullname;
+                $oldApplicant = User::where('id', $request->user_id_before)->first()->fullname;
+
+                $requestLog = RequestLog::create([
+                    'user_id' => Auth::user()->id,
+                    'request_id' => $request->id,
+                    'activity' => Auth::user()->fullname . ' merubah pemohon ' . $oldApplicant . ' menjadi ' . $newApplicant,
+                ]);
+                $requestLog->save();
+
+                return redirect('request')->with('success', 'Berhasil merubah pemohon !');
+            } else {
+                return redirect('request')->with('error', 'Terjadi kesalahan');
+            }
+
+        } catch (Exception $e) {
+            return redirect('request')->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function requestLogs()
+    {
+        return view('request-logs.index', [
+            'logs' => RequestLog::paginate(30),
+        ]);
     }
 }

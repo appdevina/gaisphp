@@ -71,7 +71,7 @@
                                     @endif
                                     @if (auth()->user()->role_id == 1 || (auth()->user()->role_id == 3 && auth()->user()->division_id == 6) || (auth()->user()->role_id == 3 && auth()->user()->division_id == 11))
                                         <a href="#exportRequest" data-toggle="modal" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Export pengajuan"><span class="lnr lnr-download"></span></a>
-                                        <a href="#exportQR" data-toggle="modal" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Export master QR pengajuan"><span class="lnr lnr-download">  </span><i class="fa fa-qrcode"></i></a>
+                                        <a href="#exportQR" data-toggle="modal" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Export master QR pengajuan"><i class="fa fa-qrcode"></i></a>
                                     @endif
                                 </div>
                             </div>
@@ -242,6 +242,28 @@
                                         </td>  
                                         <td>
                                             <a href="/request/{{$reqbar->id}}" class="btn btn-default btn-xs" type="button"><span class="lnr lnr-eye"></span></a>
+                                        </td>
+                                        <td>
+                                            @switch(auth()->user()->role_id)
+                                                @case(1)
+                                                @case(3)
+                                                        @if (auth()->user()->division_id != 11)
+                                                            @if ($reqbar->status_client == 1)
+                                                                 <form class="form-inline" action="/request/{{$reqbar->id}}/editApplicant">
+                                                                    <div class="form-group">
+                                                                    <select class="form-control" id="selectEdit" name="selectEdit" onchange="this.form.submit();">
+                                                                        <option selected value="">- Lainnya -</option>
+                                                                        <option value="editApplicant">Ubah Pemohon</option>
+                                                                    </select>
+                                                                    </div>
+                                                                </form>
+                                                            @else
+                                                            @endif
+                                                        @endif
+                                                    @break
+                                                @default
+                                                    @break
+                                            @endswitch
                                         </td>
                                     </tr>
                                     @endforeach
@@ -447,14 +469,14 @@
         </div>
     </form>
 
-    <!-- Modal Export -->
+    <!-- Modal Export QR -->
     <form action="request/exportMasterQR" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="modal fade" id="exportQR" aria-labelledby="exportQRtLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="exportQRtLabel">Export Laporan Pengajuan</h3>
+                        <h3 class="modal-title" id="exportQRtLabel">Export ID Pengajuan</h3>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">

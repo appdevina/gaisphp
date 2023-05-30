@@ -68,6 +68,7 @@
 							<li><a href="/bu" class="{{ Request::is('bu') ? 'active' : '' }}"><i class="lnr lnr-apartment"></i>BADAN USAHA</a></li>
 							<li><a href="/division" class="{{ Request::is('division') ? 'active' : '' }}"><i class="lnr lnr-apartment"></i>DIVISI</a></li>
 							<li><a href="/request-settings" class="{{ Request::is('request-settings') ? 'active' : '' }}"><i class="lnr lnr-cart"></i>PENGAJUAN</a></li>
+							<li><a href="/request-logs" class="{{ Request::is('request-logs') ? 'active' : '' }}"><i class="lnr lnr-list"></i>LOG PENGAJUAN</a></li>
 						</ul>
 					</div>
 				</li>

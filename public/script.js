@@ -167,4 +167,12 @@ $(document).ready(function () {
         format: "dd/mm/yyyy",
         parentEl: "#addRentsModal .modal-body",
     });
+
+    $("#tanggalChart").daterangepicker();
+
+    $("#tanggalCostChart").daterangepicker();
+
+    $("#tanggalProblemTotalChart").daterangepicker();
+
+    $("#dateChartProblemCategory").daterangepicker();
 });

@@ -266,5 +266,8 @@ Route::group(['middleware' => ['auth', 'checkRole:1,2,3,4']], function(){
     Route::get('/request/{requestBarang}/editStatusAcc', [RequestController::class, 'editStatusAcc']);
     Route::post('/request/{requestBarang}/updateStatusAcc', [RequestController::class, 'updateStatusAcc']);
     Route::get('/request/{requestBarang}/cancelRequest', [RequestController::class, 'cancelRequest']);
+    Route::get('/request/{requestBarang}/editApplicant', [RequestController::class, 'editApplicant']);
+    Route::post('/request/{requestBarang}/updateApplicant', [RequestController::class, 'updateApplicant']);
+    Route::get('/request-logs', [RequestController::class, 'requestLogs']);
 });
 

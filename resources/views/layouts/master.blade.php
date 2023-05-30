@@ -30,6 +30,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
 	<!-- select 2 -->
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<!-- HIGHCHART -->
+	<script src="https://code.highcharts.com/highcharts.js"></script>
 </head>
 
 <body>
@@ -81,6 +83,7 @@
 		}
 	</script>
 	<script src="{{ asset('script.js') }}"></script>
+	@yield('footer')
 </body>
 
 </html>

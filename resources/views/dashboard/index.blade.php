@@ -150,6 +150,131 @@
                                 <!-- CHART -->
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <!-- MULTI CHARTS -->
+                                        <div class="panel">
+                                            <div class="panel-heading">
+                                                <div class="col-md-12" style="margin-bottom: 30px;">
+                                                    <div class="col-md-2">
+                                                        <h3 class="panel-title">GRAFIK</h3>
+                                                    </div>
+                                                    <div class="col-md-10 text-right">
+                                                        <form action="/dashboard" id="inputFilterChartRequestItem" class="form-inline">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" name="dateChartRequestItem"
+                                                                    id="tanggalChart" placeholder="Pilih Tanggal .." required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="request_type" style="width: 200px;"
+                                                                required>
+                                                                    @foreach ($request_types as $rt)
+                                                                        <option value="{{ $rt->id }}">{{ $rt->request_type }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <a href="javascript:{}" onclick="document.getElementById('inputFilterChartRequestItem').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                                            </div>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body" style="overflow-x: auto;">
+                                                <div id="chartHighestRequestItem" style="min-width: 600px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- END MULTI CHARTS -->
+                                    </div>
+                                    <div class="col-md-12">
+                                        <!-- MULTI CHARTS -->
+                                        <div class="panel">
+                                            <div class="panel-heading">
+                                                <div class="col-md-12" style="margin-bottom: 30px;">
+                                                    <div class="col-md-2">
+                                                        <!-- <h3 class="panel-title">GRAFIK</h3> -->
+                                                    </div>
+                                                    <div class="col-md-10 text-right">
+                                                        <form action="/dashboard" id="inputFilterChartRequestCost" class="form-inline">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" name="dateChartRequestCost"
+                                                                    id="tanggalCostChart" placeholder="Pilih Tanggal .." required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="request_type" style="width: 200px;"
+                                                                required>
+                                                                    @foreach ($request_types as $rt)
+                                                                        <option value="{{ $rt->id }}">{{ $rt->request_type }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <a href="javascript:{}" onclick="document.getElementById('inputFilterChartRequestCost').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                                            </div>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body" style="overflow-x: auto;">
+                                                <div id="chartHighestRequestCost" style="min-width: 600px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- END MULTI CHARTS -->
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- MULTI CHARTS -->
+                                        <div class="panel">
+                                            <div class="panel-heading">
+                                                <div class="col-md-12" style="margin-bottom: 30px;">
+                                                    <div class="col-md-12 text-right">
+                                                        <form action="/dashboard" id="inputFilterChartProblemTotal" class="form-inline">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" name="dateChartProblemTotal"
+                                                                    id="tanggalProblemTotalChart" placeholder="Pilih Tanggal .." style="width: 170px;" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="pr_category_id" style="width: 120px;"
+                                                                required>
+                                                                    @foreach ($prcategories as $prc)
+                                                                        <option value="{{ $prc->id }}">{{ $prc->problem_report_category }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <a href="javascript:{}" onclick="document.getElementById('inputFilterChartProblemTotal').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                                            </div>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body" style="overflow-x: auto;">
+                                                <div id="chartHighestProblemTotal" style="min-width: 600px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- END MULTI CHARTS -->
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- MULTI CHARTS -->
+                                        <div class="panel">
+                                            <div class="panel-heading">
+                                                <div class="col-md-12" style="margin-bottom: 30px;">
+                                                    <div class="col-md-2">
+                                                        <!-- <h3 class="panel-title">GRAFIK</h3> -->
+                                                    </div>
+                                                    <div class="col-md-10 text-right">
+                                                        <form action="/dashboard" id="inputFilterChartProblemCategory" class="form-inline">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" name="dateChartProblemCategory"
+                                                                    id="tanggalProblemCategoryChart" placeholder="Pilih Tanggal .." required>
+                                                                <a href="javascript:{}" onclick="document.getElementById('inputFilterChartProblemCategory').submit();" class="btn btn-info" ><span class="lnr lnr-magnifier"></span></a>
+                                                            </div>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body" style="overflow-x: auto;">
+                                                <div id="chartHighestProblemCategory" style="min-width: 600px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- END MULTI CHARTS -->
+                                    </div>
+                                    <div class="col-md-12">
                                         <div class="col-md-6">
                                             <!-- RECENT REQUEST -->
                                             <div class="panel">
@@ -377,4 +502,177 @@
         </div>
     </div>
     </div>
-@stop
+@endsection
+
+@section('footer')
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>
+    const highestRequestUserData = [];
+    @foreach($highestRequestUser as $index => $user)
+        highestRequestUserData.push({
+            name: {!! json_encode($user) !!},
+            data: [{!! json_encode($highestRequestUnit[$index]) !!}],
+        });
+    @endforeach
+
+    Highcharts.chart('chartHighestRequestItem', {
+            chart: {
+                type: 'column',
+            },
+            title: {
+                text: 'Jumlah Item Pengajuan Tertinggi'
+            },
+            xAxis: {
+                categories: [
+                    '',
+                ],
+                crosshair: true,
+                title: {
+                    text: 'User'
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Total Item'
+                },
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series: highestRequestUserData
+        });
+
+    const highestRequestCostUserData = [];
+    @foreach($highestRequestCostUser as $index => $user)
+        highestRequestCostUserData.push({
+            name: {!! json_encode($user) !!},
+            data: [{!! json_encode($highestRequestCostUnit[$index]) !!}],
+        });
+    @endforeach
+
+    Highcharts.chart('chartHighestRequestCost', {
+            chart: {
+                type: 'column',
+            },
+            title: {
+                text: 'Jumlah Biaya Pengajuan Tertinggi'
+            },
+            xAxis: {
+                categories: [
+                    '',
+                ],
+                crosshair: true,
+                title: {
+                    text: 'User'
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Total Biaya'
+                },
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series: highestRequestCostUserData
+        });
+
+    const highestProblemTotalData = [];
+    @foreach($highestProblemTotalUser as $index => $user)
+        highestProblemTotalData.push({
+            name: {!! json_encode($user) !!},
+            data: [{!! json_encode($highestProblemTotalUnit[$index]) !!}],
+        });
+    @endforeach
+
+    Highcharts.chart('chartHighestProblemTotal', {
+            chart: {
+                type: 'column',
+            },
+            title: {
+                text: 'Jumlah Laporan Gangguan Tertinggi'
+            },
+            xAxis: {
+                categories: [
+                    '',
+                ],
+                crosshair: true,
+                title: {
+                    text: 'User'
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Total Laporan'
+                },
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series: highestProblemTotalData
+        });
+
+    const highestProblemCategoryData = [];
+    @foreach($highestProblemCategoryUser as $index => $user)
+        highestProblemCategoryData.push({
+            name: {!! json_encode($user) !!},
+            data: [{!! json_encode($highestProblemCategoryUnit[$index]) !!}],
+        });
+    @endforeach
+
+    Highcharts.chart('chartHighestProblemCategory', {
+            chart: {
+                type: 'column',
+            },
+            title: {
+                text: 'Kategori Laporan Gangguan Tertinggi'
+            },
+            xAxis: {
+                categories: [
+                    '',
+                ],
+                crosshair: true,
+                title: {
+                    text: 'Kategori'
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Kategori Laporan'
+                },
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series: highestProblemCategoryData
+        });
+</script>
+@endsection
