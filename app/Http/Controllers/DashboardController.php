@@ -40,7 +40,7 @@ class DashboardController extends Controller
                 ->where('status_client', '<>', 2)
                 ->where('request_type_id', $request->request_type)
                 ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id')
+                ->groupBy('user_id', 'request_type_id', 'areas.id')
                 ->orderBy('highestRequestItem', 'DESC')
                 ->limit(10)
                 ->get();
@@ -55,7 +55,7 @@ class DashboardController extends Controller
                 ->where('status_client', '<>', 2)
                 ->where('request_type_id', $request->request_type)
                 ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id')
+                ->groupBy('user_id', 'request_type_id', 'areas.id')
                 ->orderBy('highestRequestCost', 'DESC')
                 ->limit(10)
                 ->get();
@@ -92,7 +92,7 @@ class DashboardController extends Controller
                 ->where('status_client', '<>', 2)
                 ->where('request_type_id', $request->request_type)
                 ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id')
+                ->groupBy('user_id', 'request_type_id', 'areas.id')
                 ->orderBy('highestRequestItem', 'DESC')
                 ->limit(10)
                 ->get();
@@ -107,7 +107,7 @@ class DashboardController extends Controller
                 ->where('status_client', '<>', 2)
                 ->where('request_type_id', $request->request_type)
                 ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id')
+                ->groupBy('user_id', 'request_type_id', 'areas.id')
                 ->orderBy('highestRequestCost', 'DESC')
                 ->limit(10)
                 ->get();
@@ -144,7 +144,7 @@ class DashboardController extends Controller
                 ->where('status_client', '<>', 2)
                 ->where('request_type_id', $request->request_type)
                 ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id')
+                ->groupBy('user_id', 'request_type_id', 'areas.id')
                 ->orderBy('highestRequestItem', 'DESC')
                 ->limit(10)
                 ->get();
@@ -159,7 +159,7 @@ class DashboardController extends Controller
                 ->where('status_client', '<>', 2)
                 ->where('request_type_id', $request->request_type)
                 ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id')
+                ->groupBy('user_id', 'request_type_id', 'areas.id')
                 ->orderBy('highestRequestCost', 'DESC')
                 ->limit(10)
                 ->get();
@@ -196,7 +196,7 @@ class DashboardController extends Controller
                 ->where('status_client', '<>', 2)
                 ->where('request_type_id', $request->request_type)
                 ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id')
+                ->groupBy('user_id', 'request_type_id', 'areas.id')
                 ->orderBy('highestRequestItem', 'DESC')
                 ->limit(10)
                 ->get();
@@ -211,7 +211,7 @@ class DashboardController extends Controller
                 ->where('status_client', '<>', 2)
                 ->where('request_type_id', $request->request_type)
                 ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id')
+                ->groupBy('user_id', 'request_type_id', 'areas.id')
                 ->orderBy('highestRequestCost', 'DESC')
                 ->limit(10)
                 ->get();
