@@ -33,7 +33,10 @@ class RentController extends Controller
                 'rent_update'  => function($query) {
                     $query->latest('expired_date');
                 }])
-                ->where('rent_code','LIKE','%'.$request->search.'%')
+                ->whereHas('rent_update', function ($query) use ($request) {
+                    $query->where('notes', 'LIKE', '%' . $request->search . '%');
+                })
+                ->orWhere('rent_code','LIKE','%'.$request->search.'%')
                 ->orWhere('rented_detail','LIKE','%'.$request->search.'%')
                 ->orWhere('rented_address','LIKE','%'.$request->search.'%')
                 ->orWhere('first_party','LIKE','%'.$request->search.'%')

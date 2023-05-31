@@ -174,5 +174,5 @@ $(document).ready(function () {
 
     $("#tanggalProblemTotalChart").daterangepicker();
 
-    $("#dateChartProblemCategory").daterangepicker();
+    $("#tanggalProblemCategoryChart").daterangepicker();
 });

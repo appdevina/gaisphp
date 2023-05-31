@@ -240,20 +240,20 @@ class DashboardController extends Controller
                 ->join('areas', 'divisions.area_id', '=', 'areas.id')
                 ->join('request_details', 'requests.id', '=', 'request_details.request_id')
                 ->where('status_client', '<>', 2)
-                ->groupBy('user_id', 'request_type_id')
+                ->groupBy('user_id', 'request_type_id', 'areas.id')
                 ->orderBy('highestRequestItem', 'DESC')
                 ->limit(10)
                 ->get();
             
             $highestRequestCost = RequestBarang::with('request_detail', 'request_detail.product', 'user.division.area')
-                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) THEN SUM(request_details.qty_approved * products.price) ELSE SUM(request_details.qty_request * products.price) END AS highestRequestCost')
+                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved * products.price) ELSE SUM(request_details.qty_request * products.price) END AS highestRequestCost')
                 ->join('users', 'requests.user_id', '=', 'users.id')
                 ->join('divisions', 'users.division_id', '=', 'divisions.id')
                 ->join('areas', 'divisions.area_id', '=', 'areas.id')
                 ->join('request_details', 'requests.id', '=', 'request_details.request_id')
                 ->join('products', 'request_details.product_id', '=', 'products.id')
                 ->where('status_client', '<>', 2)
-                ->groupBy('user_id')
+                ->groupBy('user_id', 'request_type_id', 'areas.id')
                 ->orderBy('highestRequestCost', 'DESC')
                 ->limit(10)
                 ->get();
