@@ -25,4 +25,6 @@ Route::middleware('auth:sanctum')->group(function(){
     ##UNIT TYPE
     Route::get('unittype', [UnitTypeController::class, 'fetch']);
     Route::post('unittype', [UnitTypeController::class, 'add']);
+    Route::patch('unittype/{id}', [UnitTypeController::class, 'edit']);
+    Route::delete('unittype/{unitType}', [UnitTypeController::class, 'delete']);
 });

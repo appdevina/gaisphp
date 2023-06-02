@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Insurance;
+use App\Models\InsuranceUpdate;
 use App\Models\PRCategory;
 use App\Models\User;
 use App\Models\Product;
@@ -25,255 +26,149 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->dateChartRequestItem && $request->request_type) {
+        //INISIALISASI HIGHEST REQUEST ITEM
+        $highestRequestItem = RequestBarang::with('request_detail', 'user.division.area')
+            ->selectRaw('user_id, request_type_id, date, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved) ELSE SUM(request_details.qty_request) END AS highestRequestItem')
+            ->join('users', 'requests.user_id', '=', 'users.id')
+            ->join('divisions', 'users.division_id', '=', 'divisions.id')
+            ->join('areas', 'divisions.area_id', '=', 'areas.id')
+            ->join('request_details', 'requests.id', '=', 'request_details.request_id')
+            ->where('status_client', '<>', 2)
+            ->groupBy('user_id', 'request_type_id', 'date', 'areas.id')
+            ->orderBy('highestRequestItem', 'DESC');
+
+        //INISIALISASI HIGHEST REQUEST COST
+        $highestRequestCost = RequestBarang::with('request_detail', 'request_detail.product', 'user.division.area')
+            ->selectRaw('user_id, request_type_id, date, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved * products.price) ELSE SUM(request_details.qty_request * products.price) END AS highestRequestCost')
+            ->join('users', 'requests.user_id', '=', 'users.id')
+            ->join('divisions', 'users.division_id', '=', 'divisions.id')
+            ->join('areas', 'divisions.area_id', '=', 'areas.id')
+            ->join('request_details', 'requests.id', '=', 'request_details.request_id')
+            ->join('products', 'request_details.product_id', '=', 'products.id')
+            ->where('status_client', '<>', 2)
+            ->groupBy('user_id', 'request_type_id', 'date', 'areas.id')
+            ->orderBy('highestRequestCost', 'DESC');
+
+        //INISIALISASI HIGHEST PROBLEM TOTAL
+        $highestProblemTotal = ProblemReport::with('prcategory', 'user')
+            ->selectRaw('user_id, COUNT(*) as highestProblemTotal')
+            ->groupBy('user_id')
+            ->orderBy('highestProblemTotal', 'DESC');
+
+        //INISIALISASI HIGHEST PROBLEM CATEGORY
+        $highestProblemCategory = ProblemReport::with('prcategory', 'user')
+            ->selectRaw('pr_category_id, COUNT(*) as highestProblemCategory')
+            ->groupBy('pr_category_id')
+            ->orderBy('highestProblemCategory', 'DESC');
+
+        //INISIALISASI INSURANCE CHART
+        $insurances_cost = Insurance::whereNotIn('status', ['TUTUP', 'REFUND', 'PEMBAHARUAN'])
+            ->select(
+                DB::raw('DATE_FORMAT(expired_date, "%Y-%m") AS month_year'),
+                DB::raw('SUM(COALESCE(stock_premium, 0) + COALESCE(building_premium, 0)) AS total_cost')
+            )
+            ->groupBy('month_year');
+
+        $insurance_updates_cost = InsuranceUpdate::whereNotIn('status', ['TUTUP', 'REFUND', 'PEMBAHARUAN'])
+            ->select(
+                DB::raw('DATE_FORMAT(expired_date, "%Y-%m") AS month_year'),
+                DB::raw('SUM(COALESCE(stock_premium, 0) + COALESCE(building_premium, 0)) AS total_cost')
+            )
+            ->groupBy('month_year');
+
+        $insurance_cost_union = DB::query()
+        ->select('month_year', DB::raw('SUM(total_cost) as total_cost'))
+        ->from(function ($query) use ($insurances_cost, $insurance_updates_cost) {
+            $query->select('month_year', 'total_cost')
+                ->from($insurances_cost)
+                ->unionAll($insurance_updates_cost);
+        }, 'sub')
+        ->groupBy('month_year');
+        
+
+        //CHART 1 (HIGHEST REQUEST UNIT)
+        if ($request->dateChartRequestItem) {
             $data = explode('-', preg_replace('/\s+/', '', $request->dateChartRequestItem));
             $date1 = Carbon::parse($data[0])->format('Y-m-d');
             $date2 = Carbon::parse($data[1])->format('Y-m-d');
             $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+            $dateChartRequestItem = Carbon::parse($date1)->format('d M Y') . ' - ' . Carbon::parse($data[1])->format('d M Y');
+            
+            $highestRequestItem = $highestRequestItem->whereBetween('date', [$date1, $date2]);
+        } 
 
-            $highestRequestItem = RequestBarang::with('request_detail', 'user.division.area')
-                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved) ELSE SUM(request_details.qty_request) END AS highestRequestItem')
-                ->join('users', 'requests.user_id', '=', 'users.id')
-                ->join('divisions', 'users.division_id', '=', 'divisions.id')
-                ->join('areas', 'divisions.area_id', '=', 'areas.id')
-                ->join('request_details', 'requests.id', '=', 'request_details.request_id')
-                ->where('status_client', '<>', 2)
-                ->where('request_type_id', $request->request_type)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id', 'areas.id')
-                ->orderBy('highestRequestItem', 'DESC')
-                ->limit(10)
-                ->get();
+        if ($request->request_type_1) {
+            $highestRequestItem = $highestRequestItem->where('request_type_id', $request->request_type_1);
+        }
 
-            $highestRequestCost = RequestBarang::with('request_detail', 'request_detail.product', 'user.division.area')
-                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved * products.price) ELSE SUM(request_details.qty_request * products.price) END AS highestRequestCost')
-                ->join('users', 'requests.user_id', '=', 'users.id')
-                ->join('divisions', 'users.division_id', '=', 'divisions.id')
-                ->join('areas', 'divisions.area_id', '=', 'areas.id')
-                ->join('request_details', 'requests.id', '=', 'request_details.request_id')
-                ->join('products', 'request_details.product_id', '=', 'products.id')
-                ->where('status_client', '<>', 2)
-                ->where('request_type_id', $request->request_type)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id', 'areas.id')
-                ->orderBy('highestRequestCost', 'DESC')
-                ->limit(10)
-                ->get();
-
-            $highestProblemTotal = ProblemReport::with('prcategory', 'user')
-                ->selectRaw('user_id, COUNT(*) as highestProblemTotal')
-                ->where('pr_category_id', $request->pr_category_id)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id')
-                ->orderBy('highestProblemTotal', 'DESC')
-                ->limit(10)
-                ->get();
-
-            $highestProblemCategory = ProblemReport::with('prcategory', 'user')
-                ->selectRaw('pr_category_id, COUNT(*) as highestProblemCategory')
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('pr_category_id')
-                ->orderBy('highestProblemCategory', 'DESC')
-                ->limit(10)
-                ->get();
-
-        } else if ($request->dateChartRequestCost && $request->request_type) {
+        //CHART 2 (HIGHEST REQUEST COST)
+        if ($request->dateChartRequestCost) {
             $data = explode('-', preg_replace('/\s+/', '', $request->dateChartRequestCost));
             $date1 = Carbon::parse($data[0])->format('Y-m-d');
             $date2 = Carbon::parse($data[1])->format('Y-m-d');
             $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+            $dateChartRequestCost = Carbon::parse($date1)->format('d M Y') . ' - ' . Carbon::parse($data[1])->format('d M Y');
 
-            $highestRequestItem = RequestBarang::with('request_detail', 'user.division.area')
-                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved) ELSE SUM(request_details.qty_request) END AS highestRequestItem')
-                ->join('users', 'requests.user_id', '=', 'users.id')
-                ->join('divisions', 'users.division_id', '=', 'divisions.id')
-                ->join('areas', 'divisions.area_id', '=', 'areas.id')
-                ->join('request_details', 'requests.id', '=', 'request_details.request_id')
-                ->where('status_client', '<>', 2)
-                ->where('request_type_id', $request->request_type)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id', 'areas.id')
-                ->orderBy('highestRequestItem', 'DESC')
-                ->limit(10)
-                ->get();
+            $highestRequestCost = $highestRequestCost->whereBetween('date', [$date1, $date2]);
+        }
+        
+        if ($request->request_type_2) {
+            $highestRequestCost = $highestRequestCost->where('request_type_id', $request->request_type_2);
+        }
 
-            $highestRequestCost = RequestBarang::with('request_detail', 'request_detail.product', 'user.division.area')
-                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved * products.price) ELSE SUM(request_details.qty_request * products.price) END AS highestRequestCost')
-                ->join('users', 'requests.user_id', '=', 'users.id')
-                ->join('divisions', 'users.division_id', '=', 'divisions.id')
-                ->join('areas', 'divisions.area_id', '=', 'areas.id')
-                ->join('request_details', 'requests.id', '=', 'request_details.request_id')
-                ->join('products', 'request_details.product_id', '=', 'products.id')
-                ->where('status_client', '<>', 2)
-                ->where('request_type_id', $request->request_type)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id', 'areas.id')
-                ->orderBy('highestRequestCost', 'DESC')
-                ->limit(10)
-                ->get();
-            
-            $highestProblemTotal = ProblemReport::with('prcategory', 'user')
-                ->selectRaw('user_id, COUNT(*) as highestProblemTotal')
-                ->where('pr_category_id', $request->pr_category_id)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id')
-                ->orderBy('highestProblemTotal', 'DESC')
-                ->limit(10)
-                ->get();
-
-            $highestProblemCategory = ProblemReport::with('prcategory', 'user')
-                ->selectRaw('pr_category_id, COUNT(*) as highestProblemCategory')
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('pr_category_id')
-                ->orderBy('highestProblemCategory', 'DESC')
-                ->limit(10)
-                ->get();
-
-        } else if ($request->dateChartProblemTotal && $request->pr_category_id) {
+        //CHART 3 (TOTAL PROBLEM)
+        if ($request->dateChartProblemTotal) {
             $data = explode('-', preg_replace('/\s+/', '', $request->dateChartProblemTotal));
             $date1 = Carbon::parse($data[0])->format('Y-m-d');
             $date2 = Carbon::parse($data[1])->format('Y-m-d');
             $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+            $dateChartProblemTotal = Carbon::parse($date1)->format('d M Y') . ' - ' . Carbon::parse($data[1])->format('d M Y');
 
-            $highestRequestItem = RequestBarang::with('request_detail', 'user.division.area')
-                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved) ELSE SUM(request_details.qty_request) END AS highestRequestItem')
-                ->join('users', 'requests.user_id', '=', 'users.id')
-                ->join('divisions', 'users.division_id', '=', 'divisions.id')
-                ->join('areas', 'divisions.area_id', '=', 'areas.id')
-                ->join('request_details', 'requests.id', '=', 'request_details.request_id')
-                ->where('status_client', '<>', 2)
-                ->where('request_type_id', $request->request_type)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id', 'areas.id')
-                ->orderBy('highestRequestItem', 'DESC')
-                ->limit(10)
-                ->get();
+            $highestProblemTotal = $highestProblemTotal->whereBetween('date', [$date1, $date2]);
+        }
 
-            $highestRequestCost = RequestBarang::with('request_detail', 'request_detail.product', 'user.division.area')
-                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved * products.price) ELSE SUM(request_details.qty_request * products.price) END AS highestRequestCost')
-                ->join('users', 'requests.user_id', '=', 'users.id')
-                ->join('divisions', 'users.division_id', '=', 'divisions.id')
-                ->join('areas', 'divisions.area_id', '=', 'areas.id')
-                ->join('request_details', 'requests.id', '=', 'request_details.request_id')
-                ->join('products', 'request_details.product_id', '=', 'products.id')
-                ->where('status_client', '<>', 2)
-                ->where('request_type_id', $request->request_type)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id', 'areas.id')
-                ->orderBy('highestRequestCost', 'DESC')
-                ->limit(10)
-                ->get();
-            
-            $highestProblemTotal = ProblemReport::with('prcategory', 'user')
-                ->selectRaw('user_id, COUNT(*) as highestProblemTotal')
-                ->where('pr_category_id', $request->pr_category_id)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id')
-                ->orderBy('highestProblemTotal', 'DESC')
-                ->limit(10)
-                ->get();
+        if ($request->pr_category_id) {
+            $highestProblemTotal = $highestProblemTotal->where('pr_category_id', $request->pr_category_id);
+        }
 
-            $highestProblemCategory = ProblemReport::with('prcategory', 'user')
-                ->selectRaw('pr_category_id, COUNT(*) as highestProblemCategory')
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('pr_category_id')
-                ->orderBy('highestProblemCategory', 'DESC')
-                ->limit(10)
-                ->get();
-
-        } else if ($request->dateChartProblemCategory) {
+        //CHART 4 (HIGHEST PROBLEM CATEGORY)
+        if ($request->dateChartProblemCategory) {
             $data = explode('-', preg_replace('/\s+/', '', $request->dateChartProblemCategory));
             $date1 = Carbon::parse($data[0])->format('Y-m-d');
             $date2 = Carbon::parse($data[1])->format('Y-m-d');
             $date2 = date('Y-m-d', strtotime('+ 1 day', strtotime($date2)));
+            $dateChartProblemCategory = Carbon::parse($date1)->format('d M Y') . ' - ' . Carbon::parse($data[1])->format('d M Y');
 
-            $highestRequestItem = RequestBarang::with('request_detail', 'user.division.area')
-                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved) ELSE SUM(request_details.qty_request) END AS highestRequestItem')
-                ->join('users', 'requests.user_id', '=', 'users.id')
-                ->join('divisions', 'users.division_id', '=', 'divisions.id')
-                ->join('areas', 'divisions.area_id', '=', 'areas.id')
-                ->join('request_details', 'requests.id', '=', 'request_details.request_id')
-                ->where('status_client', '<>', 2)
-                ->where('request_type_id', $request->request_type)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id', 'areas.id')
-                ->orderBy('highestRequestItem', 'DESC')
-                ->limit(10)
-                ->get();
+            $highestProblemCategory = $highestProblemCategory->whereBetween('date', [$date1, $date2]);
+        }
 
-            $highestRequestCost = RequestBarang::with('request_detail', 'request_detail.product', 'user.division.area')
-                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved * products.price) ELSE SUM(request_details.qty_request * products.price) END AS highestRequestCost')
-                ->join('users', 'requests.user_id', '=', 'users.id')
-                ->join('divisions', 'users.division_id', '=', 'divisions.id')
-                ->join('areas', 'divisions.area_id', '=', 'areas.id')
-                ->join('request_details', 'requests.id', '=', 'request_details.request_id')
-                ->join('products', 'request_details.product_id', '=', 'products.id')
-                ->where('status_client', '<>', 2)
-                ->where('request_type_id', $request->request_type)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id', 'request_type_id', 'areas.id')
-                ->orderBy('highestRequestCost', 'DESC')
-                ->limit(10)
-                ->get();
-            
-            $highestProblemTotal = ProblemReport::with('prcategory', 'user')
-                ->selectRaw('user_id, COUNT(*) as highestProblemTotal')
-                ->where('pr_category_id', $request->pr_category_id)
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('user_id')
-                ->orderBy('highestProblemTotal', 'DESC')
-                ->limit(10)
-                ->get();
+        //CHART 5 (INSURANCE COST)
+        if ($request->dateChartInsuranceCost) {
+            $formattedDateChartInsuranceCost = \Carbon\Carbon::createFromFormat('m-Y', $request->dateChartInsuranceCost)->format('Y-m');
 
-            $highestProblemCategory = ProblemReport::with('prcategory', 'user')
-                ->selectRaw('pr_category_id, COUNT(*) as highestProblemCategory')
-                ->whereBetween('date', [$date1, $date2])
-                ->groupBy('pr_category_id')
-                ->orderBy('highestProblemCategory', 'DESC')
-                ->limit(10)
-                ->get();
-        } else {
-            $highestRequestItem = RequestBarang::with('request_detail', 'user.division.area')
-                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved) ELSE SUM(request_details.qty_request) END AS highestRequestItem')
-                ->join('users', 'requests.user_id', '=', 'users.id')
-                ->join('divisions', 'users.division_id', '=', 'divisions.id')
-                ->join('areas', 'divisions.area_id', '=', 'areas.id')
-                ->join('request_details', 'requests.id', '=', 'request_details.request_id')
-                ->where('status_client', '<>', 2)
-                ->groupBy('user_id', 'request_type_id', 'areas.id')
-                ->orderBy('highestRequestItem', 'DESC')
-                ->limit(10)
-                ->get();
-            
-            $highestRequestCost = RequestBarang::with('request_detail', 'request_detail.product', 'user.division.area')
-                ->selectRaw('user_id, CASE WHEN areas.id IN (4, 5) AND request_type_id = 2 THEN SUM(request_details.qty_approved * products.price) ELSE SUM(request_details.qty_request * products.price) END AS highestRequestCost')
-                ->join('users', 'requests.user_id', '=', 'users.id')
-                ->join('divisions', 'users.division_id', '=', 'divisions.id')
-                ->join('areas', 'divisions.area_id', '=', 'areas.id')
-                ->join('request_details', 'requests.id', '=', 'request_details.request_id')
-                ->join('products', 'request_details.product_id', '=', 'products.id')
-                ->where('status_client', '<>', 2)
-                ->groupBy('user_id', 'request_type_id', 'areas.id')
-                ->orderBy('highestRequestCost', 'DESC')
-                ->limit(10)
-                ->get();
-
-            $highestProblemTotal = ProblemReport::with('prcategory', 'user')
-                ->selectRaw('user_id, COUNT(*) as highestProblemTotal')
-                ->groupBy('user_id')
-                ->orderBy('highestProblemTotal', 'DESC')
-                ->limit(10)
-                ->get();
-
-            $highestProblemCategory = ProblemReport::with('prcategory', 'user')
-                ->selectRaw('pr_category_id, COUNT(*) as highestProblemCategory')
-                ->groupBy('pr_category_id')
-                ->orderBy('highestProblemCategory', 'DESC')
-                ->limit(10)
-                ->get();
+            $insurance_cost_union = $insurance_cost_union->where('month_year', $formattedDateChartInsuranceCost);
 
         }
-            //HIGHEST REQUEST ITEM CHART
+            // HIGHEST REQUEST ITEM CHART
+            $highestRequestItem = $highestRequestItem->limit(10)
+            ->get();
+
+            // HIGHEST REQUEST COST CHART
+            $highestRequestCost = $highestRequestCost->limit(10)
+            ->get();
+
+            // HIGHEST PROBLEM TOTAL CHART
+            $highestProblemTotal = $highestProblemTotal->limit(10)
+            ->get();
+
+            // HIGHEST PROBLEM CATEGORY CHART
+            $highestProblemCategory = $highestProblemCategory->limit(10)
+            ->get();
+
+            //INSURANCE COST CHART
+            $insurance_cost_union = $insurance_cost_union->orderBy('month_year', 'asc')
+            ->get();
+
             $highestRequestUser = [];
             $highestRequestUnit = [];
 
@@ -301,7 +196,9 @@ class DashboardController extends Controller
                 $highestRequestCostUnit = ['0', '0' ,'0'];
             }
 
-            //HIGHEST PROBKLEM REPORT COUNT CHART
+            $request_type_filter = RequestType::where('id', $request->request_type)->first()->request_type ?? '';
+
+            //HIGHEST PROBLEM REPORT COUNT CHART
             $highestProblemTotalUser = [];
             $highestProblemTotalUnit = [];
 
@@ -315,6 +212,8 @@ class DashboardController extends Controller
                 $highestProblemTotalUnit = ['0', '0' ,'0'];
             }
 
+            $pr_category_filter = PRCategory::where('id', $request->pr_category_id)->first()->problem_report_category ?? '';
+
             //HIGHEST PROBLEM REPORT CATEGORY CHART
             $highestProblemCategoryUser = [];
             $highestProblemCategoryUnit = [];
@@ -327,6 +226,20 @@ class DashboardController extends Controller
             if ($highestProblemCategoryUser == [] || $highestProblemCategoryUnit == []) {
                 $highestProblemCategoryUser = ['null', 'null', 'null'];
                 $highestProblemCategoryUnit = ['0', '0' ,'0'];
+            }
+
+            //COST MONTHLY INSURANCES CHART
+            $insurance_cost_total = [];
+            $insurance_cost_monthyear = [];
+
+            foreach ($insurance_cost_union as $icu) {
+                $insurance_cost_total[] = $icu->total_cost ?? 0;
+                $insurance_cost_monthyear[] = $icu->month_year ?? '';
+            }
+
+            if ($insurance_cost_total == [] || $insurance_cost_monthyear == []) {
+                $insurance_cost_total = ['null', 'null', 'null'];
+                $insurance_cost_monthyear = ['0', '0' ,'0'];
             }
 
             //FOR SUMMARY
@@ -417,6 +330,14 @@ class DashboardController extends Controller
             'highestProblemTotalUnit' => $highestProblemTotalUnit,
             'highestProblemCategoryUser' => $highestProblemCategoryUser,
             'highestProblemCategoryUnit' => $highestProblemCategoryUnit,
+            'request_type_filter' => $request_type_filter,
+            'dateChartRequestItem' => $dateChartRequestItem ?? '',
+            'dateChartRequestCost' => $dateChartRequestCost ?? '',
+            'dateChartProblemTotal' => $dateChartProblemTotal ?? '',
+            'pr_category_filter' => $pr_category_filter,
+            'dateChartProblemCategory' => $dateChartProblemCategory ?? '',
+            'insurance_cost_total' => $insurance_cost_total ?? '',
+            'insurance_cost_monthyear' => $insurance_cost_monthyear ?? '',
         ]);
     }
 

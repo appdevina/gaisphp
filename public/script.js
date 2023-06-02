@@ -168,11 +168,92 @@ $(document).ready(function () {
         parentEl: "#addRentsModal .modal-body",
     });
 
-    $("#tanggalChart").daterangepicker();
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateStringChartRequestItem = urlParams.get("dateChartRequestItem");
+    let startDateStrChartRequestItem, endDateStrChartRequestItem;
 
-    $("#tanggalCostChart").daterangepicker();
+    if (dateStringChartRequestItem !== null) {
+        [startDateStrChartRequestItem, endDateStrChartRequestItem] =
+            dateStringChartRequestItem.split(" - ");
+    }
 
-    $("#tanggalProblemTotalChart").daterangepicker();
+    const dateStringChartRequestCost = urlParams.get("dateChartRequestCost");
+    let startDateStrChartRequestCost, endDateStrChartRequestCost;
 
-    $("#tanggalProblemCategoryChart").daterangepicker();
+    if (dateStringChartRequestCost !== null) {
+        [startDateStrChartRequestCost, endDateStrChartRequestCost] =
+            dateStringChartRequestCost.split(" - ");
+    }
+
+    const dateStringChartProblemTotal = urlParams.get("dateChartProblemTotal");
+    let startDateStrChartProblemTotal, endDateStrChartProblemTotal;
+
+    if (dateStringChartProblemTotal !== null) {
+        [startDateStrChartProblemTotal, endDateStrChartProblemTotal] =
+            dateStringChartProblemTotal.split(" - ");
+    }
+
+    const dateStringChartProblemCategory = urlParams.get(
+        "dateChartProblemCategory"
+    );
+    let startDateStrChartProblemCategory, endDateStrChartProblemCategory;
+
+    if (dateStringChartProblemCategory !== null) {
+        [startDateStrChartProblemCategory, endDateStrChartProblemCategory] =
+            dateStringChartProblemCategory.split(" - ");
+    }
+
+    const dateStringChartInsuranceCost = urlParams.get(
+        "dateChartInsuranceCost"
+    );
+
+    $("#tanggalChart").daterangepicker({
+        startDate:
+            startDateStrChartRequestItem === undefined
+                ? new Date()
+                : new Date(startDateStrChartRequestItem),
+        endDate:
+            endDateStrChartRequestItem === undefined
+                ? new Date()
+                : new Date(endDateStrChartRequestItem),
+    });
+
+    $("#tanggalCostChart").daterangepicker({
+        startDate:
+            startDateStrChartRequestCost === undefined
+                ? new Date()
+                : new Date(startDateStrChartRequestCost),
+        endDate:
+            endDateStrChartRequestCost === undefined
+                ? new Date()
+                : new Date(endDateStrChartRequestCost),
+    });
+
+    $("#tanggalProblemTotalChart").daterangepicker({
+        startDate:
+            startDateStrChartProblemTotal === undefined
+                ? new Date()
+                : new Date(startDateStrChartProblemTotal),
+        endDate:
+            endDateStrChartProblemTotal === undefined
+                ? new Date()
+                : new Date(endDateStrChartProblemTotal),
+    });
+
+    $("#tanggalProblemCategoryChart").daterangepicker({
+        startDate:
+            startDateStrChartProblemCategory === undefined
+                ? new Date()
+                : new Date(startDateStrChartProblemCategory),
+        endDate:
+            endDateStrChartProblemCategory === undefined
+                ? new Date()
+                : new Date(endDateStrChartProblemCategory),
+    });
+
+    $("#tanggalInsuranceCostChart").datepicker({
+        format: "mm-yyyy",
+        startView: "months",
+        minViewMode: "months",
+    });
 });
