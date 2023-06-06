@@ -240,11 +240,11 @@ class RequestController extends Controller
                     ->where('request_type_id', 2)
                     ->orderBy('date', 'desc')
                     ->paginate(30);
-                ##DIVISI MKLI-HO
+                ##DIVISI MKLI-HO ATAU MKLI-4S
                 } else if ($userDivisi == 80) {
                     $requestBarangs = RequestBarang::with('user.division.area','closedby','request_detail','request_type','request_approval')
                     ->whereHas('user.division.area', function ($query) {
-                        $query->whereIn('area_id', [11]);
+                        $query->whereIn('area_id', [6, 11]);
                     })
                     ->where('request_type_id', 2)
                     ->orderBy('date', 'desc')
