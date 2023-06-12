@@ -213,8 +213,14 @@
                                                             @if ($reqbar->status_client == 3)
                                                                 <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                                             @else
-                                                                @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_type_id >= 2)
+                                                                @if ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 2 && !in_array($reqbar->user->division->area_id, [4, 5, 6, 11]))
                                                                     <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
+                                                                @elseif ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 2 && in_array($reqbar->user->division->area_id, [4, 5, 6, 11]) && $reqbar->request_approval->where('approval_type', 'MANAGER')->whereNotNull('approved_by')->isNotEmpty())
+                                                                    <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
+                                                                @elseif ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 3)
+                                                                    @if ($reqbar->request_approval->where('approval_type', 'MANAGER')->whereNotNull('approved_by')->isNotEmpty())
+                                                                        <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
+                                                                    @endif
                                                                 @elseif ($reqbar->request_approval->where('approval_type', 'EXECUTOR')->whereNull('approved_by')->isNotEmpty() && $reqbar->request_approval->where('approval_type', 'ACCOUNTING')->whereNotNull('approved_by')->isNotEmpty() && $reqbar->request_type_id == 1)
                                                                     <a href="/request/{{$reqbar->id}}/editStatus" class="btn btn-warning btn-xs" data-toggle="modal" type="button"><span class="lnr lnr-pencil"></span></a>
                                                                 @endif
