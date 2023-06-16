@@ -208,6 +208,7 @@ class RequestExport implements FromArray, WithHeadings, WithMapping
             
             array_push($result, [
                 'product_name' => $product->product,
+                'unit_type' => $product->unit_type->unit_type,
                 'price' => $product->price,
                 'qty' => $qty,
                 'total_item' => $totalProductPerProduct,
@@ -236,6 +237,7 @@ class RequestExport implements FromArray, WithHeadings, WithMapping
         // Add a new row to the result array with total items for each division
         $divisionTotalRow = [
             'product_name' => 'Total Item per Divisi',
+            'unit_type' => '',
             'price' => '',
             'qty' => $divisionTotalItems,
             'total_item' => array_sum($divisionTotalItems),
@@ -245,6 +247,7 @@ class RequestExport implements FromArray, WithHeadings, WithMapping
         // Add a new row to the result array with total price for each division
         $divisionPriceRow = [
             'product_name' => 'Total Biaya per Divisi',
+            'unit_type' => '',
             'price' => '',
             'qty' => $divisionPriceItems,
             'total_item' => '',
@@ -266,7 +269,7 @@ class RequestExport implements FromArray, WithHeadings, WithMapping
         ->pluck('division')
         ->toArray();
         
-        $headings = ['Barang', 'Harga'];
+        $headings = ['Barang', 'Tipe Unit', 'Harga'];
         $endHeadings = ['Total Item', 'Total Biaya'];
         $headings = array_merge($headings, $division, $endHeadings);
 
@@ -278,7 +281,7 @@ class RequestExport implements FromArray, WithHeadings, WithMapping
 
     public function map($row): array
     {
-        $result = [$row['product_name'], $row['price']];
+        $result = [$row['product_name'], $row['unit_type'], $row['price']];
         $result = array_merge($result, $row['qty'], [$row['total_item'], $row['total_price']]);
         return $result;
     }
