@@ -784,9 +784,15 @@ class RequestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(RequestBarang $requestBarang)
     {
-        //
+        try {
+            $requestBarang->delete($requestBarang);
+
+            return redirect('request')->with('success', 'Data berhasil dihapus !');
+        } catch (Exception $e) {
+            return redirect('request')->with(['error' => $e->getMessage()]);
+        }
     }
 
     public function export(Request $request){

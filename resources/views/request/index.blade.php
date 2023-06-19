@@ -196,9 +196,10 @@
                                                 @endif
                                         </td>
                                         <!-- AKSI -->
-                                        <td>
+                                        <td style="white-space: nowrap;">
                                             @switch(auth()->user()->role_id)
                                                 @case(1)
+                                                <a href="/request/{{$reqbar->id}}/delete" class="btn btn-danger btn-xs" type="button"><span class="lnr lnr-trash"></span></a>
                                                 @case(3)
                                                     <!-- Button check kalau divisi Role Executor WHM, AUDIT, MKLI-HO -->
                                                     @if ((auth()->user()->division_id == 9 && $reqbar->request_type_id == 2) || (auth()->user()->division_id == 12 && $reqbar->request_type_id == 3) || (auth()->user()->division_id == 80 && $reqbar->request_type_id == 2))
