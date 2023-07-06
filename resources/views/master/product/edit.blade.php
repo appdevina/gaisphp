@@ -53,11 +53,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="inputPrice" class="form-label">Harga</label>
-                                    <input name="price" type="text" class="form-control" id="inputPrice" value="{{$product->price}}" required>
+                                    <input name="price" type="text" class="form-control" id="inputPrice" value="{{$product->price}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="inputDescription" class="form-label">Keterangan</label>
-                                    <input name="description" type="text" class="form-control" id="inputDescription" value="{{$product->description}}" required>
+                                    <input name="description" type="text" class="form-control" id="inputDescription" value="{{$product->description}}">
                                 </div>
                                 <div class="form-group">
                                     <label for="inputProductImage" class="form-label">Foto Barang</label>
@@ -65,7 +65,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="inputStock" class="form-label">Stok</label>
-                                    <input name="stock" type="text" class="form-control" id="inputStock" value="{{$product->stock}}" required>
+                                    <input name="stock" type="text" class="form-control" id="inputStock" value="{{$product->stock}}">
                                 </div>
                                 <br>
                                 <button type="submit" class="btn btn-warning">UPDATE</button>

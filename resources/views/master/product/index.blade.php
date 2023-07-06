@@ -50,7 +50,7 @@
                                     <th>Tipe Unit</th>
                                     <th>Harga</th>
                                     <th>Deskripsi</th>
-                                    <!-- <th>Gambar</th> -->
+                                    <th>Gambar</th>
                                     <th>Diupdate pada</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -65,7 +65,7 @@
                                     <td>{{ $product->unit_type->unit_type }}</td>
                                     <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
                                     <td>{{ $product->description }}</td>
-                                    <!-- <td><img src="{{ $product->getProductImage() }}" class="img" width="100px" alt="Barang"></td> -->
+                                    <td><img src="{{ $product->getProductImage() }}" class="img" width="100px" alt="Barang" data-toggle="modal" data-target="#imageModal"></td>
                                     <td>{{ $product->updated_at->formatLocalized('%A, %d %b %Y') }}</td>
                                     <td>
                                         <a href="/product/{{$product->id}}/edit" class="btn btn-warning btn-xs"><span class="lnr lnr-pencil"></span></a>
@@ -96,6 +96,21 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Modal Image -->
+                                    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                            <div class="modal-content">
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-md-12 text-center">
+                                                        <img id="modalImage" src="{{ $product->getProductImage() }}" alt="Large Image" style="width: 50%;">
+                                                    </div>
+                                                </div>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>
@@ -150,11 +165,11 @@
                     </div>
                     <div class="form-group">
                         <label for="inputPrice" class="form-label">Harga</label>
-                        <input name="price" type="number" class="form-control" id="inputPrice" placeholder="Harga.." required>
+                        <input name="price" type="number" class="form-control" id="inputPrice" placeholder="Harga..">
                     </div>
                     <div class="form-group">
                         <label for="inputDescription" class="form-label">Keterangan</label>
-                        <input name="description" type="text" class="form-control" id="inputDescription" placeholder="Keterangan.." required>
+                        <input name="description" type="text" class="form-control" id="inputDescription" placeholder="Keterangan..">
                     </div>
                     <div class="form-group">
                         <label for="inputProductImage" class="form-label">Foto Barang</label>
@@ -162,7 +177,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputStock" class="form-label">Stok</label>
-                        <input name="stock" type="number" class="form-control" id="inputStock" placeholder="Stok.." required>
+                        <input name="stock" type="number" class="form-control" id="inputStock" placeholder="Stok..">
                     </div>
                 </div>
                 <div class="modal-footer">

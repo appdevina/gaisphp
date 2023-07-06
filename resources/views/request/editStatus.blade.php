@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="inputNotes" class="form-label">Catatan</label>
-                                        <input type="text" class="form-control float-right" value="" name="notes">
+                                        <input type="text" class="form-control float-right" value="{{ $requestBarang->notes }}" name="notes">
                                     </div>
                                         <button type="submit" class="btn btn-warning">UPDATE</button>
                                     </form>
