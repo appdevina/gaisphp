@@ -91,8 +91,14 @@
                                                         <br>
                                                         <div class="col-md-12 text-center">
                                                             <div style="display: inline-block; margin-bottom: 50px;">{!! DNS2D::getBarcodeHTML(strval($product->id), 'QRCODE') !!}</div>
+                                                            <br><br>
+                                                            <div style="display: inline-block;"><p style="color: black;">{{ $product->product }}</p></div>
+                                                            <br>
+                                                            <div style="display: inline-block;"><p style="color: black;">Harga: {{ $product->price }}</p></div>
                                                             <br>
                                                             <div style="display: inline-block;">{!! DNS1D::getBarcodeHTML(strval($product->id), 'C39') !!}</div>
+                                                            <br>
+                                                            <div style="display: inline-block;"><p style="color: black;">ID: {{ $product->id }}</p></div>
                                                         </div>
                                                     </div>
                                                 </div>
